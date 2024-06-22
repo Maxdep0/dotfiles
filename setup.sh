@@ -172,6 +172,7 @@ main() {
     install_and_setup_stow
     install_packages
     install_system_services_and_utils
+    install_shell_and_terminal
     install_nvm
     install_neovim
     install_sway
