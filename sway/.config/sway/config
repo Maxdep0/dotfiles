@@ -28,8 +28,8 @@
 
     exec wl-paste -t text --watch clipman store --no-persist
 
-    exec_always --no-startup-id swaymsg "workspace $ws1; pgrep firefox || exec firefox"
-    exec_always --no-startup-id swaymsg "workspace $ws2; pgrep wezterm || exec wezterm"
+    # exec_always --no-startup-id swaymsg "workspace $ws1; pgrep firefox || exec firefox"
+    # exec_always --no-startup-id swaymsg "workspace $ws2; pgrep wezterm || exec wezterm"
 
     exec_always --no-startup-id pamixer --set-volume 10
     exec_always --no-startup-id nvidia-settings --assign CurrentMetaMode="nvidia-auto-select +0+0 { ForceCompositionPipeline = On }"
