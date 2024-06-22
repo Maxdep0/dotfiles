@@ -1,0 +1,253 @@
+# Read `man 5 sway` for a complete reference.
+
+### Variables
+#
+
+    set $mod Mod4
+
+    # Navigation
+    set $left h
+    set $down j
+    set $up k
+    set $right l
+
+    # Terminal
+    set $term wezterm
+
+    # Launcher
+    set $menu wofi --show drun
+
+    # Workspaces name
+    set $ws1 1:web
+    set $ws2 2:term
+    set $ws3 3
+    set $ws4 4
+    set $ws5 5:media
+
+    exec nm-applet &
+
+    exec wl-paste -t text --watch clipman store --no-persist
+
+    exec_always --no-startup-id swaymsg "workspace $ws1; pgrep firefox || exec firefox"
+    exec_always --no-startup-id swaymsg "workspace $ws2; pgrep wezterm || exec wezterm"
+
+    exec_always --no-startup-id pamixer --set-volume 10
+    exec_always --no-startup-id nvidia-settings --assign CurrentMetaMode="nvidia-auto-select +0+0 { ForceCompositionPipeline = On }"
+
+### Output configuration
+#
+
+output * bg "$HOME/Pictures/img-1.png" fill
+
+#
+# You can get the names of your outputs by running: swaymsg -t get_outputs
+#
+
+    output 'LG Display 0x0701 Unknown' {
+        mode 1920x1200@60.001Hz 
+        position 0,0
+        adaptive_sync enabled
+    }
+
+    output 'AOC U28G2XU2 1322131231233' {
+        mode 3840x2160@143.856Hz 
+        position 1920,0
+        adaptive_sync enabled
+        max_render_time 1 
+    }
+
+### Idle configuration
+#
+# Example configuration:
+#
+# exec swayidle -w \
+#          timeout 300 'swaylock -f -c 000000' \
+#          timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+#          before-sleep 'swaylock -f -c 000000'
+#
+# This will lock your screen after 300 seconds of inactivity, then turn off
+# your displays after another 300 seconds, and turn your screens back on when
+# resumed. It will also lock your screen before your computer goes to sleep.
+
+### Input configuration
+#
+
+#
+# Read `man 5 sway-input` for more information about this section.
+#
+
+    input type:keyboard {
+        xkb_layout us 
+        repeat_delay 200
+        repeat_rate 30
+        xkb_options "caps:escape"
+    }
+
+    input type:pointer {
+        accel_profile flat
+        pointer_accel 0.5
+    }
+
+    input type:touchpad {
+        accel_profile adaptive
+        natural_scroll enabled
+        middle_emulation enabled
+        dwt enabled
+        tap enabled
+    }
+
+### Key bindings
+#
+# Basics:
+#
+    # Start a terminal
+    bindsym $mod+Return exec $term
+
+    # Kill focused window
+    bindsym $mod+Shift+q kill
+
+    # Start your launcher
+    bindsym $mod+d exec $menu
+
+    # Reload the configuration file
+    bindsym $mod+Shift+c reload
+
+    # Exit sway (logs you out of your Wayland session)
+    bindsym $mod+Shift+e exec swaynag -t warning -m 'Do you really want to exit?' -B 'Yes, exit sway' 'swaymsg exit'
+
+    # Open logout menu
+    bindsym XF86PowerOff exec bash ~/.config/sway/scripts/logout_menu.sh
+
+#
+# Media
+#
+
+    # Microphone control
+    bindsym XF86AudioMicMute exec pamixer --default-source --toggle-mute
+
+    # Volume control using pamixer
+    bindsym XF86AudioRaiseVolume exec pamixer -i 5
+    bindsym XF86AudioLowerVolume exec pamixer -d 5
+    bindsym XF86AudioMute exec pamixer -t
+
+    # Media playback control using playerctl
+    bindsym XF86AudioPlay exec playerctl play-pause
+    bindsym XF86AudioNext exec playerctl next
+    bindsym XF86AudioPrev exec playerctl previous
+    bindsym XF86AudioStop exec playerctl stop
+
+#
+# Display
+#
+
+    # Brightness
+    bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +5%
+    bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
+
+
+#
+# Moving around:
+#
+    # Move your focus around
+    bindsym $mod+$left focus left
+    bindsym $mod+$down focus down
+    bindsym $mod+$up focus up
+    bindsym $mod+$right focus right
+
+    # Move the focused window with the same, but add Shift
+    bindsym $mod+Shift+$left move left
+    bindsym $mod+Shift+$down move down
+    bindsym $mod+Shift+$up move up
+    bindsym $mod+Shift+$right move right
+#
+# Workspaces:
+#
+
+    
+    # Switch to workspace
+    bindsym $mod+y workspace number $ws1
+    bindsym $mod+u workspace number $ws2
+    bindsym $mod+i workspace number $ws3
+    bindsym $mod+o workspace number $ws4
+    bindsym $mod+p workspace number $ws5
+
+    # Move focused container to workspace
+    bindsym $mod+Shift+y move container to workspace number $ws1
+    bindsym $mod+Shift+u move container to workspace number $ws2
+    bindsym $mod+Shift+i move container to workspace number $ws3
+    bindsym $mod+Shift+o move container to workspace number $ws4
+    bindsym $mod+Shift+p move container to workspace number $ws5
+
+#
+# Layout stuff:
+#
+    # You can "split" the current object of your focus with
+    # $mod+b or $mod+v, for horizontal and vertical splits
+    bindsym $mod+b splith
+    bindsym $mod+v splitv
+
+    # Switch the current container between different layout styles
+    bindsym $mod+s layout stacking
+    bindsym $mod+w layout tabbed
+    bindsym $mod+e layout toggle split
+
+    # Make the current focus fullscreen
+    bindsym $mod+f fullscreen
+
+    # Toggle the current focus between tiling and floating mode
+    bindsym $mod+Shift+space floating toggle
+
+    # Swap focus between the tiling area and the floating area
+    bindsym $mod+space focus mode_toggle
+
+    # Move focus to the parent container
+    # bindsym $mod+a focus parent
+
+    # Assign clients to specific workspace
+    for_window [app_id="discord"] move to $ws5
+    for_window [app_id="spotify"] move to $ws5
+
+    # Change app launch
+    for_window [app_id="pavucontrol"] floating enable
+
+    # Windows border/gaps
+    default_border pixel 2
+    default_floating_border pixel 1
+    gaps inner 3
+#
+# Scratchpad:
+#
+
+    bindsym $mod+Shift+minus move scratchpad
+    bindsym $mod+minus scratchpad show
+
+#
+# Resizing containers:
+#
+mode "resize" {
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
+
+
+    # Return to default mode
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+r mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+#
+# Status Bar:
+#
+# Read `man 5 sway-bar` for more information about this section.
+bar {
+    status_command waybar
+    mode invisible
+}
+
+
+# include /etc/sway/config.d/*
+
