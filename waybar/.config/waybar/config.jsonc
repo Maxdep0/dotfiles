@@ -2,7 +2,7 @@
     "modules-left": [
         "sway/workspaces",
         "sway/mode",
-        "sway/scratchpad",
+        "sway/scratchpad"
     ],
     "modules-center": [
         "sway/window"
@@ -14,14 +14,14 @@
         "tray",
         "pulseaudio",
         "battery",
-        "clock",
+        "clock"
     ],
     "sway/workspaces": {
         "format": "{icon}",
         "format-icons": {
             "1:web": "",
             "2:term": "",
-            "5:media": "",
+            "5:media": ""
         }
     },
     "sway/window": {
@@ -41,7 +41,7 @@
         "tooltip-format": "{app}: {title}"
     },
     "cpu": {
-        "format": " {usage}% {max_frequency}",
+        "format": " {usage}% {max_frequency}"
     },
     "memory": {
         "format": " {percentage}%"
@@ -52,9 +52,9 @@
         "format-critical": "{icon} {temperatureC}°C",
         "format": "{icon} {temperatureC}°C",
         "format-icons": [
-            "",
+            "",
             "",
-            ""
+            ""
         ]
     },
     "tray": {
@@ -66,7 +66,7 @@
             "critical": 10
         },
         "format": "{icon} {capacity}%",
-        "format-charging": " {capacity}%",
+        "format-charging": "󰂄 {capacity}%",
         "format-plugged": " {capacity}%",
         "format-alt": "{icon} {time}",
         "format-icons": [
@@ -80,26 +80,26 @@
     "pulseaudio": {
         "format": "{icon} {volume}% {format_source}",
         "format-bluetooth": " {icon} {volume}% {format_source}",
-        "format-bluetooth-muted": "  {icon} {format_source}",
-        "format-muted": "  {format_source}",
+        "format-bluetooth-muted": "󰝟  {icon} {format_source}",
+        "format-muted": "\ueb24 {format_source}",
         "format-source": " {volume}%",
         "format-source-muted": "",
         "format-icons": {
-            "headphone": "",
-            "headset": "",
-            "phone": "",
-            "phone-muted": "",
-            "portable": "",
+            "headphone": " ",
+            "headset": " ",
+            "phone": " ",
+            "phone-muted": " ",
+            "portable": " ",
             "default": [
-                "",
-                "",
-                ""
-            ],
+                "  ",
+                "  ",
+                "  "
+            ]
         },
-        "on-click": "pavucontrol",
+        "on-click": "pavucontrol"
     },
     "clock": {
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format-alt": "{:%a, %d. %b  %H:%M}",
-    },
+        "format-alt": "{:%a, %d. %b  %H:%M}"
+    }
 }

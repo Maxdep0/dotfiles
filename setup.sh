@@ -119,6 +119,7 @@ install_proprietary_nvidia_drivers() {
     # grub
     sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="[^"]*"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet rd.driver.blacklist=nouveau nvidia_drm.modeset=1"/' /etc/default/grub
     sudo sed -i 's/^#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/' /etc/default/grub
+    sudo sed -i 's/^GRUB_TIMEOUT=5/GRUB_TIMEOUT=20/' /etc/default/grub
     sudo grub-mkconfig -o /boot/grub/grub.cfg
 
     # mkinitcpio
@@ -178,6 +179,8 @@ main() {
     install_sway
     install_proprietary_nvidia_drivers
 
+    fc-cache -rv
+
     sudo pacman -Syu
 
     sudo systemctl enable seatd
@@ -185,7 +188,6 @@ main() {
 
     chsh -s "$(which zsh)"
 
-    zsh
 
     echo "Reboot your PC"
 

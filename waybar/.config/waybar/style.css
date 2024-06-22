@@ -1,79 +1,88 @@
 * {
-    font-family: "JetBrains Mono ExtraBold";
-    border: none;
-    border-radius: 0;
-    min-height: 0;
-    font-size: 13px;
+  font-family: "JetBrains Mono ExtraBold";
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+  font-size: 13px;
 }
 
 window#waybar {
-    background: transparent;
-    color: white;
+  background: transparent;
+  color: white;
 }
 
-
-
-#workspaces {
-}
+/* #workspaces { */
+/* } */
 
 #workspaces button {
-    color: #c4c4c4;
-    background: none;
-    transition: none;
+  color: #c4c4c4;
+  background: none;
+  transition: none;
 }
 
-#waybar #workspaces button:hover {
-}
+/* #waybar #workspaces button:hover { */
+/* } */
 
 #workspaces button.focused {
-  color:#ffffff;
-  font-weight: bold;
+  color: #ffffff;
   border-top: 1px solid #ffffff;
 }
 
-
 #workspaces button.urgent {
-    background-color: #eb4d4b;
+  background-color: #eb4d4b;
 }
-
 
 #window {
-    font-weight: bold;
-    padding: 2px 0;
+  font-weight: bold;
+  padding: 2px 0;
 }
 
-#clock, #battery, #cpu, #memory, #temperature, #pulseaudio, #tray, #mode, #scratchpad {
-    margin: 0 2px;
-    padding: 0 5px;
+#clock,
+#battery,
+#cpu,
+#memory,
+#temperature,
+#pulseaudio,
+#tray,
+#mode,
+#scratchpad {
+  margin: 0 2px;
+  padding: 0 5px;
 }
 
 #mode {
-    color: red;
-    font-weight: bold;
-    font-size: 17;
-    border-bottom: 2px solid red;
+  color: red;
+  font-weight: bold;
+  font-size: 17;
+  border-bottom: 2px solid red;
 }
 
 #clock {
-    font-weight: bold;
+  font-weight: bold;
 }
 
-#battery {
-}
+/* #battery { */
+/* } */
 
 #battery icon {
   color: red;
 }
 
-#battery.charging, #battery.plugged {
+#battery.charging,
+#battery.plugged {
   /* color: #ffffff; */
-  background-color: #26A65B;
+  background-color: #26a65b;
 }
 
-@keyframes blink { to { background-color: #ffffff; color: black; } }
+@keyframes blink {
+  to {
+    background-color: #ffffff;
+    color: black;
+  }
+}
 
 #battery.warning:not(.charging) {
-    color: orange;
+  color: orange;
 }
 
 #battery.critical:not(.charging) {
@@ -95,7 +104,6 @@ window#waybar {
   background-color: #eb4d4b;
 }
 
-
 #tray > .passive {
   -gtk-icon-effect: dim;
 }
@@ -104,5 +112,3 @@ window#waybar {
   -gtk-icon-effect: highlight;
   background-color: #eb4d4b;
 }
-
-
