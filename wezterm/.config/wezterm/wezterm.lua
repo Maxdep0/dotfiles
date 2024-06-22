@@ -33,8 +33,9 @@ return {
 
 	scrollback_lines = 10000,
 
-	font = wezterm.font("JetBrains Mono", { weight = "Light" }),
-	font_size = 11.5,
+	font = wezterm.font("JetBrainsMono Nerd Font Mono", { weight = "Light" }),
+	-- font = wezterm.font("Ubuntu", { weight = "Light" }),
+	-- font_size = 11.5,
 
 	adjust_window_size_when_changing_font_size = false,
 
