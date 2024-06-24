@@ -18,7 +18,7 @@ setup_environment() {
     mkdir -p "$HOME/Downloads"
     mkdir -p "$HOME/Documents"
     mkdir -p "$HOME/Pictures"
-    mkdir -p "$HOME/Repository"
+    mkdir -p "$HOME/Projects"
     mkdir -p "$HOME/Videos"
     mkdir -p "$HOME/.config"
 
@@ -33,17 +33,44 @@ setup_environment() {
 
 }
 
-install_essential_packages() {
-    pac base-devel cmake unzip ninja curl tree-sitter
+install_packages() {
+    # Essentials
+    pac base base-devel polkit sudo nano
+    pac ninja curl cmake meson wget curl
+    pac unzip zip p7zip tar
+    pac git stow openssh
+    pac ripgrep fd fzf tree-sitter
     pac zsh wezterm
-    pac python python-pip python-pynvim
+    pac polkit
 
+    # Additionals
+    pac ranger htop neofetch
+    pac firefox
+
+    # System services and utils
     pac networkmanager network-manager-applet
     pac pulseaudio pulseaudio-alsa pulseaudio-jack pulseaudio-zeroconf
     pac pavucontrol pamixer playerctl acpi
     pac brightnessctl
+    yay clipman
 
+    pac discord spotify
+    pac man-db man-pages textinfo
     # screenshot tool
+
+    # Languages
+    pac python python-pip python-pynvim
+    nvm install 22
+
+    # Fonts
+    pac ttf-dejavu noto-fonts ttf-ubuntu-font-family ttf-fira-code ttf-liberation
+    pac ttf-ms-win10 noto-fonts-emoji ttf-symbola
+    pac ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-mono ttf-nerd-fonts-symbols-common
+    pac ttf-jetbrains-mono-nerd
+
+    ## Nothing
+    pac mpv
+
 }
 
 install_aux_tools() {
@@ -100,7 +127,6 @@ install_and_setup_neovim() {
         git clone https://github.com/Maxdep0/nvim.git "$CONFIG/nvim"
     fi
 
-    nvm install 22
 }
 
 main() {
@@ -128,3 +154,5 @@ main() {
 
     echo "Reboot PC"
 }
+
+main
