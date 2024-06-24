@@ -37,8 +37,3 @@ if [ "$(tty)" = "/dev/tty1" ]; then
 
     exec sway --unsupported-gpu
 fi
-# If running from tty1 start sway
-# [ "$(tty)" = "/dev/tty1" ] && export WLR_BACKENDS=gbm
-# [ "$(tty)" = "/dev/tty1" ] && export WLR_DRM_DEVICES=/dev/dri/card0
-
-# [ "$(tty)" = "/dev/tty1" ] && exec sway --unsupported-gpu

@@ -13,6 +13,8 @@ alias pacpac="sudo pacman -S --needed"
 alias gs="git status"
 alias gc="git commit -m"
 
+alias ft="ranger"
+
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
