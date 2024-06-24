@@ -26,6 +26,9 @@
 
     exec nm-applet &
 
+exec /usr/lib/xdg-desktop-portal-wlr
+
+
     exec wl-paste -t text --watch clipman store --no-persist
 
     # exec_always --no-startup-id swaymsg "workspace $ws1; pgrep firefox || exec firefox"
@@ -204,8 +207,8 @@ output * bg "$HOME/Pictures/img-1.png" fill
     # bindsym $mod+a focus parent
 
     # Assign clients to specific workspace
-    for_window [app_id="discord"] move to $ws5
-    for_window [app_id="spotify"] move to $ws5
+    for_window [class="discord"] move container to workspace $ws5
+    for_window [class="Spotify"] move container to workspace $ws5
 
     # Change app launch
     for_window [app_id="pavucontrol"] floating enable
