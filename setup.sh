@@ -33,7 +33,7 @@ setup_environment() {
 
 }
 
-install_essential_packages() {
+install_packages() {
     # Essentials
     pac base base-devel polkit sudo nano
     pac ninja curl cmake meson wget curl tar
@@ -91,7 +91,7 @@ install_aux_tools() {
 
     if ! cmd_check paru; then
         git clone https://aur.archlinux.org/paru.git "$DOWNLOADS/paru"
-        cd "$DOWNLOADS/paru" && makepkg -si -needed --noconfirm && cd "$HOME" || return
+        cd "$DOWNLOADS/paru" && makepkg -si --needed --noconfirm && cd "$HOME" || return
         rm -rf "$DOWNLOADS/paru"
     fi
 
@@ -109,7 +109,7 @@ install_sway() {
 }
 
 install_proprietary_nvidia_drivers_for_sway() {
-    pac nvidia-dmks nvidia-utils linux-headers
+    pac nvidia-dkms nvidia-utils linux-headers
     par wlroots-nvidia
 
     sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="[^"]*"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet rd.driver.blacklist=nouveau nvidia_drm.modeset=1"/' /etc/default/grub
