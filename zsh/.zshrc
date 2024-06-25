@@ -12,6 +12,7 @@ alias pacpac="sudo pacman -S --needed"
 
 alias gs="git status"
 alias gc="git commit -m"
+alias remote="git remote set-url origin git@github.com:Maxdep0/"
 
 alias ft="ranger"
 

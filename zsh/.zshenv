@@ -11,7 +11,6 @@ add() {
 add "$HOME/bin"
 add "$HOME/.local/bin"
 add "/usr/local/bin"
-add "/opt/nvim-linux64/bin"
 
 export SHELL=/usr/bin/zsh
 
