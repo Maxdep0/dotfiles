@@ -37,7 +37,6 @@ install_packages() {
     # Essentials
     pac base base-devel polkit sudo nano
     pac ninja curl cmake meson wget curl
-    pac unzip zip p7zip tar
     pac git stow openssh
     pac ripgrep fd fzf tree-sitter
     pac zsh wezterm
@@ -52,7 +51,7 @@ install_packages() {
     pac pulseaudio pulseaudio-alsa pulseaudio-jack pulseaudio-zeroconf
     pac pavucontrol pamixer playerctl acpi
     pac brightnessctl
-    yay clipman
+    ya clipman
 
     pac discord spotify
     pac man-db man-pages textinfo
@@ -63,17 +62,23 @@ install_packages() {
     nvm install 22
 
     # Fonts
-    pac ttf-dejavu noto-fonts ttf-ubuntu-font-family ttf-fira-code ttf-liberation
-    pac ttf-ms-win10 noto-fonts-emoji ttf-symbola
-    pac ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-mono ttf-nerd-fonts-symbols-common
-    pac ttf-jetbrains-mono-nerd
+    # pac ttf-dejavu noto-fonts ttf-ubuntu-font-family ttf-fira-code ttf-liberation
+    # pac ttf-ms-win10 noto-fonts-emoji 
+   #  pac ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-mono ttf-nerd-fonts-symbols-common
+   # pac ttf-jetbrains-mono-nerd
+	pac noto-fonts noto-fonts-emoji noto-fonts-extra
+	pac ttf-dejavu ttf-liberation
+	ya ttf-jetbrains-mono ttf-nerd-fonts-symbols-mono
+
+
 
     ## Nothing
-    pac mpv
+    # pac mpv
 
 }
 
 install_aux_tools() {
+	pac curl unzip zip tar p7zip
     if ! cmd_check yay; then
         git clone https://aur.archlinux.org/yay.git "$DOWNLOADS/yay"
         makepkg -si --needed --noconfirm -p "$DOWNLOADS/yay/PKGBUILD"
@@ -122,6 +127,7 @@ install_and_setup_neovim() {
         git clone https://github.com/neovim/neovim "$DOWNLOADS/neovim"
         make --directory="$DOWNLOADS/neovim" CMAKE_BUILD_TYPE=Release
         sudo make --directory="$DOWNLOADS/neovim" install
+        rm -rf "$DOWNLOADS/neovim"
     fi
     if [ ! -d "$CONFIG/nvim" ]; then
         git clone https://github.com/Maxdep0/nvim.git "$CONFIG/nvim"
@@ -131,9 +137,13 @@ install_and_setup_neovim() {
 
 main() {
     sudo pacman -Syu --noconfirm
-    # Call function in correct order
-    # Call function in correct order
-    # Call function in correct order
+
+	setup_environment
+	install_aux_tools
+	install_packages
+	install_and_setup_neovim
+	install_sway
+	install_proprietary_nvidia_drivers_for_sway
 
     fc-cache -rv
     sudo pacman -Syu --noconfirm
