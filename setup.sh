@@ -4,7 +4,6 @@ DOWNLOADS=$HOME/Downloads
 DOTFILES=$HOME/dotfiles
 CONFIG="$HOME/.config"
 
-## pacman discord, spotify
 
 pac() { sudo pacman -S --needed --noconfirm "$@"; }
 par() { paru -S --needed --noconfirm "$@"; }
@@ -33,10 +32,11 @@ setup_environment() {
 
 }
 
-install_packages() {
+install_essential_packages() {
     # Essentials
     pac base base-devel polkit sudo nano
-    pac ninja curl cmake meson wget curl
+    pac ninja curl cmake meson wget curl tar
+    pac unzip zip p7zip
     pac git stow openssh
     pac ripgrep fd fzf tree-sitter
     pac zsh wezterm
@@ -62,13 +62,9 @@ install_packages() {
     nvm install 22
 
     # Fonts
-    # pac ttf-dejavu noto-fonts ttf-ubuntu-font-family ttf-fira-code ttf-liberation
-    # pac ttf-ms-win10 noto-fonts-emoji 
-   #  pac ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-mono ttf-nerd-fonts-symbols-common
-   # pac ttf-jetbrains-mono-nerd
 	pac noto-fonts noto-fonts-emoji noto-fonts-extra
 	pac ttf-dejavu ttf-liberation
-	ya ttf-jetbrains-mono ttf-nerd-fonts-symbols-mono
+	pac ttf-jetbrains-mono ttf-nerd-fonts-symbols-mono
 
 
 
@@ -78,10 +74,10 @@ install_packages() {
 }
 
 install_aux_tools() {
-	pac curl unzip zip tar p7zip
+	pac curl unzip 
     if ! cmd_check yay; then
         git clone https://aur.archlinux.org/yay.git "$DOWNLOADS/yay"
-        makepkg -si --needed --noconfirm -p "$DOWNLOADS/yay/PKGBUILD"
+        cd "$DOWNLOADS/yay" && makepkg -si --needed --noconfirm && cd "$HOME" || return
         rm -rf "$DOWNLOADS/yay"
     fi
 
@@ -94,7 +90,7 @@ install_aux_tools() {
 
     if ! cmd_check paru; then
         git clone https://aur.archlinux.org/paru.git "$DOWNLOADS/paru"
-        makepkg -si -needed --noconfirm -p "$DOWNLOADS/paru/PKGBUILD"
+        cd "$DOWNLOADS/paru" && makepkg -si -needed --noconfirm && cd "$HOME" || return
         rm -rf "$DOWNLOADS/paru"
     fi
 
