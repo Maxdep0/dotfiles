@@ -1,0 +1,17 @@
+[user]
+	email = fjkasdhfkjsadhfkjsad@gmail.com
+	name = maxdep
+
+[core]
+    editor = nvim
+
+[delta]
+    navigate = true
+    line-numbers = true
+
+[merge]
+    conflictstyle = diff3
+
+[init]
+	defaultBranch = main
+

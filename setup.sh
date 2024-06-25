@@ -29,6 +29,7 @@ setup_environment() {
     stow --dir="$DOTFILES" wezterm
     stow --dir="$DOTFILES" htop
     stow --dir="$DOTFILES" ranger
+    stow --dir="$DOTFILES" gitconfig
 
 }
 
