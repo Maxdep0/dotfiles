@@ -120,6 +120,7 @@ install_proprietary_nvidia_drivers_for_sway() {
 }
 
 install_and_setup_neovim() {
+    pac luarocks
     if [ ! -d "$DOWNLOADS/neovim" ]; then
         git clone https://github.com/neovim/neovim "$DOWNLOADS/neovim"
         make --directory="$DOWNLOADS/neovim" CMAKE_BUILD_TYPE=Release
