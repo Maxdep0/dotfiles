@@ -123,10 +123,11 @@ install_sway() {
 
 
 install_graphics_drivers() {
-    pac mesa mesa-utils
-    pac linux-headers nvidia-dkms nvidia-utils nvidia-prime 
-    pac nvidia-settings nvtop # glmark2
-    par wlroots-nvidia
+    # pac mesa mesa-utils
+    # pac linux-headers nvidia-dkms nvidia-utils nvidia-prime 
+    yay nvidia-beta-dkms nvidia-utils-beta nvidia-settings-beta
+    pac nvidia-settings nvtop
+    # par wlroots-nvidia
 
     # Grub
     GRUB=/etc/default/grub
@@ -153,29 +154,6 @@ install_graphics_drivers() {
 }
 
 
-
-
-
-
-install_graphics_drivers
-
-
-
-
-
-
-
-
-install_proprietary_nvidia_drivers_for_sway() {
-    # pac nvidia-dkms nvidia-utils linux-headers
-    par wlroots-nvidia
-
-    # sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="[^"]*"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet rd.driver.blacklist=nouveau nvidia_drm.modeset=1"/' /etc/default/grub
-    # sudo grub-mkconfig -o /boot/grub/grub.cfg
-
-    # sudo sed -i 's/^MODULES=(.*)/MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' /etc/mkinitcpio.conf
-}
-
 install_and_setup_neovim() {
     pac luarocks
     if [ ! -d "$DOWNLOADS/neovim" ]; then
@@ -198,7 +176,6 @@ main() {
 	install_packages
 	install_and_setup_neovim
 	install_sway
-	# install_proprietary_nvidia_drivers_for_sway
 	install_graphics_drivers
 
     fc-cache -rv
@@ -221,4 +198,4 @@ main() {
     echo "Reboot PC"
 }
 
-# main
+main
