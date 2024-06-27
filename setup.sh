@@ -8,7 +8,6 @@ CONFIG="$HOME/.config"
 
 pac() { sudo pacman -S --needed --noconfirm "$@"; }
 par() { paru -S --needed --noconfirm "$@"; }
-ya() { yay -S --needed --noconfirm "$@"; }
 
 cmd_check() { command -v "$1" >/dev/null 2>&1; }
 
@@ -53,7 +52,7 @@ install_packages() {
     pac pulseaudio pulseaudio-alsa pulseaudio-jack pulseaudio-zeroconf
     pac pavucontrol pamixer playerctl acpi
     pac brightnessctl
-    ya clipman
+    yay -S clipman
 
     pac discord spotify
     pac man-db man-pages textinfo
@@ -79,7 +78,7 @@ install_aux_tools() {
 	pac curl unzip 
     if ! cmd_check yay; then
         git clone https://aur.archlinux.org/yay.git "$DOWNLOADS/yay"
-        cd "$DOWNLOADS/yay" && makepkg -si --needed --noconfirm && cd "$HOME" || return
+        cd "$DOWNLOADS/yay" && makepkg -si --needed --noconfirm && cd "$HOME"
         rm -rf "$DOWNLOADS/yay"
     fi
 
@@ -92,7 +91,7 @@ install_aux_tools() {
 
     if ! cmd_check paru; then
         git clone https://aur.archlinux.org/paru.git "$DOWNLOADS/paru"
-        cd "$DOWNLOADS/paru" && makepkg -si --needed --noconfirm && cd "$HOME" || return
+        cd "$DOWNLOADS/paru" && makepkg -si --needed --noconfirm && cd "$HOME"
         rm -rf "$DOWNLOADS/paru"
     fi
 
@@ -110,24 +109,12 @@ install_sway() {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 install_graphics_drivers() {
     # pac mesa mesa-utils
-    # pac linux-headers nvidia-dkms nvidia-utils nvidia-prime 
-    yay nvidia-beta-dkms nvidia-utils-beta nvidia-settings-beta
-    pac nvidia-settings nvtop
-    # par wlroots-nvidia
+    pac linux-headers
+    yay -S nvidia-beta-dkms nvidia-utils-beta nvidia-settings-beta nvidia-prime
+    pac nvtop 
+    par wlroots-nvidia
 
     # Grub
     GRUB=/etc/default/grub
@@ -146,7 +133,7 @@ install_graphics_drivers() {
     sudo sed -i 's/^HOOKS=(.*)$/HOOKS=(base udev autodetect microcode modconf keyboard keymap consolefont block filesystems fsck)/' "$MKINITCPIO"
 
     ## Modules
-    sudo sed -i 's/^MODULES=(.*)/MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' "MKINITCPIO"
+    sudo sed -i 's/^MODULES=(.*)/MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' "$MKINITCPIO"
 
     sudo mkinitcpio -P
 
@@ -155,7 +142,7 @@ install_graphics_drivers() {
 
 
 install_and_setup_neovim() {
-    pac luarocks
+    pac luarocks lua51 jdk-openjdk
     if [ ! -d "$DOWNLOADS/neovim" ]; then
         git clone https://github.com/neovim/neovim "$DOWNLOADS/neovim"
         make --directory="$DOWNLOADS/neovim" CMAKE_BUILD_TYPE=Release
@@ -180,7 +167,7 @@ main() {
 
     fc-cache -rv
     sudo pacman -Syu --noconfirm
-
+    
     sudo systemctl enable NetworkManager
     sudo systemctl start NetworkManager
 
