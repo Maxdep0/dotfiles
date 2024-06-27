@@ -1,4 +1,5 @@
 #!/bin/bash
+# https://www.youtube.com/watch?v=gIVIHJmW1P0
 
 DOWNLOADS=$HOME/Downloads
 DOTFILES=$HOME/dotfiles
@@ -108,15 +109,68 @@ install_sway() {
     sudo sed -i 's/^#*\s*HandlePowerKey\s*=.*/HandlePowerKey=ignore/' /etc/systemd/logind.conf
 }
 
-install_proprietary_nvidia_drivers_for_sway() {
-    pac nvidia-dkms nvidia-utils linux-headers
-    par wlroots-nvidia
 
-    sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="[^"]*"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet rd.driver.blacklist=nouveau nvidia_drm.modeset=1"/' /etc/default/grub
+
+
+
+
+
+
+
+
+
+
+
+
+install_graphics_drivers() {
+    # pac mesa mesa-utils
+    pac linux-headers nvidia-dkms nvidia-utils nvidia-prime 
+    # pac ffmpeg
+    pac nvidia-settings nvtop
+
+    # Grub
+    GRUB=/etc/default/grub
+
+    ## GRUB_CMDLINE_LINUX_DEFAULT
+    sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="[^"]*"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet rd.driver.blacklist=nouveau nvidia_drm.fbdev=1"/' "$GRUB"
+
     sudo grub-mkconfig -o /boot/grub/grub.cfg
 
-    sudo sed -i 's/^MODULES=(.*)/MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' /etc/mkinitcpio.conf
+    # mkinitcpio.conf
+    MKINITCPIO=/etc/mkinitcpio.conf
+
+    ## Hooks
+    sudo sed -i 's/^HOOKS=(.*)$/HOOKS=(base udev autodetect microcode modconf keyboard keymap consolefont block filesystems fsck)/' "$MKINITCPIO"
+
+    ## Modules
+    sudo sed -i 's/^MODULES=(.*)/MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' "MKINITCPIO"
+
     sudo mkinitcpio -P
+
+
+}
+
+
+
+install_graphics_drivers
+
+
+
+
+
+
+
+
+
+
+install_proprietary_nvidia_drivers_for_sway() {
+    # pac nvidia-dkms nvidia-utils linux-headers
+    par wlroots-nvidia
+
+    # sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="[^"]*"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet rd.driver.blacklist=nouveau nvidia_drm.modeset=1"/' /etc/default/grub
+    # sudo grub-mkconfig -o /boot/grub/grub.cfg
+
+    # sudo sed -i 's/^MODULES=(.*)/MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' /etc/mkinitcpio.conf
 }
 
 install_and_setup_neovim() {
@@ -163,4 +217,4 @@ main() {
     echo "Reboot PC"
 }
 
-main
+# main

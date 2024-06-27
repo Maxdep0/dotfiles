@@ -97,7 +97,9 @@ export NVM_DIR="$HOME/.nvm"
 
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
-source ~/.zsh-plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+source "/usr/share/bash-completion/completions/dkms"
+source "$HOME/.zsh-plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 source "$HOME/.zsh-plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 

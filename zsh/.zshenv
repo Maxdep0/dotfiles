@@ -19,6 +19,8 @@ export PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig:$PKG_CONFIG_PATH
 export PKG_CONFIG_PATH=/usr/local/share/pkgconfig:$PKG_CONFIG_PATH
 
 
+export LD_LIBRARY_PATH=/usr/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/usr/lib/:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=/usr/local/lib/:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=/usr/local/lib64/:$LD_LIBRARY_PATH
 
@@ -26,13 +28,20 @@ export XDG_DOWNLOAD_DIR="$HOME/Downloads"
 
 if [ "$(tty)" = "/dev/tty1" ]; then
 
-    export LIBVA_DRIVER_NAME=nvidia
-    export XDG_SESSION_TYPE=wayland
     export GBM_BACKEND=nvidia-drm
     export __GLX_VENDOR_LIBRARY_NAME=nvidia
+
+
+
+    # export __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json
+    # export __GLX_VENDOR_LIBRARY_NAME=mesa
+    ##
+    ##
+    ##
+    # export XDG_SESSION_TYPE=wayland
     export WLR_NO_HARDWARE_CURSORS=1
     export MOZ_ENABLE_WAYLAND=1
-    export XCURSOR_THEME=default
+    # export XCURSOR_THEME=default
 
-    exec sway --unsupported-gpu
+    # exec sway --unsupported-gpu
 fi
