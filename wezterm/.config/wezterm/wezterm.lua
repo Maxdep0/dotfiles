@@ -29,6 +29,7 @@ local function ckey(keys, mods, non_editor_action)
 end
 
 return {
+	front_end = "OpenGL",
 	disable_default_key_bindings = true,
 
 	scrollback_lines = 10000,

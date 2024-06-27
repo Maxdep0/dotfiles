@@ -35,7 +35,7 @@ exec /usr/lib/xdg-desktop-portal-wlr
     # exec_always --no-startup-id swaymsg "workspace $ws2; pgrep wezterm || exec wezterm"
 
     exec_always --no-startup-id pamixer --set-volume 10
-    exec_always --no-startup-id nvidia-settings --assign CurrentMetaMode="nvidia-auto-select +0+0 { ForceCompositionPipeline = On }"
+    # exec_always --no-startup-id nvidia-settings --assign CurrentMetaMode="nvidia-auto-select +0+0 { ForceCompositionPipeline = On }"
 
 ### Output configuration
 #
@@ -46,10 +46,12 @@ output * bg "$HOME/Pictures/img-1.png" fill
 # You can get the names of your outputs by running: swaymsg -t get_outputs
 #
 
+
     output 'LG Display 0x0701 Unknown' {
         mode 1920x1200@60.001Hz 
         position 0,0
-        adaptive_sync enabled
+        # adaptive_sync enabled
+        max_render_time 35
     }
 
     output 'AOC U28G2XU2 1322131231233' {

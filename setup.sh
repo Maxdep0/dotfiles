@@ -123,16 +123,18 @@ install_sway() {
 
 
 install_graphics_drivers() {
-    # pac mesa mesa-utils
+    pac mesa mesa-utils
     pac linux-headers nvidia-dkms nvidia-utils nvidia-prime 
-    # pac ffmpeg
-    pac nvidia-settings nvtop
+    pac nvidia-settings nvtop # glmark2
+    par wlroots-nvidia
 
     # Grub
     GRUB=/etc/default/grub
 
+    ### prime-run eglgears-wayland
+
     ## GRUB_CMDLINE_LINUX_DEFAULT
-    sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="[^"]*"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet rd.driver.blacklist=nouveau nvidia_drm.fbdev=1"/' "$GRUB"
+    sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="[^"]*"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet rd.driver.blacklist=nouveau nvidia-drm.modeset=1 nvidia-drm.fbdev=1"/' "$GRUB"
 
     sudo grub-mkconfig -o /boot/grub/grub.cfg
 
@@ -152,9 +154,10 @@ install_graphics_drivers() {
 
 
 
+
+
+
 install_graphics_drivers
-
-
 
 
 
@@ -195,7 +198,8 @@ main() {
 	install_packages
 	install_and_setup_neovim
 	install_sway
-	install_proprietary_nvidia_drivers_for_sway
+	# install_proprietary_nvidia_drivers_for_sway
+	install_graphics_drivers
 
     fc-cache -rv
     sudo pacman -Syu --noconfirm
