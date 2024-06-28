@@ -32,7 +32,7 @@ if [ "$(tty)" = "/dev/tty1" ]; then
     # export __GLX_VENDOR_LIBRARY_NAME=nvidia
 
     # export __NV_PRIME_RENDER_OFFLOAD=1
-    export LIBVA_DRIVER_NAME=nvidia
+    export LIBVA_DRIVER_NAME=iHD
     export VDPAU_DRIVER=nvidia
 
 

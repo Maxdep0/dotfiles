@@ -116,17 +116,54 @@ install_sway() {
 }
 
 
-install_graphics_drivers() {
-    pac libva-utils
+install_graphics_drivers22222() {
+
+    pac clinfo 
 
     # INTEL
     pac mesa mesa-utils
     pac intel-media-driver intel-gpu-tools intel-compute-runtime
+    pac vulkan-intel vulkan-mesa-layers
+    pac libva-utils
 
     # NVIDIA
     pac linux-headers
     yay -S --needed nvidia-beta-dkms nvidia-utils-beta nvidia-settings-beta opencl-nvidia-beta
-    pac nvtop nvidia-prime
+    pac vulkan-icd-loader vulkan-tools
+    yay -S --needed vulkan-caps-viewer-wayland
+    pac nvtop nvidia-prime vdpauinfo
+    par wlroots-nvidia
+
+    # Grub
+    GRUB=/etc/default/grub
+
+    ## GRUB_CMDLINE_LINUX_DEFAULT
+    sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="[^"]*"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet rd.driver.blacklist=nouveau nvidia-drm.modeset=1 nvidia-drm.fbdev=1"/' "$GRUB"
+
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
+
+    # mkinitcpio.conf
+    MKINITCPIO=/etc/mkinitcpio.conf
+
+    ## Hooks
+    sudo sed -i 's/^HOOKS=(.*)$/HOOKS=(base udev autodetect microcode modconf keyboard keymap consolefont block filesystems fsck)/' "$MKINITCPIO"
+
+    ## Modules
+    sudo sed -i 's/^MODULES=(.*)/MODULES=(i915 nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' "$MKINITCPIO"
+
+    sudo mkinitcpio -P
+
+
+}
+install_graphics_drivers() {
+    pac clinfo 
+
+    # INTEL
+    pac mesa mesa-utils intel-media-driver intel-gpu-tools intel-compute-runtime libva-utils
+
+    # NVIDIA
+    yay -S --needed nvidia-beta-dkms nvidia-utils-beta nvidia-settings-beta opencl-nvidia-beta
+    pac linux-headers nvtop nvidia-prime vdpauinfo libva-nvidia-driver
     par wlroots-nvidia
 
     # Grub
