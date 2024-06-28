@@ -54,13 +54,20 @@ install_packages() {
     pac brightnessctl
     yay -S clipman
 
-    pac discord spotify
+    pac discord
+
+
+    yay -S --needed --noconfirm spotify
+
+
     pac man-db man-pages textinfo
     # screenshot tool
 
     # Languages
     pac python python-pip python-pynvim
+    pac jdk-openjdk
     nvm install 22
+
 
     # Fonts
 	pac noto-fonts noto-fonts-emoji noto-fonts-extra
@@ -110,16 +117,20 @@ install_sway() {
 
 
 install_graphics_drivers() {
-    # pac mesa mesa-utils
+    pac libva-utils
+
+    # INTEL
+    pac mesa mesa-utils
+    pac intel-media-driver intel-gpu-tools intel-compute-runtime
+
+    # NVIDIA
     pac linux-headers
-    yay -S nvidia-beta-dkms nvidia-utils-beta nvidia-settings-beta nvidia-prime
-    pac nvtop 
+    yay -S --needed nvidia-beta-dkms nvidia-utils-beta nvidia-settings-beta opencl-nvidia-beta
+    pac nvtop nvidia-prime
     par wlroots-nvidia
 
     # Grub
     GRUB=/etc/default/grub
-
-    ### prime-run eglgears-wayland
 
     ## GRUB_CMDLINE_LINUX_DEFAULT
     sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="[^"]*"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet rd.driver.blacklist=nouveau nvidia-drm.modeset=1 nvidia-drm.fbdev=1"/' "$GRUB"
@@ -133,7 +144,7 @@ install_graphics_drivers() {
     sudo sed -i 's/^HOOKS=(.*)$/HOOKS=(base udev autodetect microcode modconf keyboard keymap consolefont block filesystems fsck)/' "$MKINITCPIO"
 
     ## Modules
-    sudo sed -i 's/^MODULES=(.*)/MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' "$MKINITCPIO"
+    sudo sed -i 's/^MODULES=(.*)/MODULES=(i915 nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' "$MKINITCPIO"
 
     sudo mkinitcpio -P
 
@@ -142,7 +153,7 @@ install_graphics_drivers() {
 
 
 install_and_setup_neovim() {
-    pac luarocks lua51 jdk-openjdk
+    pac luarocks lua51
     if [ ! -d "$DOWNLOADS/neovim" ]; then
         git clone https://github.com/neovim/neovim "$DOWNLOADS/neovim"
         make --directory="$DOWNLOADS/neovim" CMAKE_BUILD_TYPE=Release
@@ -156,16 +167,16 @@ install_and_setup_neovim() {
 }
 
 main() {
-    sudo pacman -Syu --noconfirm
+    # sudo pacman -Syu --noconfirm
 
-	setup_environment
-	install_aux_tools
-	install_packages
-	install_and_setup_neovim
-	install_sway
-	install_graphics_drivers
+	# setup_environment 2>&1 | tee "$HOME/setup_environment" 
+	# install_aux_tools 2>&1 | tee "$HOME/install_aux_tools.log" 
+	# install_packages 2>&1 | tee "$HOME/install_packages.log" 
+	# install_and_setup_neovim 2>&1 | tee "$HOME/install_and_setup_neovim.log" 
+	# install_sway 2>&1 | tee "$HOME/install_sway.log"
+    install_graphics_drivers 2>&1 | tee "$HOME/intel-media-driver.log" 
 
-    fc-cache -rv
+    # fc-cache -rv
     sudo pacman -Syu --noconfirm
     
     sudo systemctl enable NetworkManager
