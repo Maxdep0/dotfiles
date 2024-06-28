@@ -115,6 +115,65 @@ install_sway() {
     sudo sed -i 's/^#*\s*HandlePowerKey\s*=.*/HandlePowerKey=ignore/' /etc/systemd/logind.conf
 }
 
+setup_pacman() {
+    # Cache cleaning
+    pac pacman-contrib
+
+    sudo systemctl enable paccache.timer
+    sudo systemctl start paccache.timer
+
+    # Pacman Configuration
+    PACMAN=/etc/pacman.conf 
+
+    sudo sed -i 's/^#*\s*Color\.*/Color/' "$PACMAN"
+    sudo sed -i 's/^#*\s*ParallelDownloads\s*=.*/ParallelDownloads = 5/' "$PACMAN"
+
+
+}
+
+install_and_setup_networkmanager() {
+    pac networkmanager network-manager-applet
+
+    sudo systemctl enable NetworkManager.service
+    sudo systemctl start Networkmanager.service
+
+    # DNS Configuration         https://www.dnsleaktest.com/ 
+    set_dns() {
+        local conn_name=$1
+        local ipv4_dns_servers="8.8.8.8, 8.8.4.4"
+        local ipv6_dns_servers="2001:4860:4860::8888, 2001:4860:4860::8844"
+
+        # IPv4
+        nmcli connection modify "$conn_name" ipv4.dns "$ipv4_dns_servers"
+        nmcli connection modify "$conn_name" ipv4.ignore-auto-dns yes
+
+        # IPv6
+        nmcli connection modify "$conn_name" ipv6.dns "$ipv6_dns_servers"
+        nmcli connection modify "$conn_name" ipv6.ignore-auto-dns yes
+
+        nmcli connection up "$conn_name"
+
+        echo "Servers for '$conn_name' set to IPv4: '$ipv4_dns_servers', IPv6: '$ipv6_dns_servers'"
+    }
+
+
+    ## TODO: Check wired connection
+    active_connect=$( nmcli -t -f NAME,TYPE connection show --active | grep -v '^lo:' | awk -F':' '{print $1}')
+
+
+    if [ -z "$active_connect" ]; then
+        echo "No active connection"
+        exit 1
+    else
+        echo "Active connection: $active_connect"
+        set_dns "$active_connect"
+    fi
+
+    sudo ln -sf /run/NetworkManager/resolv.conf /etc/resolv.conf
+
+    # Mirrors     https://wiki.archlinux.org/title/General_recommendations#Mirrors 
+}
+
 
 install_graphics_drivers22222() {
 
@@ -126,44 +185,14 @@ install_graphics_drivers22222() {
     pac vulkan-intel vulkan-mesa-layers
     pac libva-utils
 
+    # https://wiki.archlinux.org/title/CPU_frequency_scaling#Userspace_tools
+
     # NVIDIA
     pac linux-headers
     yay -S --needed nvidia-beta-dkms nvidia-utils-beta nvidia-settings-beta opencl-nvidia-beta
     pac vulkan-icd-loader vulkan-tools
     yay -S --needed vulkan-caps-viewer-wayland
     pac nvtop nvidia-prime vdpauinfo
-    par wlroots-nvidia
-
-    # Grub
-    GRUB=/etc/default/grub
-
-    ## GRUB_CMDLINE_LINUX_DEFAULT
-    sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="[^"]*"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet rd.driver.blacklist=nouveau nvidia-drm.modeset=1 nvidia-drm.fbdev=1"/' "$GRUB"
-
-    sudo grub-mkconfig -o /boot/grub/grub.cfg
-
-    # mkinitcpio.conf
-    MKINITCPIO=/etc/mkinitcpio.conf
-
-    ## Hooks
-    sudo sed -i 's/^HOOKS=(.*)$/HOOKS=(base udev autodetect microcode modconf keyboard keymap consolefont block filesystems fsck)/' "$MKINITCPIO"
-
-    ## Modules
-    sudo sed -i 's/^MODULES=(.*)/MODULES=(i915 nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' "$MKINITCPIO"
-
-    sudo mkinitcpio -P
-
-
-}
-install_graphics_drivers() {
-    pac clinfo 
-
-    # INTEL
-    pac mesa mesa-utils intel-media-driver intel-gpu-tools intel-compute-runtime libva-utils
-
-    # NVIDIA
-    yay -S --needed nvidia-beta-dkms nvidia-utils-beta nvidia-settings-beta opencl-nvidia-beta
-    pac linux-headers nvtop nvidia-prime vdpauinfo libva-nvidia-driver
     par wlroots-nvidia
 
     # Grub
@@ -211,26 +240,34 @@ main() {
 	# install_packages 2>&1 | tee "$HOME/install_packages.log" 
 	# install_and_setup_neovim 2>&1 | tee "$HOME/install_and_setup_neovim.log" 
 	# install_sway 2>&1 | tee "$HOME/install_sway.log"
-    install_graphics_drivers 2>&1 | tee "$HOME/intel-media-driver.log" 
+    # install_graphics_drivers 2>&1 | tee "$HOME/intel-media-driver.log" 
+    # setup_pacman
 
     # fc-cache -rv
-    sudo pacman -Syu --noconfirm
-    
-    sudo systemctl enable NetworkManager
-    sudo systemctl start NetworkManager
+    # sudo pacman -Syu --noconfirm
+    # 
+    # sudo systemctl enable NetworkManager
+    # sudo systemctl start NetworkManager
+    #
+    # systemctl --user enable pulseaudio
+    # systemctl --user start pulseaudio
+    #
+    # sudo systemctl enable seatd
+    #
+    # sudo systemctl restart systemd-logind
+    #
+    # sudo usermod -aG video,wheel,seat "$USER"
+    #
+    # chsh -s "$(which zsh)"
+    #
+    # echo "Reboot PC"
 
-    systemctl --user enable pulseaudio
-    systemctl --user start pulseaudio
+    # su
+    # [root@archlinux dotfiles]# pacman -Qdtq | pacman -Rs -
+    # sudo pacman -Syu && sudo pacman -Sc
+    # sudo pacman -Rns $(pacman -Qdtq)
 
-    sudo systemctl enable seatd
 
-    sudo systemctl restart systemd-logind
-
-    sudo usermod -aG video,wheel,seat "$USER"
-
-    chsh -s "$(which zsh)"
-
-    echo "Reboot PC"
 }
 
 main
