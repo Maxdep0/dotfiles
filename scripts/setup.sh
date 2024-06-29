@@ -146,7 +146,6 @@ main() {
     mkdir -p "$HOME/Videos"
     mkdir -p "$HOME/.config"
 
-    # Stow .gitconfig
     stow --dir="$DOTFILES" images
     stow --dir="$DOTFILES" sway
     stow --dir="$DOTFILES" waybar
@@ -156,7 +155,7 @@ main() {
     stow --dir="$DOTFILES" ranger
     stow --dir="$DOTFILES" gitconfig
 
-    pac base base-devel polkit sudo nano firefox
+    pac base base-devel archlinux-keyring polkit sudo nano firefox
     pac ninja curl cmake meson wget curl tar unzip zip p7zip
     pac ripgrep fd fzf tree-sitter
     pac zsh wezterm
@@ -177,8 +176,8 @@ main() {
     setup_networkmanager
     install_aux_tools
 
-    yay -S --needed --noconfirm clipman
     nvm install 22
+    yay -S --needed --noconfirm clipman
     yay -S --needed --noconfirm spotify
 
     install_and_setup_neovim
