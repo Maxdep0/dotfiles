@@ -48,7 +48,7 @@ install_packages() {
     pac firefox
 
     # System services and utils
-    pac networkmanager network-manager-applet
+    # pac networkmanager network-manager-applet
     pac pulseaudio pulseaudio-alsa pulseaudio-jack pulseaudio-zeroconf
     pac pavucontrol pamixer playerctl acpi
     pac brightnessctl
@@ -115,27 +115,146 @@ install_sway() {
     sudo sed -i 's/^#*\s*HandlePowerKey\s*=.*/HandlePowerKey=ignore/' /etc/systemd/logind.conf
 }
 
-setup_pacman() {
-    # Cache cleaning
+# setup_pacman() {
+#     # Cache cleaning
+#     pac pacman-contrib
+#
+#     sudo systemctl enable paccache.timer
+#     sudo systemctl start paccache.timer
+#
+#     # Pacman Configuration
+#     PACMAN=/etc/pacman.conf 
+#
+#     sudo sed -i 's/^#*\s*Color\.*/Color/' "$PACMAN"
+# }
+
+
+setup_internet_connection() {
+
+    # PACMAN Configuration
     pac pacman-contrib
 
-    sudo systemctl enable paccache.timer
-    sudo systemctl start paccache.timer
+    PACMAN=/etc/pacman.conf
+    MIRRORS=/etc/pacman.d/mirrorlist
 
-    # Pacman Configuration
-    PACMAN=/etc/pacman.conf 
 
-    sudo sed -i 's/^#*\s*Color\.*/Color/' "$PACMAN"
-    sudo sed -i 's/^#*\s*ParallelDownloads\s*=.*/ParallelDownloads = 5/' "$PACMAN"
+        # Update pacman config
+         sudo sed -i 's/^#*\s*Color\.*/Color/' "$PACMAN"
+        
+
+
+        # Update mirrors
+
+
+
+
+        # Setup cache cleaning
+        sudo systemctl enable paccache.timer
+        sudo systemctl start paccache.timer
+
+
+    # NM Configuration
+    pac networkmanager network-manager-applet
+
+
+    # Move to up config
+
+    sudo systemctl enable NetworkManager
+    sudo systemctl start NetworkManager
+
+        # DNS Configuration      https://www.dnsleaktest.com/
+        set_dns() {
+            local conn_name=$1
+            local ipv4_dns_servers="8.8.8.8, 8.8.4.4"
+            local ipv6_dns_servers="2001:4860:4860::8888, 2001:4860:4860::8844"
+
+            # IPv4
+            nmcli connection modify "$conn_name" ipv4.dns "$ipv4_dns_servers" ipv4.ignore-auto-dns yes
+
+            # IPv6
+            nmcli connection modify "$conn_name" ipv6.dns "$ipv6_dns_servers" ipv6.ignore-auto-dns yes
+
+            nmcli connection up "$conn_name"
+
+        }
+
+        # Get wifi name // TODO: Add wired connection
+        active_connect=$( nmcli -t -f NAME,TYPE connection show --active | grep -v '^lo:' | awk -F':' '{print $1}')
+
+        if [ -z "$active_connect" ]; then
+            echo "No active connection"
+            exit 1
+        else
+            set_dns "$active_connect"
+        fi
+
+        sudo ln -sf /run/NetworkManager/resolv.conf /etc/resolv.conf
+        
+
+        # Update hosts script
+        NM_DISPATCHER=/etc/NetworkManager/dispatcher.d
+        
+            # Move and replace file ======================================================================================
+            sudo mv -f "PATH TO SCRIPTS" "$NM_DISPATCHER"
+
+
+
+
+            sudo chmod +x /etc/NetworkManager/dispatcher.d/99-update-hosts
+
+
+
+    # NFTABLES Configuration
+    pac nftables netcat conntrack-tools
+
+    NFTABLES=/etc/nftables.conf
+
+        # Move and replace file #####################################################################################################################
+        sudo mv -f "PATH TO SCRIPTS" "$NFTABLES"
+
+        sudo systemctl enable nftables
+        sudo systemctl start nftables
+
+        sudo nft -f /etc/nftables.conf
+
+
+
+    # SSHD Configuration
+    SSHD=/etc/ssh/sshd_config
+
+        # Update sssh_config
+        sudo sed -i 's/^#*\s*Port 22\.*/Port 22/' "$SSHD"
+        echo "Port 8080" | sudo tee -a "$SSHD"
+        sudo sed -i 's/^#*\s*PermitRootLogin yes\.*/PermitRootLogin no/' "$SSHD"
+        sudo sed -i 's/^#*\s*PasswordAuthentication yes\.*/PasswordAuthentication no/' "$SSHD"
+        sudo sed -i 's/^#*\s*PubkeyAuthentication yes\.*/PubkeyAuthentication yes/' "$SSHD"
+        sudo sed -i 's/^#*\s*PermitEmptyPasswords no\.*/PermitEmptyPasswords no/' "$SSHD"
+        sudo sed -i 's/^#*\s*X11Forwarding no\.*/X11Forwarding no/' "$SSHD"
+        sudo sed -i 's/^#*\s*AllowTcpForwarding yes\.*/AllowTcpForwarding no/' "$SSHD"
+        sudo sed -i 's/^#*\s*X11Forwarding no\.*/X11Forwarding no/' "$SSHD"
+
+        sudo systemctl enable sshd
+        sudo systemctl start sshd
+
+
+    # Restart services
+    sudo systemctl restart NetworkManager
+    sudo systemctl restart nftables
+    sudo systemctl restart sshd
 
 
 }
+
+
+
+
+
 
 install_and_setup_networkmanager() {
     pac networkmanager network-manager-applet
 
     sudo systemctl enable NetworkManager.service
-    sudo systemctl start Networkmanager.service
+    sudo systemctl start NetworkManager.service
 
     # DNS Configuration         https://www.dnsleaktest.com/ 
     set_dns() {
@@ -144,12 +263,10 @@ install_and_setup_networkmanager() {
         local ipv6_dns_servers="2001:4860:4860::8888, 2001:4860:4860::8844"
 
         # IPv4
-        nmcli connection modify "$conn_name" ipv4.dns "$ipv4_dns_servers"
-        nmcli connection modify "$conn_name" ipv4.ignore-auto-dns yes
+        nmcli connection modify "$conn_name" ipv4.dns "$ipv4_dns_servers" ipv4.ignore-auto-dns yes
 
         # IPv6
-        nmcli connection modify "$conn_name" ipv6.dns "$ipv6_dns_servers"
-        nmcli connection modify "$conn_name" ipv6.ignore-auto-dns yes
+        nmcli connection modify "$conn_name" ipv6.dns "$ipv6_dns_servers" ipv6.ignore-auto-dns yes
 
         nmcli connection up "$conn_name"
 
@@ -242,6 +359,7 @@ main() {
 	# install_sway 2>&1 | tee "$HOME/install_sway.log"
     # install_graphics_drivers 2>&1 | tee "$HOME/intel-media-driver.log" 
     # setup_pacman
+    # install_and_setup_networkmanager
 
     # fc-cache -rv
     # sudo pacman -Syu --noconfirm
@@ -260,7 +378,7 @@ main() {
     #
     # chsh -s "$(which zsh)"
     #
-    # echo "Reboot PC"
+    echo "Reboot PC"
 
     # su
     # [root@archlinux dotfiles]# pacman -Qdtq | pacman -Rs -

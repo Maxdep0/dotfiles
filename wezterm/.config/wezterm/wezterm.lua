@@ -110,8 +110,10 @@ return {
 		ckey("k", "CTRL", a({ SendString = "teeest" })),
 
 		-- Copy/Paste
-		ckey("v", "CTRL|SHIFT", a.PasteFrom("Clipboard")),
-		ckey("c", "CTRL|SHIFT", a.CopyTo("Clipboard")),
+		key("v", "CTRL|SHIFT", a.PasteFrom("Clipboard")),
+		key("c", "CTRL|SHIFT", a.CopyTo("Clipboard")),
+		-- ckey("v", "CTRL|SHIFT", a.PasteFrom("Clipboard")),
+		-- ckey("c", "CTRL|SHIFT", a.CopyTo("Clipboard")),
 
 		-- Scrolling
 		ckey("u", "CTRL", a.ScrollByPage(-1)),
