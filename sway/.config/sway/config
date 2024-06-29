@@ -26,6 +26,8 @@
 
     exec nm-applet &
 
+
+
     # exec /usr/lib/xdg-desktop-portal-wlr
 
 
@@ -40,7 +42,7 @@
 ### Output configuration
 #
 
-output * bg "$HOME/Pictures/img-1.png" fill
+    output * bg "$HOME/Pictures/img-1.png" fill
 
 #
 # You can get the names of your outputs by running: swaymsg -t get_outputs
@@ -128,8 +130,11 @@ output * bg "$HOME/Pictures/img-1.png" fill
     # Open logout menu
     bindsym XF86PowerOff exec bash ~/.config/sway/scripts/logout_menu.sh
 
+    # Satty screenshot
+    bindsym Print exec grim -g "$(slurp -d)" - | satty -f - --output-filename "$HOME/Pictures/$(date '+%d%m%y-%H%M%S').png"
+    bindsym $mod+Print exec grim -g "$(slurp -o -r)" - | satty -f - --output-filename "$HOME/Pictures/$(date '+%d%m%y-%H%M%S').png"
 #
-# Media
+# Audio
 #
 
     # Microphone control
@@ -219,6 +224,10 @@ output * bg "$HOME/Pictures/img-1.png" fill
 
     # Change app launch
     for_window [app_id="pavucontrol"] floating enable
+    # for_window [app_id="satty"] floating enable resize set width 80 ppt height 80 ppt
+    # for_window [app_id="satty"] floating enable resize set width 80 ppt height 80 ppt
+    # for_window [app_id="satty"] floating enable resize set width 80 ppt height 80 ppt
+
 
     # Windows border/gaps
     default_border pixel 2

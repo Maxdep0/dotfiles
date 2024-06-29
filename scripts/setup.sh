@@ -88,7 +88,6 @@ setup_reflector() {
 
 
 install_graphics_drivers() {
-    # pac clinfo vdpauinfo
 
     # INTEL
     pac mesa mesa-utils
@@ -102,7 +101,7 @@ install_graphics_drivers() {
     yay -S --needed nvidia-beta-dkms nvidia-utils-beta nvidia-settings-beta opencl-nvidia-beta
     pac vulkan-icd-loader vulkan-tools
     yay -S --needed vulkan-caps-viewer-wayland
-    pac nvtop nvidia-prime
+    pac nvtop nvidia-prime vdpauinfo clinfo
     par wlroots-nvidia
 
     ## grub
@@ -139,21 +138,9 @@ main() {
 
     pac git stow openssh
 
-    mkdir -p "$HOME/Downloads"
-    mkdir -p "$HOME/Documents"
-    mkdir -p "$HOME/Pictures"
-    mkdir -p "$HOME/Projects"
-    mkdir -p "$HOME/Videos"
-    mkdir -p "$HOME/.config"
+    mkdir -p "$HOME/Downloads" "$HOME/Documents" "$HOME/Pictures" "$HOME/Projects" "$HOME/Videos" "$HOME/.config"
 
-    stow --dir="$DOTFILES" images
-    stow --dir="$DOTFILES" sway
-    stow --dir="$DOTFILES" waybar
-    stow --dir="$DOTFILES" zsh
-    stow --dir="$DOTFILES" wezterm
-    stow --dir="$DOTFILES" htop
-    stow --dir="$DOTFILES" ranger
-    stow --dir="$DOTFILES" gitconfig
+    stow --dir="$DOTFILES" gitconfig htop images satty sway waybar wezterm zsh #ranger
 
     pac base base-devel archlinux-keyring polkit sudo nano firefox
     pac ninja curl cmake meson wget curl tar unzip zip p7zip
@@ -172,19 +159,23 @@ main() {
     pac ttf-jetbrains-mono ttf-nerd-fonts-symbols-mono
     pac discord
 	
+
+    pac grim slurp
+
+
     setup_reflector
     setup_networkmanager
     install_aux_tools
 
     nvm install 22
-    yay -S --needed --noconfirm clipman
-    yay -S --needed --noconfirm spotify
+    yay -S --needed --noconfirm clipman spotify satty
 
     install_and_setup_neovim
     setup_ssh
     setup_nftables_config
 
     pac wayland-protocols sway swaybg swaylock waybar wofi
+
 
     install_graphics_drivers
 
