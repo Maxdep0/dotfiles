@@ -6,6 +6,9 @@ else
     echo "fdfind not installed"
 fi
 
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+
 alias cl="clear"
 
 alias pacpac="sudo pacman -S --needed"
@@ -23,14 +26,11 @@ alias ....="cd ../../.."
 alias .dot="cd ~/.config"
 alias dot="cd ~/dotfiles"
 
-# cd first so i can use telescope
 alias nvimcfg="cd ~/.config/nvim && nvim init.lua"
 alias wtcfg="cd ~/dotfiles/wezterm/.config/wezterm && nvim wezterm.lua"
 alias swaycfg="cd ~/dotfiles/sway/.config/sway && nvim config"
 alias barcfg="cd ~/dotfiles/waybar/.config/waybar && nvim config.jsonc"
 alias zshcfg="cd ~/dotfiles/zsh && nvim .zshrc"
-
-
 
 autoload -Uz compinit
 compinit

@@ -1,16 +1,7 @@
-typeset -U path
-
-add() {
-    if [[ -d "$1" ]]; then
-        path=("$1" $path)
-#    else
-#        echo "$1 does not exist"
-    fi
-}
-
-add "$HOME/bin"
-add "$HOME/.local/bin"
-add "/usr/local/bin"
+export PATH="$HOME/bin":$PATH
+export PATH="$HOME/.local/bin":$PATH
+export PATH="/usr/bin":$PATH
+export PATH="/usr/local/bin":$PATH
 
 export SHELL=/usr/bin/zsh
 
