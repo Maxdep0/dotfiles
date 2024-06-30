@@ -158,6 +158,8 @@ main() {
     pac ttf-dejavu ttf-liberation
     pac ttf-jetbrains-mono ttf-nerd-fonts-symbols-mono
     pac discord
+
+    pac mpv feh
 	
 
     pac grim slurp

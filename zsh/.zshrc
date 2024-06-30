@@ -32,6 +32,9 @@ alias swaycfg="cd ~/dotfiles/sway/.config/sway && nvim config"
 alias barcfg="cd ~/dotfiles/waybar/.config/waybar && nvim config.jsonc"
 alias zshcfg="cd ~/dotfiles/zsh && nvim .zshrc"
 
+alias play="prime-run mpv --hwdec=nvdec --vo=gpu --gpu-context=wayland --video-sync=display-resample --interpolation --framedrop=vo"
+alias img="feh"
+
 autoload -Uz compinit
 compinit
 zstyle ':completion:*' menu select 
