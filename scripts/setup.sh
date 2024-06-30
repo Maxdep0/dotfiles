@@ -8,7 +8,7 @@ CONFIG="$HOME/.config"
 
 
 pac() { sudo pacman -S --needed --noconfirm "$@"; }
-par() { paru -S --needed --noconfirm "$@"; }
+# par() { paru -S --needed --noconfirm "$@"; }
 cmd_check() { command -v "$1" >/dev/null 2>&1; }
 
 install_aux_tools() {
@@ -73,6 +73,8 @@ setup_networkmanager() {
     sudo rm -rf "$NETWORKMANAGER/dispatcher.d/99-update-dns.sh" "$NETWORKMANAGER/dispatcher.d/99-update-hosts.sh"
     sudo stow --dir="$CONFIG_FILES" --target="$NETWORKMANAGER/dispatcher.d" networkmanager
 
+    sudo chown root:root /etc/NetworkManager/dispatcher.d/99-update-hosts.sh
+    sudo chown root:root /etc/NetworkManager/dispatcher.d/99-update-dns.sh
     sudo chmod +x /etc/NetworkManager/dispatcher.d/99-update-dns.sh
     sudo chmod +x /etc/NetworkManager/dispatcher.d/99-update-hosts.sh
 }
@@ -94,7 +96,7 @@ install_graphics_drivers() {
     pac intel-media-driver intel-gpu-tools intel-compute-runtime
     pac vulkan-intel vulkan-mesa-layers
     pac libva-utils
-    yay -S -needed auto-cpufreq
+    yay -S --needed auto-cpufreq # Interactive install
 
     # NVIDIA
     pac linux-headers
@@ -102,7 +104,7 @@ install_graphics_drivers() {
     pac vulkan-icd-loader vulkan-tools
     yay -S --needed vulkan-caps-viewer-wayland
     pac nvtop nvidia-prime vdpauinfo clinfo
-    par wlroots-nvidia
+    paru -S --needed wlroots-nvidia # Interactive install
 
     ## grub
     sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="[^"]*"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet rd.driver.blacklist=nouveau nvidia-drm.modeset=1 nvidia-drm.fbdev=1"/' "/etc/default/grub"
@@ -153,7 +155,7 @@ main() {
     pac brightnessctl
     pac python python-pip python-pynvim luarocks jdk-openjdk lua51
     pac ranger htop neofetch
-    pac firefox
+   # pac firefox
     pac noto-fonts noto-fonts-emoji noto-fonts-extra
     pac ttf-dejavu ttf-liberation
     pac ttf-jetbrains-mono ttf-nerd-fonts-symbols-mono
@@ -170,7 +172,8 @@ main() {
     install_aux_tools
 
     nvm install 22
-    yay -S --needed --noconfirm clipman spotify satty
+    yay -S --needed --noconfirm clipman satty
+    yay -S --needed spotify # Interactive install
 
     install_and_setup_neovim
     setup_ssh
@@ -183,20 +186,17 @@ main() {
 
     sudo pacman -Syu --noconfirm
    
-
-    chsh -s "$(which zsh)"
-
     fc-cache -rv
 
     sudo sed -i 's/^#*\s*Color\.*/Color/' "/etc/pacman.conf"
     sudo sed -i 's/^#*\s*HandlePowerKey\s*=.*/HandlePowerKey=ignore/' /etc/systemd/logind.conf
 
- #    # screenshot tool
     
     sudo systemctl --user enable --now pulseaudio
 
     sudo systemctl enable --now reflector.timer
     sudo systemctl enable --now NetworkManager
+    sudo systemctl enable --now NetworkManager-dispatcher.service
     sudo systemctl enable --now seatd
     sudo systemctl enable --now paccache.timer
 
@@ -205,10 +205,15 @@ main() {
     sudo systemctl restart nftables
     sudo systemctl restart sshd
     sudo systemctl restart systemd-logind
+    sudo systemctl daemon-reload
+
+
     sudo systemctl restart NetworkManager
 
-    sudo systemctl daemon-reload
+    chsh -s "$(which zsh)"
 
    printf "\n\n DONE! REBOOT PC \n\n" 
 
 }
+
+main

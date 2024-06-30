@@ -13,7 +13,7 @@ set_dns() {
     # IPv6
     nmcli connection modify "$conn_name" ipv6.dns "$ipv6_dns_servers" ipv6.ignore-auto-dns yes
 
-    nmcli connection up "$conn_name"
+    ## nmcli connection up "$conn_name"
 }
 
 ACTION=$2
@@ -28,6 +28,6 @@ if [ "$ACTION" = "up" ]; then
         set_dns "$active_connect"
     fi
 
-    sudo ln -sf /run/NetworkManager/resolv.conf /etc/resolv.conf
+   sudo ln -sf /run/NetworkManager/resolv.conf /etc/resolv.conf
 fi
 
