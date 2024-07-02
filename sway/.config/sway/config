@@ -1,184 +1,102 @@
 # Read `man 5 sway` for a complete reference.
 
-### Variables
+#
+# Run
+#
+
+    exec nm-applet &
+    exec --no-startup-id wpaperd -d
+    exec --no-startup-id wl-paste -t text --watch clipman store --no-persist
+    exec --no-startup-id pamixer --set-volume 10
+
+#
+# Variables
 #
 
     set $mod Mod4
 
-    # Navigation
     set $left h
     set $down j
     set $up k
     set $right l
 
-    # Terminal
-    set $term wezterm
+    set $terminal wezterm
+    set $launcher wofi --show drun
+    set $screenshot grim -g "$(slurp -d)" - | satty -f - --output-filename "$HOME/Pictures/$(date '+%d%m%y-%H%M%S').png"
+    set $fullscreenshot grim -g "$(slurp -o -r)" - | satty -f - --output-filename "$HOME/Pictures/$(date '+%d%m%y-%H%M%S').png"
 
-    # Launcher
-    set $menu wofi --show drun
-
-    # Workspaces name
-    set $ws1 1:web
-    set $ws2 2:term
+    set $ws1 1
+    set $ws2 2
     set $ws3 3
     set $ws4 4
-    set $ws5 5:media
+    set $ws5 5
 
-    exec nm-applet &
-
-
-
-    # exec /usr/lib/xdg-desktop-portal-wlr
-
-
-    exec wl-paste -t text --watch clipman store --no-persist
-
-    # exec_always --no-startup-id swaymsg "workspace $ws1; pgrep firefox || exec firefox"
-    # exec_always --no-startup-id swaymsg "workspace $ws2; pgrep wezterm || exec wezterm"
-
-    exec_always --no-startup-id pamixer --set-volume 10
-    # exec_always --no-startup-id nvidia-settings --assign CurrentMetaMode="nvidia-auto-select +0+0 { ForceCompositionPipeline = On }"
-
-### Output configuration
-#
-
-    output * bg "$HOME/Pictures/img-1.png" fill
+    set $monitor1 'LG Display 0x0701 Unknown'
+    set $monitor2 'AOC U28G2XU2 1322131231233'
+    # set $monitor3CZ '.....'
 
 #
-# You can get the names of your outputs by running: swaymsg -t get_outputs
+# Binds
 #
 
-
-    output 'LG Display 0x0701 Unknown' {
-        mode 1920x1200@60.001Hz 
-        position 0,0
-        # adaptive_sync enabled
-        max_render_time 35
-    }
-
-    output 'AOC U28G2XU2 1322131231233' {
-        mode 3840x2160@143.856Hz 
-        position 1920,0
-        adaptive_sync enabled
-        max_render_time 1 
-    }
-
-### Idle configuration
-#
-# Example configuration:
-#
-# exec swayidle -w \
-#          timeout 300 'swaylock -f -c 000000' \
-#          timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-#          before-sleep 'swaylock -f -c 000000'
-#
-# This will lock your screen after 300 seconds of inactivity, then turn off
-# your displays after another 300 seconds, and turn your screens back on when
-# resumed. It will also lock your screen before your computer goes to sleep.
-
-### Input configuration
-#
-
-#
-# Read `man 5 sway-input` for more information about this section.
-#
-
-    input type:keyboard {
-        xkb_layout us 
-        repeat_delay 200
-        repeat_rate 30
-        xkb_options "caps:escape"
-    }
-
-    input type:pointer {
-        accel_profile flat
-        pointer_accel 0.5
-        # natural_scroll enabled
-        # middle_emulation enabled
-        scroll_method "on_button_down"
-    }
-
-    input type:touchpad {
-        accel_profile adaptive
-        # natural_scroll enabled
-        middle_emulation enabled
-        dwt enabled
-        tap enabled
-    }
-
-    
-
-### Key bindings
-#
-# Basics:
-#
-    # Start a terminal
-    bindsym $mod+Return exec $term
-
-    # Kill focused window
     bindsym $mod+Shift+q kill
-
-    # Start your launcher
-    bindsym $mod+d exec $menu
-
-    # Reload the configuration file
     bindsym $mod+Shift+c reload
+    bindsym $mod+f fullscreen
 
-    # Exit sway (logs you out of your Wayland session)
-    bindsym $mod+Shift+e exec swaynag -t warning -m 'Do you really want to exit?' -B 'Yes, exit sway' 'swaymsg exit'
+    #
+    # System binds
+    #
 
-    # Open logout menu
-    bindsym XF86PowerOff exec bash ~/.config/sway/scripts/logout_menu.sh
+    # Open
+    bindsym $mod+Return exec $terminal
+    bindsym $mod+d exec $launcher
 
     # Satty screenshot
-    bindsym Print exec grim -g "$(slurp -d)" - | satty -f - --output-filename "$HOME/Pictures/$(date '+%d%m%y-%H%M%S').png"
-    bindsym $mod+Print exec grim -g "$(slurp -o -r)" - | satty -f - --output-filename "$HOME/Pictures/$(date '+%d%m%y-%H%M%S').png"
-#
-# Audio
-#
+    bindsym Print exec $screenshot
+    bindsym $mod+Print exec $fullscreenshot
 
-    # Microphone control
+    # Mic
     bindsym XF86AudioMicMute exec pamixer --default-source --toggle-mute
 
-    # Volume control using pamixer
+    # Volume
     bindsym XF86AudioRaiseVolume exec pamixer -i 5
     bindsym XF86AudioLowerVolume exec pamixer -d 5
     bindsym XF86AudioMute exec pamixer -t
 
-    # Media playback control using playerctl
+    # play/next/prev/stop
     bindsym XF86AudioPlay exec playerctl play-pause
     bindsym XF86AudioNext exec playerctl next
     bindsym XF86AudioPrev exec playerctl previous
     bindsym XF86AudioStop exec playerctl stop
 
-#
-# Display
-#
-
     # Brightness
     bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +5%
     bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
 
+    # Logout menu
+    bindsym XF86PowerOff exec bash ~/.config/sway/scripts/logout_menu.sh
 
-#
-# Moving around:
-#
+    #
+    # Windows Management binds
+    #
+
+    # Scratchpad
+    bindsym $mod+Shift+minus move scratchpad
+    bindsym $mod+minus scratchpad show
+
     # Move your focus around
-    bindsym $mod+$left focus left
-    bindsym $mod+$down focus down
-    bindsym $mod+$up focus up
+    bindsym $mod+$left  focus left
+    bindsym $mod+$down  focus down
+    bindsym $mod+$up    focus up
     bindsym $mod+$right focus right
 
     # Move the focused window with the same, but add Shift
-    bindsym $mod+Shift+$left move left
-    bindsym $mod+Shift+$down move down
-    bindsym $mod+Shift+$up move up
-    bindsym $mod+Shift+$right move right
-#
-# Workspaces:
-#
-
+    bindsym $mod+Shift+$left  move left 30 px
+    bindsym $mod+Shift+$down  move down 30 px
+    bindsym $mod+Shift+$up    move up 30 px
+    bindsym $mod+Shift+$right move right 30 px
     
+
     # Switch to workspace
     bindsym $mod+y workspace number $ws1
     bindsym $mod+u workspace number $ws2
@@ -193,81 +111,160 @@
     bindsym $mod+Shift+o move container to workspace number $ws4
     bindsym $mod+Shift+p move container to workspace number $ws5
 
-#
-# Layout stuff:
-#
-    # You can "split" the current object of your focus with
-    # $mod+b or $mod+v, for horizontal and vertical splits
+    # Split horizontal/vertical
     bindsym $mod+b splith
     bindsym $mod+v splitv
 
     # Switch the current container between different layout styles
-    bindsym $mod+s layout stacking
     bindsym $mod+w layout tabbed
     bindsym $mod+e layout toggle split
 
-    # Make the current focus fullscreen
-    bindsym $mod+f fullscreen
-
-    # Toggle the current focus between tiling and floating mode
+    # Toggle floating/change focus
     bindsym $mod+Shift+space floating toggle
+    bindsym $mod+space       focus mode_toggle
 
-    # Swap focus between the tiling area and the floating area
-    bindsym $mod+space focus mode_toggle
+    # Modes
+    bindsym $mod+r mode "resize"
 
-    # Move focus to the parent container
-    # bindsym $mod+a focus parent
+#
+# Output/Input
+#
 
-    # Assign clients to specific workspace
+    #
+    # Output
+    #
+
+    output $monitor1 {
+        mode 1920x1200@60.001Hz 
+        adaptive_sync enabled
+        max_render_time 1
+        position 0,0
+        scale 1
+    }
+
+    output $monitor2 {
+        mode 3840x2160@143.856Hz 
+        adaptive_sync enabled
+        max_render_time 1 
+        position 1920,0
+        scale_filter smart
+        scale 1.1
+    }
+
+    # output $monitor3CZ {
+    #     mode 3840x2160@143.856Hz 
+    #     adaptive_sync enabled
+    #     max_render_time 1 
+    #     position 1920,0
+    #     scale_filter smart
+    #     scale 1.1
+    # }
+
+    #
+    # Input
+    #
+
+    input type:keyboard {
+        xkb_layout us 
+        repeat_delay 200
+        repeat_rate 30
+        xkb_options "caps:escape"
+    }
+
+    input type:pointer {
+        accel_profile flat
+        pointer_accel 0.5
+        scroll_method "on_button_down"
+    }
+
+    input type:touchpad {
+        accel_profile adaptive
+        middle_emulation enabled
+        dwt enabled
+        tap enabled
+    }
+
+#
+# Workspaces/Windows/Layouts:
+#
+
+    #
+    # Workspaces
+    #
+
+    # Workspace monitor priority
+    workspace $ws1 output $monitor1 $monitor2
+    workspace $ws2 output $monitor2 $monitor1
+    workspace $ws3 output $monitor2 $monitor1
+    workspace $ws4 output $monitor2 $monitor1
+    workspace $ws5 output $monitor2 $monitor1
+
+    #
+    # App settings
+    #
+
+    # Assign apps to specific workspace
     for_window [class="discord"] move container to workspace $ws5
     for_window [class="Spotify"] move container to workspace $ws5
 
-    # Change app launch
-    for_window [app_id="pavucontrol"] floating enable
-    for_window [class="feh"] floating enable
-    # for_window [app_id="satty"] floating enable resize set width 80 ppt height 80 ppt
-    # for_window [app_id="satty"] floating enable resize set width 80 ppt height 80 ppt
-    # for_window [app_id="satty"] floating enable resize set width 80 ppt height 80 ppt
+    # Change default startup
+    for_window [app_id="pavucontrol"]          floating enable, resize set 800 px 600 px
+    for_window [app_id="nm-connection-editor"] floating enable, resize set 400 px 400 px
+    for_window [class="feh"]                   floating enable, resize set  80 ppt 80 ppt
 
+    #
+    # Layout Settings
+    #
 
-    # Windows border/gaps
-    default_border pixel 2
+    floating_maximum_size 1880 x 1140
+    floating_minimum_size 800 x 600
     default_floating_border pixel 1
-    gaps inner 3
-#
-# Scratchpad:
-#
+    default_border pixel 1
 
-    bindsym $mod+Shift+minus move scratchpad
-    bindsym $mod+minus scratchpad show
+    workspace_auto_back_and_forth yes
+    smart_borders on
+    smart_gaps on
+    
+    workspace $ws1 gaps inner 0
+    workspace $ws1 gaps outer 0
 
-#
-# Resizing containers:
-#
-mode "resize" {
-    bindsym $left resize shrink width 10px
-    bindsym $down resize grow height 10px
-    bindsym $up resize shrink height 10px
-    bindsym $right resize grow width 10px
-
-
-    # Return to default mode
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-    bindsym $mod+r mode "default"
-}
-
-bindsym $mod+r mode "resize"
+    workspace $ws2 gaps inner 30
+    workspace $ws2 gaps vertical -10
+    workspace $ws2 gaps horizontal -10
 
 #
-# Status Bar:
+# Modes:
 #
-# Read `man 5 sway-bar` for more information about this section.
+
+    #
+    # Resizing
+    #
+
+    mode "resize" {
+        bindsym $left resize shrink width 10px
+        bindsym $down resize grow height 10px
+        bindsym $up resize shrink height 10px
+        bindsym $right resize grow width 10px
+
+        bindsym $mod+$left resize shrink width 20px
+        bindsym $mod+$down resize grow height 20px
+        bindsym $mod+$up resize shrink height 20px
+        bindsym $mod+$right resize grow width 20px
+
+        # Return to default mode
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
+    }
+
+
+
+
+#######################################################
+
 bar {
     status_command waybar
     mode invisible
 }
 
-
-# include /etc/sway/config.d/*
 

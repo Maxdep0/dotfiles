@@ -44,11 +44,22 @@ return {
 
 	window_padding = { left = 0, right = 0, top = 0, bottom = 0 },
 
-	use_fancy_tab_bar = true,
+	-- automatically_reload_config = false,
+	use_fancy_tab_bar = false,
 
 	max_fps = 144,
 
 	hide_tab_bar_if_only_one_tab = true,
+
+	colors = {
+		tab_bar = {
+			background = "rgba(0,0,0,0.6)",
+		},
+	},
+
+	-- tab_bar = {
+	-- 	background = "rgba(0,0,0,0)",
+	-- },
 
 	keys = {
 
@@ -107,7 +118,7 @@ return {
 		key("-", "CTRL|ALT", a.DecreaseFontSize),
 		key("0", "CTRL|ALT", a.ResetFontSize),
 
-		ckey("k", "CTRL", a({ SendString = "teeest" })),
+		-- ckey("k", "CTRL", a({ SendString = "teeest" })),
 
 		-- Copy/Paste
 		key("v", "CTRL|SHIFT", a.PasteFrom("Clipboard")),

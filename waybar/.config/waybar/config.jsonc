@@ -1,4 +1,6 @@
 {
+    "mode": "dock",
+    "position": "top",
     "modules-left": [
         "sway/workspaces",
         "sway/mode",
@@ -19,9 +21,9 @@
     "sway/workspaces": {
         "format": "{icon}",
         "format-icons": {
-            "1:web": "",
-            "2:term": "",
-            "5:media": ""
+            "1": "",
+            "2": "",
+            "5": ""
         }
     },
     "sway/window": {
