@@ -50,14 +50,55 @@ setopt BG_NICE
 setopt LONG_LIST_JOBS
 setopt NOTIFY
 
+# Prompting
+setopt PROMPT_SUBST
+
 # Zle
 setopt COMBINING_CHARS
 setopt VI
 setopt ZLE
 
+#
+# https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html 
+#
+
+autoload -Uz vcs_info
+
+precmd() { vcs_info; }
+zstyle ':vcs_info:git:*' formats '%F{yellow} %b%f'
+zstyle ':vcs_info:*' enable git
+
+RPROMPT='%(?..%F{red}%f)'
+PROMPT='%B%F{cyan}%~%f%b ${vcs_info_msg_0_}%B%F{white}>%f%b '
 
 
 
+
+############################
+
+
+
+
+
+
+
+
+####################
+# autoload -Uz vcs_info
+#
+# zstyle ':vcs_info:git:*' formats '%F{yellow}%b%f'
+# precmd() { vcs_info }
+#
+# PROMPT='%F{blue}%~%f ${vcs_info_msg_0_}   '
+
+
+# PROMPT='%n@%m:%~%# '
+# PROMPT='%~%ea  :   ) '
+
+
+#
+#
+#
 
 # autoload -U colors && colors
 
