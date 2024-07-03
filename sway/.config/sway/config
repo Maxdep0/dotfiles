@@ -31,9 +31,9 @@
     set $ws4 4
     set $ws5 5
 
-    set $monitor1 'LG Display 0x0701 Unknown'
-    set $monitor2 'AOC U28G2XU2 1322131231233'
-    # set $monitor3CZ '.....'
+    set $laptop_monitor 'LG Display 0x0701 Unknown'
+    set $monitor_uk 'AOC U28G2XU2 1322131231233'
+    # set $monitor_cz '.....'
 
 #
 # Binds
@@ -134,7 +134,7 @@
     # Output
     #
 
-    output $monitor1 {
+    output $laptop_monitor {
         mode 1920x1200@60.001Hz 
         adaptive_sync enabled
         max_render_time 1
@@ -142,7 +142,7 @@
         scale 1
     }
 
-    output $monitor2 {
+    output $monitor_uk {
         mode 3840x2160@143.856Hz 
         adaptive_sync enabled
         max_render_time 1 
@@ -151,7 +151,7 @@
         scale 1.1
     }
 
-    # output $monitor3CZ {
+    # output $monitor_cz {
     #     mode 3840x2160@143.856Hz 
     #     adaptive_sync enabled
     #     max_render_time 1 
@@ -193,11 +193,11 @@
     #
 
     # Workspace monitor priority
-    workspace $ws1 output $monitor1 $monitor2
-    workspace $ws2 output $monitor2 $monitor1
-    workspace $ws3 output $monitor2 $monitor1
-    workspace $ws4 output $monitor2 $monitor1
-    workspace $ws5 output $monitor2 $monitor1
+    workspace $ws1 output $laptop_monitor $monitor_uk
+    workspace $ws2 output $monitor_uk $laptop_monitor
+    workspace $ws3 output $monitor_uk $laptop_monitor
+    workspace $ws4 output $monitor_uk $laptop_monitor
+    workspace $ws5 output $monitor_uk $laptop_monitor
 
     #
     # App settings
@@ -221,7 +221,7 @@
     default_floating_border pixel 1
     default_border pixel 1
 
-    workspace_auto_back_and_forth yes
+    # workspace_auto_back_and_forth yes
     smart_borders on
     smart_gaps on
     
@@ -231,6 +231,10 @@
     workspace $ws2 gaps inner 30
     workspace $ws2 gaps vertical -10
     workspace $ws2 gaps horizontal -10
+
+    workspace $ws5 gaps inner 30
+    workspace $ws5 gaps vertical -10
+    workspace $ws5 gaps horizontal -10
 
 #
 # Modes:
