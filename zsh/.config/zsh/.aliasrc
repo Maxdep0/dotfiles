@@ -1,0 +1,57 @@
+echo "6. aliases"
+alias cl="clear"
+alias ls="ls -a --color=auto"
+
+if [[ -f "/usr/bin/fd" ]] || [[ -f "$HOME/bin/fd" ]] || [[ -f "$HOME/.local/bin/fd" ]]; then
+    alias fdf='fd -H -d 1 -t f'
+    alias fdd='fd -H -d 1 -t d'
+    alias fda='fd -H -d 1'
+fi
+
+#   Directory stacking - use d and then index
+alias d="dirs -v"
+for index ({1..9}) alias "$index"="cd +${index}"; unset index
+
+
+#   Pacman
+alias paci="sudo pacman -S --needed"
+alias pacl="sudo pacman -Ql"
+alias pacs="sudo pacman -Ss"
+alias pacr="sudo pacman -Rns"
+alias paclock="sudo rm /var/lib/pacman/db.lck"
+alias pacclean="sudo pacman -Sc"
+
+#   Yayy
+alias yayi="yay -S --needed"
+alias yayr="yay -Rns"
+
+#   git
+alias gs="git status"
+alias gss="git status -s"
+alias gc="git commit -m"
+alias gf="git diff"
+alias glog="git log --graph --abbrev-commit --oneline --decorate"
+
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+
+#   Grep
+alias grep="grep -P -i --color=auto"
+
+#   Folders/Files
+alias .dot="cd ~/.config"
+alias dot="cd ~/dotfiles"
+alias nvimc="cd ~/.config/nvim && nvim init.lua"
+alias wtc="cd ~/dotfiles/wezterm/.config/wezterm && nvim wezterm.lua"
+alias swayc="cd ~/dotfiles/sway/.config/sway && nvim config"
+alias barc="cd ~/dotfiles/waybar/.config/waybar && nvim config.jsonc"
+alias zshc="cd ~/dotfiles/zsh/.config/zsh && nvim .zshrc"
+
+#   Media
+alias play="prime-run mpv --hwdec=nvdec --vo=gpu --gpu-context=wayland --video-sync=display-resample --interpolation --framedrop=vo"
+alias img="feh"
+
+
+################
+alias ft="ranger"
