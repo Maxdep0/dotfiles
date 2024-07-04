@@ -37,6 +37,7 @@ export HISTFILE="$XDG_CACHE_HOME/zsh/.zhistory"
 export HISTSIZE=10000
 export SAVEHIST=10000
 export KEYTIMEOUT=1
+skip_global_compinit=1
 
 #   NPM
 export NVM_DIR="$HOME/.nvm"

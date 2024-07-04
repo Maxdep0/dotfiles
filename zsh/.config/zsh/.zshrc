@@ -1,3 +1,6 @@
+export ZSH_COMPDUMP="$HOME/.zcompdump"
+
+
 # For initial linux setup
 [ ! -d "$HOME/.config/zsh" ] && mkdir -pv "$HOME/.config/zsh"
 [ ! -d "$XDG_CACHE_HOME/zsh" ] && mkdir -pv "$XDG_CACHE_HOME/zsh" 
@@ -13,12 +16,6 @@ fi
 
 # NVM
 [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh" || echo "NVM Not Found" 
-
-# Bash Completions
-[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion" || echo "Bash Completions Not Found" 
-
-# DKMS Completions
-[ -s "/usr/share/bash-completion/completions/dkms" ] && source "/usr/share/bash-completion/completions/dkms"|| echo "DKMS Completions Not Found"
 
 # Colors
 [ -s "$ZDOTDIR/src/.dircolors" ] && eval "$(dircolors -b $ZDOTDIR/src/.dircolors)" || echo "Dircolors Not Found" 
@@ -177,14 +174,18 @@ source <(fzf --zsh)
 bindkey -s '^F' "source $ZDOTDIR/scripts/fzf-fd.sh\n"
 bindkey -s '^G' "source $ZDOTDIR/scripts/fzf-rg.sh\n"
 
-autoload -Uz compinit; compinit -d "$XDG_CACHE_HOME/zsh/.zcompdump"
+autoload -Uz compinit
+compinit -d "$XDG_CACHE_HOME/zsh/.zcompdump_${ZSH_VERSION}"
+autoload -Uz bashcompinit; bashcompinit 
 autoload -U colors; colors
-autoload -Uz bashcompinit; bashcompinit
+
+[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion" || echo "Bash Completions Not Found" 
+
 
 _comp_options+=(globdots)
 
 zstyle ":completion:*" use-cache on
-zstyle ":completion:*" cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
+zstyle ":completion:*" cache-path "$XDG_CACHE_HOME/zsh/.zcompcache_{$ZSH_VERSION}"
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' completer _list _expand _complete _ignored _match _correct _approximate _prefix _extensions _files
 zstyle ':completion:*' expand prefix suffix
