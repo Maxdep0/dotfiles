@@ -1,4 +1,5 @@
-echo "6. aliases"
+alias so="source $HOME/.zshenv"
+
 alias cl="clear"
 alias ls="ls -a --color=auto"
 
@@ -23,6 +24,7 @@ alias pacclean="sudo pacman -Sc"
 
 #   Yayy
 alias yayi="yay -S --needed"
+alias yays="yay -Ss"
 alias yayr="yay -Rns"
 
 #   git

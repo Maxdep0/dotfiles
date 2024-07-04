@@ -29,11 +29,6 @@ fi
 # Aliases
 [ -s "$ZDOTDIR/.aliasrc" ] && source "$ZDOTDIR/.aliasrc" || echo "Aliases not found" 
 
-
-
-
-
-
 #
 # http://zsh.sourceforge.net/Doc/Release/Options.html 
 #
@@ -100,11 +95,14 @@ setopt ZLE
 
 autoload -Uz vcs_info
 
-precmd() { vcs_info; }
+precmd() {
+  vcs_info
+  [[ $? -eq 0 ]] && RPROMPT="%F{green}( ͡° ͜ʖ ͡°)%f" || RPROMPT="%F{red}¯\(°_o)/¯%f"
+}
+
 zstyle ':vcs_info:git:*' formats '%F{yellow} %b%f'
 zstyle ':vcs_info:*' enable git
 
-precmd() { [[ $? -eq 0 ]] && RPROMPT="%F{green}( ͡° ͜ʖ ͡°)%f" || RPROMPT="%F{red}¯\(°_o)/¯%f" }
 PROMPT='%B%F{cyan}%~%f%b ${vcs_info_msg_0_}%B%F{white}>%f%b '
 
 #
@@ -166,6 +164,12 @@ bindkey -M menuselect "j" vi-down-line-or-history
 bindkey -M menuselect "l" vi-forward-char
 bindkey -M menuselect "^I" accept-line
 bindkey -M menuselect "^K" send-break
+
+# Fzf
+source <(fzf --zsh)
+
+bindkey -s '^F' "source $ZDOTDIR/scripts/fzf-fd.sh\n"
+bindkey -s '^G' "source $ZDOTDIR/scripts/fzf-rg.sh\n"
 
 autoload -Uz compinit; compinit -d "$XDG_CACHE_HOME/zsh/.zcompdump"
 autoload -U colors; colors

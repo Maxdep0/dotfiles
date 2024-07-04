@@ -127,8 +127,8 @@ use_fancy_tab_bar = false,
 		-- ckey("c", "CTRL|SHIFT", a.CopyTo("Clipboard")),
 
 		-- Scrolling
-		ckey("u", "CTRL", a.ScrollByPage(-1)),
-		ckey("d", "CTRL", a.ScrollByPage(1)),
+		-- ckey("u", "CTRL", a.ScrollByPage(-1)),
+		-- ckey("d", "CTRL", a.ScrollByPage(1)),
 
 		-- Tabs/Panes
 		ckey("w", "ALT", a.CloseCurrentPane({ confirm = true })),
