@@ -95,10 +95,16 @@ setopt ZLE
 
 autoload -Uz vcs_info
 
-precmd() {
+vcs_info_precmd() {
   vcs_info
+}
+
+rprompt_precmd() {
   [[ $? -eq 0 ]] && RPROMPT="%F{green}( ͡° ͜ʖ ͡°)%f" || RPROMPT="%F{red}¯\(°_o)/¯%f"
 }
+
+add-zsh-hook precmd vcs_info_precmd
+add-zsh-hook precmd rprompt_precmd
 
 zstyle ':vcs_info:git:*' formats '%F{yellow} %b%f'
 zstyle ':vcs_info:*' enable git
