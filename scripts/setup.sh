@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 
 CONFIG_FILES="$HOME/dotfiles/scripts/configs"
 
@@ -27,15 +27,11 @@ install_aux_tools() {
 
     if ! cmd_check paru; then
         git clone https://aur.archlinux.org/paru.git "$DOWNLOADS/paru"
-        cd "$DOWNLOADS/paru" && makepkg -si --needed --noconfirm && cd "$HOME"
+        cd "$DOWNLOADS/paru" && makepkg -si --needed --noconfirm && cd "$HOME"                                                         
         rm -rf "$DOWNLOADS/paru"
     fi
 
-    if ! cmd_check oh-my-posh; then
-        sudo curl -s https://ohmyposh.dev/install.sh | sudo bash -s
-    fi
 }
-
 setup_ssh() {
     if [[ -f "/etc/ssh/sshd_config" ]]; then
         sudo sed -i \
@@ -120,6 +116,8 @@ install_graphics_drivers() {
     sudo mkinitcpio -P
 
     systemctl enable --now auto-cpufreq
+
+    sudo auto-cpufreq --install
 }
 
 install_and_setup_neovim() {
@@ -140,13 +138,22 @@ main() {
 
     pac git stow openssh
 
-    mkdir -p "$HOME/Downloads" "$HOME/Documents" "$HOME/Pictures" "$HOME/Projects" "$HOME/Videos" "$HOME/.config"
+    mkdir -pv "$HOME/Downloads"
+    mkdir -pv "$HOME/Documents"
+    mkdir -pv "$HOME/Pictures/Background"
+    mkdir -pv "$HOME/Projects"
+    mkdir -pv "$HOME/Videos"
+    mkdir -pv "$HOME/.config/zsh"
 
-    stow --dir="$DOTFILES" gitconfig htop images satty sway waybar wezterm zsh #ranger
+    stow --dir="$DOTFILES" zsh
+
+    source "$HOME/.zshenv"
+
+    stow --dir="$DOTFILES" git images satty sway waybar wezterm wpaperd #ranger
 
     pac base base-devel archlinux-keyring polkit sudo nano firefox
     pac ninja curl cmake meson wget curl tar unzip zip p7zip
-    pac ripgrep fd fzf tree-sitter
+    pac ripgrep fd fzf tree-sitter tree-sitter-cli bat
     pac zsh wezterm
     pac polkit nftables netcat conntrack-tools pacman-contrib
     pac networkmanager network-manager-applet reflector
@@ -155,7 +162,6 @@ main() {
     pac brightnessctl
     pac python python-pip python-pynvim luarocks jdk-openjdk lua51
     pac ranger htop neofetch
-   # pac firefox
     pac noto-fonts noto-fonts-emoji noto-fonts-extra
     pac ttf-dejavu ttf-liberation
     pac ttf-jetbrains-mono ttf-nerd-fonts-symbols-mono
@@ -163,6 +169,9 @@ main() {
 
     pac mpv feh
 	
+
+
+    # libreoffice-fresh
 
     pac grim slurp
 
@@ -172,6 +181,7 @@ main() {
     install_aux_tools
 
     nvm install 22
+    npm install --global yarn
     yay -S --needed --noconfirm clipman satty
     yay -S --needed spotify # Interactive install
 
@@ -179,7 +189,7 @@ main() {
     setup_ssh
     setup_nftables_config
 
-    pac wayland-protocols sway swaybg swaylock waybar wofi
+    pac wayland-protocols sway waybar wofi wpaperd
 
 
     install_graphics_drivers
@@ -191,6 +201,7 @@ main() {
     sudo sed -i 's/^#*\s*Color\.*/Color/' "/etc/pacman.conf"
     sudo sed -i 's/^#*\s*HandlePowerKey\s*=.*/HandlePowerKey=ignore/' /etc/systemd/logind.conf
 
+    wpaperd -d
     
     sudo systemctl --user enable --now pulseaudio
 

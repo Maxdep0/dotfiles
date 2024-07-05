@@ -283,6 +283,8 @@ $ eval "$(ssh-agent -s)"
 $ ssh-add ~/.ssh/id_ed25519
 $ cat ~/.ssh/id_ed25519.pub
 
+$ chsh -s "$(which zsh)"
+
 # Run Setup
 $ cd dotfiles
 $ git remote set-url origin git@github.com/Maxdep0/dotfiles.git

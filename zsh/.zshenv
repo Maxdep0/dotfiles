@@ -1,3 +1,11 @@
+typeset -U path
+
+path() { [[ -d "$1" ]] && path=("$1" $path); }
+
+path "$HOME/.local/bin"
+path "/usr/local/bin"
+path "/usr/bin"
+
 # Custom
 export DOTFILES="$HOME/dotfiles"
 
@@ -6,12 +14,8 @@ export SHELL=/usr/bin/zsh
 export EDITOR="nvim"
 export TERM="xterm-256color"
 export CLICOLOR=1
-
 export VISUAL="$EDITOR"
 export MANPAGER="$EDITOR +Man!"
-
-# PATH
-export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:$PATH"
 
 # XDG
 export XDG_DATA_HOME="$HOME/.local/share"
@@ -28,7 +32,7 @@ export XDG_DOCUMENTS_DIR="$HOME/Documents"
 export XDG_DOWNLOAD_DIR="$HOME/Downloads"
 export XDG_PICTURES_DIR="$HOME/Pictures"
 export XDG_VIDEOS_DIR="$HOME/Videos"
-export XDG_MUSIC_DIR="$HOME/Videos"
+export XDG_MUSIC_DIR="$HOME/Videos" # I dont download music.. so dir is Videos
 
 # ZSH
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
@@ -71,6 +75,3 @@ if [ "$(tty)" = "/dev/tty1" ]; then
     export MOZ_ENABLE_WAYLAND=1
     exec sway --unsupported-gpu
 fi
-
-
-

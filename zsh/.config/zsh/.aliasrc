@@ -27,13 +27,6 @@ alias yayi="yay -S --needed"
 alias yays="yay -Ss"
 alias yayr="yay -Rns"
 
-#   git
-alias gs="git status"
-alias gss="git status -s"
-alias gc="git commit -m"
-alias gf="git diff"
-alias glog="git log --graph --abbrev-commit --oneline --decorate"
-
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."

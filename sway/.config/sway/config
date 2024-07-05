@@ -206,20 +206,20 @@
     # Assign apps to specific workspace
     assign [class="discord"] workspace $ws5
     assign [class="Spotify"] workspace $ws5
-    # for_window [class="discord"] move container to workspace $ws5
-    # for_window [class="Spotify"] move container to workspace $ws5
 
     # Change default startup
     for_window [app_id="pavucontrol"]          floating enable, resize set 800 px 600 px
     for_window [app_id="nm-connection-editor"] floating enable, resize set 400 px 400 px
     for_window [class="feh"]                   floating enable, resize set  80 ppt 80 ppt
+    for_window [app_id="libreoffice-*"]        floating enable, resize set  80 ppt 90 ppt
+    
 
     #
     # Layout Settings
     #
 
     floating_maximum_size 1880 x 1140
-    floating_minimum_size 800 x 600
+    floating_minimum_size 800 x 450
     default_floating_border pixel 1
     default_border pixel 1
 
