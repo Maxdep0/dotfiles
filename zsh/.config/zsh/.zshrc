@@ -1,6 +1,3 @@
-export ZSH_COMPDUMP="$HOME/.zcompdump"
-
-
 # For initial linux setup
 [ ! -d "$HOME/.config/zsh" ] && mkdir -pv "$HOME/.config/zsh"
 [ ! -d "$XDG_CACHE_HOME/zsh" ] && mkdir -pv "$XDG_CACHE_HOME/zsh" 

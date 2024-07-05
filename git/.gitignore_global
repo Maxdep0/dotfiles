@@ -1,0 +1,104 @@
+.git/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Download/Installation Files
+Downloads
+Download
+*.dell
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Arch Sway Files
+.swaylock
+.AURINFO
+.SRCINFO
+
+
+# Temp/Cache
+tmp
+temp
+.cache
+cache
+Cache
+*.sass-cache
+*.css.map
+*.css.min
+*.js.map
+*.js.min
+tsconfig.tsbuildinfo
+*.log
+*.log.*
+*~
+.directory
+.Trash-*
+
+# Node/Yarn
+node_modules
+yarn.lock
+
+# Project Files
+.vscode
+build
+dist
+*.swp
+*.swo
+
+# Lua Files
+lazy-lock.json
+*.luac
+*.luacheckrc
+
+# Database Files
+*.db
+*.sqlite
+
+# Certificate/Key Files
+*.cert
+*.key
+*.data
+
+# Archive Files
+*.tar
+*.tar.*
+*.zip
+*.tgz
+*.sig
+*.bz2
+*.rar
+*.gz
+*.tbz2
+*.Z
+*.7z
+*.jar
+.~lock.*
+
+# Python 
+.Python
+.env
+.venv
+env/
+venv/
+env.bak
+venv.bak
+__pycache__
+*.py[cod]
+*$py.class
+.ipynb_checkpoints
+
+# Package Files
+lib
+lib64
+pkg/
+
+# CMake
+CMakeCache.txt
+CMakeFiles
+Makefile
+cmake_install.cmake
+install_manifest.txt
+

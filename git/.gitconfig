@@ -1,0 +1,47 @@
+[credential]
+    helper = cache --timeout=86400
+
+[user]
+    email = zxmnaslkqwpoiuer123@gmail.com
+    name = max
+
+[core]
+    excludefile = ~/.gitignore_global
+    editor = nvim
+    autocrlf = input
+    pager = cat
+
+[init]
+    defaultBranch = main
+
+[color]
+    ui = true
+    diff = auto
+    status = auto
+    branch = auto
+    interactive = auto;
+
+[merge]
+    conflictstyle = diff3
+
+[push]
+    default = simple
+
+[diff]
+    tool = nvimdiff
+    algoritm = patience
+
+[difftool "nvimdiff"]
+    cmd = "nvim -d $LOCAL $REMOTE"
+    prompt = false
+
+[help]
+    autocorrect = 1
+
+[alias]
+    s = status -s
+    r = remote -v
+    setssh = "!f() { git remote set-url origin git@github.com:Maxdep0/$1; }; f"
+    l = log --graph --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short 
+    la = "!git config -l | grep alias | cut -c 7-"
+

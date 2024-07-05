@@ -1,3 +1,6 @@
+<details>
+<summary>Arch Linux Installation</summary>
+
 <span style="font-size:17px"> [Open source tool to create bootable driver with multiple ISO files + storage](https://www.ventoy.net/en/index.html)
 </span><br>
 <span style="font-size:17px">[Turn off fast startup in wondows 11](https://www.elevenforum.com/t/turn-on-or-off-fast-startup-in-windows-11.1212/)
@@ -17,7 +20,7 @@ $ iwctl
 > device list
 > station "wlan" get-networks
 > station "wlan" connect "Network Name"
-> <"Enter Password">
+> "Enter Password"
 > exit
 
 # Test connecton
@@ -273,7 +276,7 @@ $ https://github.com/Maxdep0/dotfiles.git
 
 # Create SSH
 $ ssh-keygen -t ed25519 -C "EMAIL ADDRESS"
-> "Enter">
+> "Enter"
 > "PASSWORD"
 > "PASSWORD"
 $ eval "$(ssh-agent -s)"
@@ -282,6 +285,8 @@ $ cat ~/.ssh/id_ed25519.pub
 
 # Run Setup
 $ cd dotfiles
-$ git remote set-url origin https://github.com/Maxdep0/dotfiles.git
+$ git remote set-url origin git@github.com/Maxdep0/dotfiles.git
 $ zsh scripts/setup.sh
 ```
+
+</details>
