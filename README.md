@@ -1,5 +1,15 @@
 <details>
 <summary>Arch Linux Installation</summary>
+<br>
+
+<blockquote>
+  <strong>Note:</strong> 
+        This guide is not intended for others, but for me.
+        If by chance someone installs linux according to this instruction,
+        you have to change the partition size, Select the mirrors and Time and Localization,
+</blockquote>
+
+[Link to Subsection 1.1](#Time-And-Localization)
 
 <span style="font-size:17px"> [Open source tool to create bootable driver with multiple ISO files + storage](https://www.ventoy.net/en/index.html)
 </span><br>
@@ -154,8 +164,7 @@ $ nano /etc/xdg/reflector/reflector.conf
 # CTRL+O, ENTER, CTRL+X
 
 $ systemctl daemon-reload
-$ systemctl enable reflector.timer
-$ systemctl start reflector.timer
+$ systemctl enable --now reflector.timer
 ```
 
 ### Install essential [packages](https://wiki.archlinux.org/title/installation_guide#Select_the_mirrors)
@@ -279,16 +288,17 @@ $ ssh-keygen -t ed25519 -C "EMAIL ADDRESS"
 > "Enter"
 > "PASSWORD"
 > "PASSWORD"
-$ eval "$(ssh-agent -s)"
+$ eval `ssh-agent -s`        # or eval "$(ssh-agent -s)"
 $ ssh-add ~/.ssh/id_ed25519
 $ cat ~/.ssh/id_ed25519.pub
 
-$ chsh -s "$(which zsh)"
 
 # Run Setup
 $ cd dotfiles
 $ git remote set-url origin git@github.com/Maxdep0/dotfiles.git
-$ zsh scripts/setup.sh
+$ bash scripts/setup.sh
+
+$ chsh -s `which zsh`        # or chsh -s "$(which zsh)"
 ```
 
 </details>
