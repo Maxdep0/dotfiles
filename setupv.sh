@@ -22,9 +22,7 @@ export HISTFILE="$XDG_CACHE_HOME/zsh/.zhistory"
 export NVM_DIR="$HOME/.nvm"
 SCRIPT_CONFIG_FILES="$HOME/dotfiles/scripts/configs"
 
-log() {
-    echo "$(date '+%H:%M:%S') - $1" >> "$HOME/error.log"
-}
+log() { echo "$(date '+%H:%M:%S') - $1" >> "$HOME/error.log"; }
 
 pac() { 
 	for pkg in "$@"; do
@@ -32,10 +30,9 @@ pac() {
 	done 
 }
 
-pac clipman vulkan-intel networkmanager asdfsa
 cmd_check() { command -v "$1" >/dev/null 2>&1; }
+pac_check() { pacman -Qi "$1" &> /dev/null 2>&1; }
 
-cmd_check nvim && echo "yes" || echo "no"
 
 install_aux_tools() {
     if ! cmd_check yay; then
@@ -45,18 +42,17 @@ install_aux_tools() {
     fi
 
     if ! [ -d "$HOME/.nvm" ]; then
-        mkdir $NVM_DIR
-	sudo curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash || log "curl nvm"
-        export NVM_DIR="$HOME/.nvm"
+        mkdir "$NVM_DIR"
+        sudo curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash || log "curl nvm"
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" || log "source nvm"
         [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" || log "source bash comp"
     fi
 
-    if ! cmd_check paru; then
-        git clone https://aur.archlinux.org/paru.git "$XDG_DOWNLOAD_DIR/paru" || log "clone paru"
-        cd "$XDG_DOWNLOAD_DIR/paru" && makepkg -si --needed --noconfirm || log "makepkg paru" && cd "$HOME"                                                          
-        rm -rfv "$XDG_DOWNLOAD_DIR/paru" || log "rm paru"
-    fi
+    # if ! cmd_check paru; then
+    #     git clone https://aur.archlinux.org/paru.git "$XDG_DOWNLOAD_DIR/paru" || log "clone paru"
+    #     cd "$XDG_DOWNLOAD_DIR/paru" && makepkg -si --needed --noconfirm || log "makepkg paru" && cd "$HOME"                                                          
+    #     rm -rfv "$XDG_DOWNLOAD_DIR/paru" || log "rm paru"
+    # fi
 }
 
 #
@@ -64,7 +60,7 @@ install_aux_tools() {
 #
 
 install_and_setup_neovim() {
-    if [ ! -d "$XDG_DOWNLOAD_DIR/neovim" ] || ! cmd_check nvm; then
+    if [ ! -d "$XDG_DOWNLOAD_DIR/neovim" ] || ! cmd_check nvim; then
         git clone https://github.com/neovim/neovim "$XDG_DOWNLOAD_DIR/neovim" || log "clone nvim"
         make --directory="$XDG_DOWNLOAD_DIR/neovim" CMAKE_BUILD_TYPE=Release || log "make neovim cmake"
         sudo make --directory="$XDG_DOWNLOAD_DIR/neovim" install || log "make neovim install"
@@ -93,7 +89,13 @@ install_graphics_drivers() {
     pac vulkan-icd-loader
     yay -S --needed vulkan-caps-viewer-wayland
     pac nvtop nvidia-prime 
-    paru -S --needed wlroots-nvidia # Interactive install
+    # paru -S --needed wlroots-nvidia # Interactive install
+
+    if ! pac_check wlroots-nvidia; then
+        git clone https://aur.archlinux.org/wlroots-nvidia.git "$XDG_DOWNLOAD_DIR/wlroots-nvidia" || log "clone wlroots-nvidia"
+        cd "$XDG_DOWNLOAD_DIR/wlroots-nvidia" && makepkg -si --needed --noconfirm || log "makepkg wlroots-nvidia" && cd "$HOME"
+        rm -rfv "$XDG_DOWNLOAD_DIR/wlroots-nvidia" || log "rm wlroots-nvidia"
+    fi
 
     # pac vulkan-tools vdpauinfo clinfo
 
@@ -193,8 +195,8 @@ main() {
     mkdir -pv "$HOME/.config/zsh"
 
     # Stow config files
-    stow --dir="$DOTFILES" zsh || log "stow zsh"
-    stow --dir="$DOTFILES" gitconfig images satty sway waybar wezterm || log "stow .config"
+    stow --dir="$DOTFILES" -D gitconfig images satty sway waybar wezterm zsh wpaperd || log "stow .config"
+    stow --dir="$DOTFILES" gitconfig images satty sway waybar wezterm zsh wpaperd || log "stow .config"
 
     # Essential packages
     pac base base-devel archlinux-keyring sudo nano
@@ -228,8 +230,8 @@ main() {
     # Install nvm, yay, paru
     install_aux_tools
 
-    nvm install 22
-    npm install --global yarn
+    nvm install 22 || log "install 22"
+    # npm install --global yarn || log "install yarn"
 
     install_and_setup_neovim
 
@@ -292,7 +294,6 @@ main() {
     systemctl enable --now auto-cpufreq || log "sysctl enable auto-cpufreq"
 
    printf "\n\n DONE! REBOOT PC \n\n" 
-
 }
 
 
