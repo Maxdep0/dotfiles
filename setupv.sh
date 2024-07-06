@@ -41,7 +41,7 @@ install_aux_tools() {
         rm -rfv "$XDG_DOWNLOAD_DIR/yay" || log "rm yay"
     fi
 
-    if ! [ -d "$HOME/.nvm" ]; then
+    if ! [ -d "$NVM_DIR" ]; then
         mkdir "$NVM_DIR"
         sudo curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash || log "curl nvm"
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" || log "source nvm"
@@ -60,7 +60,7 @@ install_aux_tools() {
 #
 
 install_and_setup_neovim() {
-    if [ ! -d "$XDG_DOWNLOAD_DIR/neovim" ] || ! cmd_check nvim; then
+    if [ ! -d "$XDG_DOWNLOAD_DIR/neovim" ] && ! cmd_check nvim; then
         git clone https://github.com/neovim/neovim "$XDG_DOWNLOAD_DIR/neovim" || log "clone nvim"
         make --directory="$XDG_DOWNLOAD_DIR/neovim" CMAKE_BUILD_TYPE=Release || log "make neovim cmake"
         sudo make --directory="$XDG_DOWNLOAD_DIR/neovim" install || log "make neovim install"
@@ -70,36 +70,48 @@ install_and_setup_neovim() {
     [ ! -d "$XDG_CONFIG_HOME/nvim" ] && git clone https://github.com/Maxdep0/nvim.git "$XDG_CONFIG_HOME/nvim" 
 }
 
+
 #
 #
 #
 
 install_graphics_drivers() {
 
+    # Tools to find compatible driver packages
+    # pac mesa-utils libva-utils
+    # pac vulkan-tools vdpauinfo clinfo
+
+
     # INTEL
     pac mesa
     pac intel-media-driver intel-gpu-tools intel-compute-runtime
     pac vulkan-intel  vulkan-mesa-layers
     yay -S --needed auto-cpufreq # Interactive install
-    # pac mesa-utils libva-utils
 
     # NVIDIA
+    # Beta 555+ nvidia drivers
     pac linux-headers
     yay -S --needed nvidia-beta-dkms nvidia-utils-beta nvidia-settings-beta opencl-nvidia-beta
     pac vulkan-icd-loader
     yay -S --needed vulkan-caps-viewer-wayland
     pac nvtop nvidia-prime 
+
+    # Trying the non paru version
     # paru -S --needed wlroots-nvidia # Interactive install
 
+    # wlroots-nvidia is not needed for 1 monitor
+    # it reduces screen glitches for multi monitor setup
     if ! pac_check wlroots-nvidia; then
         git clone https://aur.archlinux.org/wlroots-nvidia.git "$XDG_DOWNLOAD_DIR/wlroots-nvidia" || log "clone wlroots-nvidia"
         cd "$XDG_DOWNLOAD_DIR/wlroots-nvidia" && makepkg -si --needed --noconfirm || log "makepkg wlroots-nvidia" && cd "$HOME"
         rm -rfv "$XDG_DOWNLOAD_DIR/wlroots-nvidia" || log "rm wlroots-nvidia"
     fi
 
-    # pac vulkan-tools vdpauinfo clinfo
 
-    ## grub
+    # grub 
+
+    # nvidia-drm.fbdev=1 is experimental feature for 545+ drivers
+    # It provides its own framebuffer console and replace efifb, vesafb
     sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="[^"]*"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet rd.driver.blacklist=nouveau nvidia-drm.modeset=1 nvidia-drm.fbdev=1"/' "/etc/default/grub" || log "sed grub_cmdline_linux_default"
 
     sudo grub-mkconfig -o /boot/grub/grub.cfg || log "grub-mkconfig"
@@ -114,6 +126,7 @@ install_graphics_drivers() {
 
     sudo auto-cpufreq --install || log "sudo auto-cpufreq install"
 }
+
 
 #
 #
@@ -230,7 +243,7 @@ main() {
     # Install nvm, yay, paru
     install_aux_tools
 
-    nvm install 22 || log "install 22"
+    nvm install 22 || log "nvm install 22 failed or already installed"
     # npm install --global yarn || log "install yarn"
 
     install_and_setup_neovim
@@ -273,7 +286,7 @@ main() {
 
     wpaperd -d || log "wraperd -d"
     
-    sudo systemctl --user enable --now pulseaudio || log "sysctl enable pulseaudio"
+    systemctl --user enable --now pulseaudio || log "sysctl enable pulseaudio"
 
 
     sudo systemctl enable --now reflector.timer || log "sysctl enable reflector.timer"
@@ -289,14 +302,16 @@ main() {
     sudo systemctl restart systemd-logind || log "sysctl restart systemd-logind"
     sudo systemctl daemon-reload || log "sysctl daemon-reload"
 
+    # Restart network connection
     sudo systemctl restart NetworkManager || log "sysctl restart networkmanager"
 
-    systemctl enable --now auto-cpufreq || log "sysctl enable auto-cpufreq"
+    # Last.. because it needs password and sometimes the script just skip it
+    sudo systemctl enable --now auto-cpufreq || log "sysctl enable auto-cpufreq"
 
    printf "\n\n DONE! REBOOT PC \n\n" 
 }
 
 
-
+# install_and_setup_neovim
 
 main
