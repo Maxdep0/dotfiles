@@ -3,15 +3,16 @@
 <br>
 
 <blockquote>
-  <strong>Note:</strong> 
+  <strong style="color:orange">Warning:</strong> 
         This guide is not intended for others, but for me.
-        If by chance someone installs linux according to this instruction,
-        you have to change the partition size, Select the mirrors and Time and Localization,
+        If by chance someone install linux arch using this guide,
+        you have to change the <a href="#Partition-the-disks">partition size</a>, <a href="#Select-the-mirrors">mirrors</a> and <a href="#Time-And-localization">Time and Localization</a>.<br>
+        The setup script (which is not 100% error-free) contains drivers for <a href="https://www.dell.com/en-uk/shop/laptops-2-in-1-pcs/precision-7680-workstation/spd/precision-16-7680-laptop/n007p7680emea_vp">Dell Precision 7680 i7 32GB, 1TB</a>, so if you want to use it, comment out the driver installation.
 </blockquote>
 
-[Link to Subsection 1.1](#Time-And-Localization)
-
-<span style="font-size:17px"> [Open source tool to create bootable driver with multiple ISO files + storage](https://www.ventoy.net/en/index.html)
+<span style="font-size:17px"> [Arch Linux Downloads](https://archlinux.org/download/)
+</span><br>
+<span style="font-size:17px"> [Open source tool to create bootable driver with multiple ISOs + storage](https://www.ventoy.net/en/index.html)
 </span><br>
 <span style="font-size:17px">[Turn off fast startup in wondows 11](https://www.elevenforum.com/t/turn-on-or-off-fast-startup-in-windows-11.1212/)
 </span><br>
@@ -100,6 +101,9 @@ $ mkfs.ext4 /dev/nvme0n1p6
 
 # Home
 $ mkfs.ext4 /dev/nvme0n1p7
+
+
+mkfs.ext4 /dev/nvme0n1p6 /dev/nvme0n1p7
 
 # Swap
 $ mkswap /dev/nvme0n1p8
@@ -295,10 +299,10 @@ $ cat ~/.ssh/id_ed25519.pub
 
 # Run Setup
 $ cd dotfiles
-$ git remote set-url origin git@github.com/Maxdep0/dotfiles.git
 $ bash scripts/setup.sh
 
 $ chsh -s `which zsh`        # or chsh -s "$(which zsh)"
+$ git remote set-url origin git@github.com/Maxdep0/dotfiles.git
 ```
 
 </details>
