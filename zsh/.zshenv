@@ -8,6 +8,7 @@ path "/usr/bin"
 
 # Custom
 export DOTFILES="$HOME/dotfiles"
+export LOGS_DIR="$HOME/logs"
 
 # Editor/Shell
 export SHELL=/usr/bin/zsh
@@ -41,12 +42,11 @@ export HISTFILE="$XDG_CACHE_HOME/zsh/.zhistory"
 export HISTSIZE=10000
 export SAVEHIST=10000
 export KEYTIMEOUT=1
-skip_global_compinit=1
 
-#   NPM
+# NPM
 export NVM_DIR="$HOME/.nvm"
 
-#   FZF
+# FZF
 export FZF_DEFAULT_COMMAND="fd --type f --hidden"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 FZF_COLORS="bg+:-1,fg:gray,fg+:white,border:black,spinner:0,hl:yellow,header:blue,info:green,pointer:red,marker:blue,prompt:gray,hl+:red"

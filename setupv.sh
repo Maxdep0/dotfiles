@@ -1,6 +1,7 @@
 #!/usr/bin/bash
 
 export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:$PATH"
+export LOGS_DIR="$HOME/logs"
 export SHELL=/usr/bin/zsh
 export DOTFILES="$HOME/dotfiles"
 export XDG_DATA_HOME="$HOME/.local/share"
@@ -22,11 +23,19 @@ export HISTFILE="$XDG_CACHE_HOME/zsh/.zhistory"
 export NVM_DIR="$HOME/.nvm"
 SCRIPT_CONFIG_FILES="$HOME/dotfiles/scripts/configs"
 
-log() { echo "$(date '+%H:%M:%S') - $1" >> "$HOME/error.log"; }
+timestamp=$(date +'%m-%d_%H-%M')
+exec > >(tee -a "$LOGS_DIR/setup-output-$timestamp.log") 2>&1
+log() { echo "$(date '+%H:%M:%S') - $1" >> "$LOGS_DIR/setup-error-$timestamp.log"; }
 
 pac() { 
 	for pkg in "$@"; do
-	sudo pacman -S --needed --noconfirm "$pkg" || log "Failed package: $pkg"
+	sudo pacman -S --needed --noconfirm "$pkg" || log "Pacman: Failed package: $pkg"
+	done 
+}
+
+yayi() {
+	for pkg in "$@"; do
+	yay -S --needed --answerclean no --answerdiff n "$pkg" || log "Yay: Failed package: $pkg"
 	done 
 }
 
@@ -38,7 +47,7 @@ install_aux_tools() {
     if ! cmd_check yay; then
         git clone https://aur.archlinux.org/yay.git "$XDG_DOWNLOAD_DIR/yay" || log "clone yay"
         cd "$XDG_DOWNLOAD_DIR/yay" && makepkg -si --needed --noconfirm || log "makepkg yay" && cd "$HOME"
-        rm -rfv "$XDG_DOWNLOAD_DIR/yay" || log "rm yay"
+        rm -rf "$XDG_DOWNLOAD_DIR/yay" || log "rm yay"
     fi
 
     if ! [ -d "$NVM_DIR" ]; then
@@ -48,11 +57,11 @@ install_aux_tools() {
         [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" || log "source bash comp"
     fi
 
-    # if ! cmd_check paru; then
-    #     git clone https://aur.archlinux.org/paru.git "$XDG_DOWNLOAD_DIR/paru" || log "clone paru"
-    #     cd "$XDG_DOWNLOAD_DIR/paru" && makepkg -si --needed --noconfirm || log "makepkg paru" && cd "$HOME"                                                          
-    #     rm -rfv "$XDG_DOWNLOAD_DIR/paru" || log "rm paru"
-    # fi
+    if ! cmd_check paru; then
+        git clone https://aur.archlinux.org/paru.git "$XDG_DOWNLOAD_DIR/paru" || log "clone paru"
+        cd "$XDG_DOWNLOAD_DIR/paru" && makepkg -si --needed --noconfirm || log "makepkg paru" && cd "$HOME"                                                          
+        rm -rf "$XDG_DOWNLOAD_DIR/paru" || log "rm paru"
+    fi
 }
 
 #
@@ -64,7 +73,7 @@ install_and_setup_neovim() {
         git clone https://github.com/neovim/neovim "$XDG_DOWNLOAD_DIR/neovim" || log "clone nvim"
         make --directory="$XDG_DOWNLOAD_DIR/neovim" CMAKE_BUILD_TYPE=Release || log "make neovim cmake"
         sudo make --directory="$XDG_DOWNLOAD_DIR/neovim" install || log "make neovim install"
-        rm -rfv "$XDG_DOWNLOAD_DIR/neovim"
+        rm -rf "$XDG_DOWNLOAD_DIR/neovim"
     fi
 
     [ ! -d "$XDG_CONFIG_HOME/nvim" ] && git clone https://github.com/Maxdep0/nvim.git "$XDG_CONFIG_HOME/nvim" 
@@ -80,36 +89,28 @@ install_graphics_drivers() {
     # Tools to find compatible driver packages
     # pac mesa-utils libva-utils
     # pac vulkan-tools vdpauinfo clinfo
+    # pac vulkan-mesa-layers
+    # yayi vulkan-caps-viewer-wayland
 
 
     # INTEL
     pac mesa
     pac intel-media-driver intel-gpu-tools intel-compute-runtime
-    pac vulkan-intel  vulkan-mesa-layers
-    yay -S --needed auto-cpufreq # Interactive install
+    pac vulkan-intel 
+    yayi auto-cpufreq # Interactive install
 
     # NVIDIA
     # Beta 555+ nvidia drivers
     pac linux-headers
-    yay -S --needed nvidia-beta-dkms nvidia-utils-beta nvidia-settings-beta opencl-nvidia-beta
+    yayi nvidia-beta-dkms nvidia-utils-beta nvidia-settings-beta opencl-nvidia-beta
     pac vulkan-icd-loader
-    yay -S --needed vulkan-caps-viewer-wayland
     pac nvtop nvidia-prime 
-
-    # Trying the non paru version
-    # paru -S --needed wlroots-nvidia # Interactive install
 
     # wlroots-nvidia is not needed for 1 monitor
     # it reduces screen glitches for multi monitor setup
-    if ! pac_check wlroots-nvidia; then
-        git clone https://aur.archlinux.org/wlroots-nvidia.git "$XDG_DOWNLOAD_DIR/wlroots-nvidia" || log "clone wlroots-nvidia"
-        cd "$XDG_DOWNLOAD_DIR/wlroots-nvidia" && makepkg -si --needed --noconfirm || log "makepkg wlroots-nvidia" && cd "$HOME"
-        rm -rfv "$XDG_DOWNLOAD_DIR/wlroots-nvidia" || log "rm wlroots-nvidia"
-    fi
-
+    paru -S --removemake --cleanafter --noupgrademenu --skipreview --install wlroots-nvidia # Interactive install
 
     # grub 
-
     # nvidia-drm.fbdev=1 is experimental feature for 545+ drivers
     # It provides its own framebuffer console and replace efifb, vesafb
     sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="[^"]*"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet rd.driver.blacklist=nouveau nvidia-drm.modeset=1 nvidia-drm.fbdev=1"/' "/etc/default/grub" || log "sed grub_cmdline_linux_default"
@@ -155,7 +156,7 @@ setup_ssh() {
 setup_nftables_config() {
     sudo stow --dir="$SCRIPT_CONFIG_FILES" --target="/etc" -D nftables || log "stow -d script config files"
     [[ -f "/etc/nftables.conf" ]] && sudo mv "/etc/nftables.conf" "/etc/nftables.conf.bak" 
-    sudo rm -rfv "/etc/nftables.conf" || log "rm nftables.conf"
+    sudo rm -rf "/etc/nftables.conf" || log "rm nftables.conf"
     sudo stow --dir="$SCRIPT_CONFIG_FILES" --target="/etc" nftables || log "stow script config files"
 
     sudo systemctl enable --now nftables || log "sysctl enable nftables"
@@ -169,7 +170,7 @@ setup_reflector() {
 
     sudo stow --dir="$SCRIPT_CONFIG_FILES" --target="$REFLECTOR" -D reflector || log "stow -D reflector"
     [[ -f "$REFLECTOR/reflector.conf" ]] && sudo mv "$REFLECTOR/reflector.conf" "$REFLECTOR/reflector.conf.bak"
-    sudo rm -rfv "$REFLECTOR/reflector.conf" || log "rm reflector.conf"
+    sudo rm -rf "$REFLECTOR/reflector.conf" || log "rm reflector.conf"
     sudo stow --dir="$SCRIPT_CONFIG_FILES" --target="$REFLECTOR" reflector || log "stow reflector"
 }
 
@@ -183,7 +184,7 @@ setup_networkmanager() {
     sudo systemctl enable --now NetworkManager.service || log "sysctl enable NetworkManager.service"
 
     sudo stow --dir="$SCRIPT_CONFIG_FILES" --target="$NETWORKMANAGER/dispatcher.d" -D networkmanager || log "stow -D networkmanager"
-    sudo rm -rfv "$NETWORKMANAGER/dispatcher.d/99-update-dns.sh" "$NETWORKMANAGER/dispatcher.d/99-update-hosts.sh" || log "rm 99-update-hosts.sh"
+    sudo rm -rf "$NETWORKMANAGER/dispatcher.d/99-update-dns.sh" "$NETWORKMANAGER/dispatcher.d/99-update-hosts.sh" || log "rm 99-update-hosts.sh"
     sudo stow --dir="$SCRIPT_CONFIG_FILES" --target="$NETWORKMANAGER/dispatcher.d" networkmanager || log "stow networkmanager"
 
     sudo chown root:root /etc/NetworkManager/dispatcher.d/99-update-hosts.sh || log "chown 99-update-hosts.sh"
@@ -205,7 +206,9 @@ main() {
     mkdir -pv "$HOME/Pictures/Background"
     mkdir -pv "$HOME/Projects"
     mkdir -pv "$HOME/Videos"
+    mkdir -pv "$HOME/logs"
     mkdir -pv "$HOME/.config/zsh"
+
 
     # Stow config files
     stow --dir="$DOTFILES" -D gitconfig images satty sway waybar wezterm zsh wpaperd || log "stow .config"
@@ -308,10 +311,11 @@ main() {
     # Last.. because it needs password and sometimes the script just skip it
     sudo systemctl enable --now auto-cpufreq || log "sysctl enable auto-cpufreq"
 
+    rm -rf "$HOME/.bash_logout"
+    rm -rf "$HOME/.bash_history"
+    rm -rf "$HOME/.bash_profile"
+
    printf "\n\n DONE! REBOOT PC \n\n" 
 }
-
-
-# install_and_setup_neovim
 
 main
