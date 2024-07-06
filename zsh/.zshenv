@@ -75,3 +75,12 @@ if [ "$(tty)" = "/dev/tty1" ]; then
     export MOZ_ENABLE_WAYLAND=1
     exec sway --unsupported-gpu
 fi
+
+if [ "$(tty)" = "/dev/tty5" ]; then
+    export LIBVA_DRIVER_NAME=iHD
+    export VDPAU_DRIVER=nvidia
+    export WLR_NO_HARDWARE_CURSORS=1
+    export MOZ_DRM_DEVICE=/dev/dri/card0:/dev/dri/card1
+    export MOZ_ENABLE_WAYLAND=1
+    timeout 1m sway --unsupported-gpu -d &> "$HOME/logs/sway-debug-$(date + '%m-%d_%H-%M')"
+fi

@@ -1,4 +1,5 @@
 # For initial linux setup
+[ -f "$HOME/.bash_history" ] && rm -f "$HOME/.bash_history" 
 [ ! -d "$HOME/.config/zsh" ] && mkdir -pv "$HOME/.config/zsh"
 [ ! -d "$XDG_CACHE_HOME/zsh" ] && mkdir -pv "$XDG_CACHE_HOME/zsh" 
 
@@ -111,7 +112,7 @@ PROMPT='%B%F{cyan}%~%f%b ${vcs_info_msg_0_}%B%F{white}>%f%b '
 # https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#Zle-Widgets
 #
 
-fpath=($fpath /usr/local/share/zsh/site-functions /usr/share/zsh/site-functions)
+fpath=("$fpath" /usr/local/share/zsh/site-functions /usr/share/zsh/site-functions)
 
 zmodload zsh/complist 
 bindkey -v
@@ -125,12 +126,12 @@ else
 fi
 
 # Disable register change for delete, etc..
-zle_vi_delete() { zle .vi-delete; CUTBUFFER="" }
-zle_vi_change() { zle .vi-change; CUTBUFFER="" }
-zle_vi_delete_char() { zle .vi-delete-char; CUTBUFFER="" }
-zle_vi_substitute_char() { zle .vi-substitute-char; CUTBUFFER="" }
-zle_vi_kill_line() { zle .vi-kill-line; CUTBUFFER="" }
-zle_vi_change_eol() { zle .vi-change-eol; CUTBUFFER="" }
+zle_vi_delete() { zle .vi-delete; CUTBUFFER=""; }
+zle_vi_change() { zle .vi-change; CUTBUFFER=""; }
+zle_vi_delete_char() { zle .vi-delete-char; CUTBUFFER=""; }
+zle_vi_substitute_char() { zle .vi-substitute-char; CUTBUFFER=""; }
+zle_vi_kill_line() { zle .vi-kill-line; CUTBUFFER=""; }
+zle_vi_change_eol() { zle .vi-change-eol; CUTBUFFER=""; }
 
 # Widgets
 zle -N vi-yank zle_vi_yank_to_system_register
