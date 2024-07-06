@@ -1,6 +1,5 @@
 #!/usr/bin/bash
 
-# System Variables in case .zshenv is not sourced
 export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:$PATH"
 export SHELL=/usr/bin/zsh
 export DOTFILES="$HOME/dotfiles"
@@ -27,25 +26,27 @@ log() {
     echo "$(date '+%H:%M:%S') - $1" >> "$HOME/error.log"
 }
 
-pac() {
-    for pkg in "$@"; do
-        output=$(sudo pacman -S --needed --noconfirm "$pkg" 2>&1)
-        [ $? -ne 0 ] && log "$output" 
-    done
+pac() { 
+	for pkg in "$@"; do
+	sudo pacman -S --needed --noconfirm "$pkg" || log "Failed package: $pkg"
+	done 
 }
 
-cmd_check() { command -v "$1" >/dev/null 2>&1 || log "Command not found: $1"; }
+pac clipman vulkan-intel networkmanager asdfsa
+cmd_check() { command -v "$1" >/dev/null 2>&1; }
 
+cmd_check nvim && echo "yes" || echo "no"
 
 install_aux_tools() {
     if ! cmd_check yay; then
         git clone https://aur.archlinux.org/yay.git "$XDG_DOWNLOAD_DIR/yay" || log "clone yay"
-        cd "$XDG_DOWNLOAD_DIR/yay" && makepkg -si --needed --noconfirm || log "makepg yay" && cd "$HOME"
+        cd "$XDG_DOWNLOAD_DIR/yay" && makepkg -si --needed --noconfirm || log "makepkg yay" && cd "$HOME"
         rm -rfv "$XDG_DOWNLOAD_DIR/yay" || log "rm yay"
     fi
 
     if ! [ -d "$HOME/.nvm" ]; then
-        sudo curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash || log "curl nvm"
+        mkdir $NVM_DIR
+	sudo curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash || log "curl nvm"
         export NVM_DIR="$HOME/.nvm"
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" || log "source nvm"
         [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" || log "source bash comp"
@@ -63,7 +64,7 @@ install_aux_tools() {
 #
 
 install_and_setup_neovim() {
-    if [ ! -d "$XDG_DOWNLOAD_DIR/neovim" ]; then
+    if [ ! -d "$XDG_DOWNLOAD_DIR/neovim" ] || ! cmd_check nvm; then
         git clone https://github.com/neovim/neovim "$XDG_DOWNLOAD_DIR/neovim" || log "clone nvim"
         make --directory="$XDG_DOWNLOAD_DIR/neovim" CMAKE_BUILD_TYPE=Release || log "make neovim cmake"
         sudo make --directory="$XDG_DOWNLOAD_DIR/neovim" install || log "make neovim install"
@@ -109,8 +110,6 @@ install_graphics_drivers() {
 
     sudo mkinitcpio -P || log "sudo mkinitcpio -P"
 
-    systemctl enable --now auto-cpufreq || log "sysctl enable auto-cpufreq"
-
     sudo auto-cpufreq --install || log "sudo auto-cpufreq install"
 }
 
@@ -153,10 +152,10 @@ setup_nftables_config() {
 setup_reflector() {
     REFLECTOR='/etc/xdg/reflector'
 
-    sudo stow --dir="$XDG_CONFIG_HOME" --target="$REFLECTOR" -D reflector || log "stow -D reflector"
+    sudo stow --dir="$SCRIPT_CONFIG_FILES" --target="$REFLECTOR" -D reflector || log "stow -D reflector"
     [[ -f "$REFLECTOR/reflector.conf" ]] && sudo mv "$REFLECTOR/reflector.conf" "$REFLECTOR/reflector.conf.bak"
     sudo rm -rfv "$REFLECTOR/reflector.conf" || log "rm reflector.conf"
-    sudo stow --dir="$XDG_CONFIG_HOME" --target="$REFLECTOR" reflector || log "stow reflector"
+    sudo stow --dir="$SCRIPT_CONFIG_FILES" --target="$REFLECTOR" reflector || log "stow reflector"
 }
 
 #
@@ -195,8 +194,7 @@ main() {
 
     # Stow config files
     stow --dir="$DOTFILES" zsh || log "stow zsh"
-    source "$HOME/.zshenv"
-    stow --dir="$DOTFILES" git images satty sway waybar wezterm wpaperd || log "stow .config"
+    stow --dir="$DOTFILES" gitconfig images satty sway waybar wezterm || log "stow .config"
 
     # Essential packages
     pac base base-devel archlinux-keyring sudo nano
@@ -291,7 +289,7 @@ main() {
 
     sudo systemctl restart NetworkManager || log "sysctl restart networkmanager"
 
-    chsh -s "$(which zsh)"
+    systemctl enable --now auto-cpufreq || log "sysctl enable auto-cpufreq"
 
    printf "\n\n DONE! REBOOT PC \n\n" 
 
@@ -300,4 +298,4 @@ main() {
 
 
 
-
+# main
