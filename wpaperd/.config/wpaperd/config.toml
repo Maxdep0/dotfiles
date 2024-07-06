@@ -1,6 +1,6 @@
 [default]
 duration = "5m"
-mode = "stretch"
+mode = "center"
 sorting = "random"
 path = "~/Pictures/Background"
 queue-size = 20
