@@ -38,8 +38,7 @@ $ iwctl
 $ ping google.com
 
 # Update keyring
-$ pacman -Syu
-$ pacman -S archlinux-keyring
+$ pacman -Syu archlinux-keyring
 
 ```
 
@@ -102,9 +101,6 @@ $ mkfs.ext4 /dev/nvme0n1p6
 # Home
 $ mkfs.ext4 /dev/nvme0n1p7
 
-
-mkfs.ext4 /dev/nvme0n1p6 /dev/nvme0n1p7
-
 # Swap
 $ mkswap /dev/nvme0n1p8
 $ swapon /dev/nvme0n1p8
@@ -154,21 +150,7 @@ $ lsblk
 ```zsh
 $ cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
 
-$ nano /etc/xdg/reflector/reflector.conf
-
-# --save /etc/pacman.d/mirrorlist
-# --country GB,DE,FR,NL,SE,CZ,SK
-# --protocol https
-# --latest 20
-# --sort rate
-# --age 12
-# --completion-percent 100
-# --fastest 10
-
-# CTRL+O, ENTER, CTRL+X
-
-$ systemctl daemon-reload
-$ systemctl enable --now reflector.timer
+$ reflector --country GB,DE,FR,NL,SE,CZ,SK --protocol https --latest 20 --sort rate --age 24 --completion-percent 100 --fastest 10 --save /etc/pacman.d/mirrorlist
 ```
 
 ### Install essential [packages](https://wiki.archlinux.org/title/installation_guide#Select_the_mirrors)
@@ -238,7 +220,7 @@ $ EDITOR=nano visudo
 <span style="font-size:15px">[Boot Loaders](https://wiki.archlinux.org/title/Arch_boot_process#Boot_loader) </span>
 
 ```zsh
-$ pacman -Syu grub efibootmgr networkmanager git openssh zsh
+$ pacman -Syu grub efibootmgr networkmanager git openssh stow
 
 $ lsblk
 # NAME           MAJ:MIN  RM    SIZE  RO   TYPE   MOUNTPOINTS
@@ -287,6 +269,16 @@ $ sudo pacman -Syu
 # Clone dotfiles
 $ https://github.com/Maxdep0/dotfiles.git
 
+
+
+# Run Setup
+$ cd dotfiles
+$ bash scripts/setup.sh
+
+$ chsh -s `which zsh`        # or chsh -s "$(which zsh)"
+
+$ reboot
+
 # Create SSH
 $ ssh-keygen -t ed25519 -C "EMAIL ADDRESS"
 > "Enter"
@@ -296,12 +288,7 @@ $ eval `ssh-agent -s`        # or eval "$(ssh-agent -s)"
 $ ssh-add ~/.ssh/id_ed25519
 $ cat ~/.ssh/id_ed25519.pub
 
-
-# Run Setup
-$ cd dotfiles
-$ bash scripts/setup.sh
-
-$ chsh -s `which zsh`        # or chsh -s "$(which zsh)"
+# Add SSH to GitHub and change url
 $ git remote set-url origin git@github.com/Maxdep0/dotfiles.git
 ```
 
