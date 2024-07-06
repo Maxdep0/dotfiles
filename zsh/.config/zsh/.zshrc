@@ -165,6 +165,12 @@ bindkey -M menuselect "l" vi-forward-char
 bindkey -M menuselect "^I" accept-line
 bindkey -M menuselect "^K" send-break
 
+
+# Backspace
+bindkey "^?" backward-delete-char
+bindkey "^H" backward-delete-char
+
+
 # Fzf
 source <(fzf --zsh)
 
