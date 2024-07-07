@@ -1,5 +1,5 @@
 local wezterm = require("wezterm")
-local a = wezterm.action
+local act = wezterm.action
 
 local function is_an_editor(name)
 	return name:find("nvim")
@@ -24,116 +24,122 @@ local function key(keys, mods, actions)
 	return { key = keys, mods = mods, action = actions }
 end
 
+local function mkey(keys, actions)
+	return { key = keys, action = actions }
+end
+
 local function ckey(keys, mods, non_editor_action)
 	return conflicting_nvim_keys(keys, mods, { SendKey = { key = keys, mods = mods } }, non_editor_action)
 end
 
+wezterm.on("update-right-status", function(window, pane)
+	local name = window:active_key_table()
+	if name then
+		name = name
+	end
+	window:set_right_status(name or "")
+end)
+
 return {
 	front_end = "OpenGL",
 	disable_default_key_bindings = true,
-
 	scrollback_lines = 10000,
-
 	font = wezterm.font("JetBrains Mono", { weight = "Light" }),
-	-- font = wezterm.font("Ubuntu", { weight = "Light" }),
-	-- font_size = 11.5,
-
 	adjust_window_size_when_changing_font_size = false,
-
 	window_background_opacity = 0.7,
-
 	window_padding = { left = 0, right = 0, top = 0, bottom = 0 },
-
-	-- automatically_reload_config = false,
 use_fancy_tab_bar = false,
-
 	max_fps = 144,
-
 	hide_tab_bar_if_only_one_tab = true,
-
 	colors = {
-		tab_bar = {
-			background = "rgba(0,0,0,0.6)",
-		},
+		tab_bar = { background = "rgba(0,0,0,0.6)" },
+		compose_cursor = "orange",
 	},
 
-	-- tab_bar = {
-	-- 	background = "rgba(0,0,0,0)",
+	-- window_frame = {
+	-- 	inactive_titlebar_bg = "#353535",
+	-- 	active_titlebar_bg = "#2b2042",
+	-- 	inactive_titlebar_fg = "#cccccc",
+	-- 	active_titlebar_fg = "#ffffff",
+	-- 	inactive_titlebar_border_bottom = "#2b2042",
+	-- 	active_titlebar_border_bottom = "#2b2042",
+	-- 	button_fg = "#cccccc",
+	-- 	button_bg = "#2b2042",
+	-- 	button_hover_fg = "#ffffff",
+	-- 	button_hover_bg = "#3b3052",
 	-- },
 
+	leader = { key = "Space", mods = "SHIFT" },
+
 	keys = {
+		key("t", "LEADER", act.ActivateKeyTable({ name = "tab_mode", one_shot = true })),
+		key("w", "LEADER", act.ActivateKeyTable({ name = "pane_mode", one_shot = true })),
+		key("r", "LEADER", act.ActivateKeyTable({ name = "size_mode", one_shot = false })),
 
-		--
-		--
-		--
-		--
-		-- -- Tabs
-		--
-		--
-		-- -- Scrolling
-		-- key("p", A, a.ScrollByLine(-1)),
-		-- key("n", A, a.ScrollByLine(1)),
-		-- key("g", A, a.ScrollToTop),
-		-- key("G", A, a.ScrollToBottom),
-		--
-		--
-		--
-		-- ---------------------
+		-- Tab
+		key("]", "ALT", act.ActivateTabRelative(1)),
+		key("[", "ALT", act.ActivateTabRelative(-1)),
+		key("Tab", "ALT", act.ActivateTabRelative(1)),
+		key("Tab", "ALT|SHIFT", act.ActivateTabRelative(-1)),
 
-		-- key("P", C, a.ActivateCommandPalette),		-- Panes
+		-- Pane
+		key("Enter", "ALT", act.TogglePaneZoomState),
 
-		--
-		-- Global keys
-		--
-
-		-- Panes
-		key("f", "ALT|SHIFT", a.SplitPane({ direction = "Right", size = { Percent = 50 } })),
-		key("a", "ALT|SHIFT", a.SplitPane({ direction = "Left", size = { Percent = 50 } })),
-		key("s", "ALT|SHIFT", a.SplitPane({ direction = "Down", size = { Cells = 7 } })),
-		key("d", "ALT|SHIFT", a.SplitPane({ direction = "Up", size = { Cells = 7 } })),
-
-		key("f", "ALT", a.ActivatePaneDirection("Right")),
-		key("a", "ALT", a.ActivatePaneDirection("Left")),
-		key("s", "ALT", a.ActivatePaneDirection("Down")),
-		key("d", "ALT", a.ActivatePaneDirection("Up")),
-
-		key("f", "ALT|CTRL", a.AdjustPaneSize({ "Right", 1 })),
-		key("a", "ALT|CTRL", a.AdjustPaneSize({ "Left", 1 })),
-		key("s", "ALT|CTRL", a.AdjustPaneSize({ "Up", 1 })),
-		key("d", "ALT|CTRL", a.AdjustPaneSize({ "Down", 1 })),
-
-		key("Enter", "ALT", a.TogglePaneZoomState),
-
-		-- Tabs
-		key("T", "ALT", a.SpawnTab("DefaultDomain")),
-		key("]", "ALT", a.ActivateTabRelative(1)),
-		key("[", "ALT", a.ActivateTabRelative(-1)),
-
-		--
-		-- Conflicting keys with neovim
-		--
-
-		-- Font size
-		key("=", "CTRL|ALT", a.IncreaseFontSize),
-		key("-", "CTRL|ALT", a.DecreaseFontSize),
-		key("0", "CTRL|ALT", a.ResetFontSize),
-
-		-- ckey("k", "CTRL", a({ SendString = "teeest" })),
+		key("h", "ALT", act.ActivatePaneDirection("Left")),
+		key("j", "ALT", act.ActivatePaneDirection("Down")),
+		key("k", "ALT", act.ActivatePaneDirection("Up")),
+		key("l", "ALT", act.ActivatePaneDirection("Right")),
 
 		-- Copy/Paste
-		key("v", "CTRL|SHIFT", a.PasteFrom("Clipboard")),
-		key("c", "CTRL|SHIFT", a.CopyTo("Clipboard")),
-		-- ckey("v", "CTRL|SHIFT", a.PasteFrom("Clipboard")),
-		-- ckey("c", "CTRL|SHIFT", a.CopyTo("Clipboard")),
+		key("V", "CTRL", act.PasteFrom("Clipboard")),
+		key("C", "CTRL", act.CopyTo("Clipboard")),
+
+		-- Search Mode
+		ckey("/", "ALT", act.Search({ CaseInSensitiveString = "" })),
 
 		-- Scrolling
-		-- ckey("u", "CTRL", a.ScrollByPage(-1)),
-		-- ckey("d", "CTRL", a.ScrollByPage(1)),
+		ckey("u", "ALT", act.ScrollByPage(-1)),
+		ckey("d", "ALT", act.ScrollByPage(1)),
+		ckey("U", "ALT", act.ScrollByLine(-5)),
+		ckey("J", "ALT", act.ScrollByLine(5)),
 
-		-- Tabs/Panes
-		ckey("w", "ALT", a.CloseCurrentPane({ confirm = true })),
-		ckey("w", "ALT|SHIFT", a.CloseCurrentTab({ confirm = true })),
+		-- Command Pallette
+		key("P", "CTRL", act.ActivateCommandPalette),
+	},
 
-		-- Seaarching.......................................................
+	key_tables = {
+		size_mode = {
+			mkey("Escape", "PopKeyTable"),
+			mkey("h", act.AdjustPaneSize({ "Left", 1 })),
+			mkey("j", act.AdjustPaneSize({ "Down", 1 })),
+			mkey("k", act.AdjustPaneSize({ "Up", 1 })),
+			mkey("l", act.AdjustPaneSize({ "Right", 1 })),
+			mkey("=", act.IncreaseFontSize),
+			mkey("-", act.DecreaseFontSize),
+			mkey("0", act.ResetFontSize),
+		},
+
+		tab_mode = {
+			mkey("t", act.SpawnTab("DefaultDomain")),
+			mkey("c", act.CloseCurrentTab({ confirm = false })),
+		},
+
+		pane_mode = {
+			mkey("h", act.SplitPane({ direction = "Left", size = { Percent = 50 } })),
+			mkey("j", act.SplitPane({ direction = "Down", size = { Percent = 7 } })),
+			mkey("k", act.SplitPane({ direction = "Up", size = { Percent = 7 } })),
+			mkey("l", act.SplitPane({ direction = "Right", size = { Percent = 50 } })),
+			mkey("c", act.CloseCurrentPane({ confirm = false })),
+		},
+
+		search_mode = {
+			key("Escape", "NONE", act.CopyMode("Close")),
+			key("j", "ALT", act.CopyMode("NextMatch")),
+			key("k", "ALT", act.CopyMode("PriorMatch")),
+			key("J", "ALT", act.CopyMode("NextMatchPage")),
+			key("K", "ALT", act.CopyMode("PriorMatchPage")),
+			key("t", "CTRL", act.CopyMode("CycleMatchType")),
+			key("d", "CTRL", act.CopyMode("ClearPattern")),
+		},
 	},
 }
