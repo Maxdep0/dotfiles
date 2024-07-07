@@ -1,3 +1,5 @@
+# shellcheck shell=zsh
+
 typeset -U path
 
 path() { [[ -d "$1" ]] && path=("$1" $path); }
@@ -38,7 +40,7 @@ export XDG_MUSIC_DIR="$HOME/Videos" # I dont download music.. so dir is Videos
 # ZSH
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
 export ZSH_PLUGINS_DIR="$XDG_DATA_HOME/zsh/plugins"
-export HISTFILE="$XDG_CACHE_HOME/zsh/.zhistory"
+export HISTFILE="$ZDOTDIR/.zhistory"
 export HISTSIZE=10000
 export SAVEHIST=10000
 export KEYTIMEOUT=1

@@ -22,6 +22,7 @@ alias pacr="sudo pacman -Rns"
 alias paclock="sudo rm /var/lib/pacman/db.lck"
 alias pacclean="sudo pacman -Sc"
 
+
 #   Yayy
 alias yayi="yay -S --needed"
 alias yays="yay -Ss"
