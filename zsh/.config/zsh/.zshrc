@@ -134,7 +134,6 @@ else
     echo "Unsupported session type for registers check -> .zshrc line $LINENO"
 fi
 
-
 CTRL="^"
 ALT="M-"
 BACKSPACE="^?"
@@ -163,20 +162,27 @@ zle -N vi-change-eol zle_vi_change_eol
 zle -N vi-paste-visual zle_vi_paste_visual_mode
 
 # Global
-bindkey -r '^D'
-bindkey -r '^U'
-bindkey "${BACKSPACE}" backward-delete-char
-bindkey "${CTRL}L" accept-line
+bindkey -r "${ALT}j"
+bindkey -r "${CTRL}j"
+bindkey -r "${ALT}k"
+# bindkey -r "u"
+bindkey -r "${CTRL}R"
+bindkey -r "${CTRL}D"
+bindkey -r "${CTRL}U"
 bindkey "${CTRL}Z" undo
 bindkey "${CTRL}Y" redo
 
-# Insert Mode
-bindkey -M viins "${CTRL}H" backward-delete-char
-bindkey -M viins "${CTRL}J" menu-select
-bindkey -M viins "${CTRL}${SPACE}" complete-word
-bindkey -M viins "${CTRL}P" menu-complete
-bindkey -M viins "${CTRL}N" reverse-menu-complete
+bindkey "${CTRL}L" accept-line
 
+bindkey "${CTRL}H" backward-delete-char
+bindkey "${BACKSPACE}" backward-delete-char
+bindkey "${TAB}" menu-select
+
+# Insert Mode
+bindkey -M viins "${CTRL}${SPACE}" complete-word
+bindkey -M viins "${CTRL}j" menu-select
+bindkey -M viins "${CTRL}p" .history-search-backward 
+bindkey -M viins "${CTRL}n" .history-search-forward 
 
 # Completion Menu
 bindkey -M menuselect "h" vi-backward-char
@@ -184,8 +190,8 @@ bindkey -M menuselect "k" vi-up-line-or-history
 bindkey -M menuselect "j" vi-down-line-or-history
 bindkey -M menuselect "l" vi-forward-char
 bindkey -M menuselect "${CTRL}L" accept-line
-bindkey -M menuselect "${CTRL}M" accept-line
-bindkey -M menuselect "${TAB}" send-break
+bindkey -M menuselect "${CTRL}B" send-break
+bindkey -M menuselect "${ESC}" send-break
 
 # Yank/Paste/Remove
 bindkey -M vicmd "y" vi-yank
@@ -201,7 +207,7 @@ bindkey -M visual "p" vi-paste-visual
 # Fzf
 source <(fzf --zsh)
 
-bindkey -s "${CTRL}F" "zsh $ZDOTDIR/scripts/fzf-fd.zsh\n"
+bindkey -s "${CTRL}F" "source $ZDOTDIR/scripts/fzf-fd.zsh\n"
 bindkey -s "${CTRL}G" "source $ZDOTDIR/scripts/fzf-rg.zsh\n"
 
 autoload -Uz bashcompinit; bashcompinit 
