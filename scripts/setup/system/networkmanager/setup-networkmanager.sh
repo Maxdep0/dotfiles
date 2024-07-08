@@ -5,12 +5,11 @@ source "$SCRIPT_SETUP_DIR/utils.sh"
 
 DISPATCHER_DIR="/etc/NetworkManager/dispatcher.d"
 
-setup_network_manager_scripts() {
-
+setup_networkmanager_scripts() {
     logger "dispatcher.d setup in progress..."
 
     if [ -d "$DISPATCHER_DIR" ]; then
-        if sudo stow --dir="$SCRIPT_SETUP_DIR/system" --target="$DISPATCHER_DIR" -D networkmanager; then
+        if sudo stow --dir="$SCRIPT_SETUP_DIR/system" --ignore="setup-networkmanager.sh" --target="$DISPATCHER_DIR" -D networkmanager; then
             logger "dispatcher.d de-stowed."
         else
             logger "dispatcher.d de-stow failed."
@@ -18,13 +17,13 @@ setup_network_manager_scripts() {
         fi
 
         if sudo rm -rf "$DISPATCHER_DIR/99-update-dns.sh" "$DISPATCHER_DIR/99-update-hosts.sh"; then
-            logger "dispatcher.d removed."
+            logger "dispatcher.d scripts removed."
         else
-            logger "dispatcher.d remove failed."
+            logger "dispatcher.d scripts remove failed."
             return 1
         fi
 
-        if sudo stow --dir="$SCRIPT_SETUP_DIR/system" --target="$DISPATCHER_DIR" networkmanager; then
+        if sudo stow --dir="$SCRIPT_SETUP_DIR/system" --ignore="setup-networkmanager.sh" --target="$DISPATCHER_DIR" networkmanager; then
             logger "dispatcher.d stowed."
             return 0
         else
@@ -38,18 +37,20 @@ setup_network_manager_scripts() {
 
 }
 
-setup_permissions() {
+setup_networkmanager_scripts_permissions() {
     logger "dispatcher.d scripts permissions in progress..."
     if [ -f "$DISPATCHER_DIR/99-update-hosts.sh" ] && [ -f "$DISPATCHER_DIR/99-update-dns.sh" ]; then
 
         if [ -x "$DISPATCHER_DIR/99-update-hosts.sh" ] && [ -x "$DISPATCHER_DIR/99-update-dns.sh" ]; then
             logger "dispatcher.d scripts permissions already set."
+
         else
             sudo chown root:root "$DISPATCHER_DIR/99-update-hosts.sh" || return 1
             sudo chmod +x "$DISPATCHER_DIR/99-update-hosts.sh" || return 1
 
             sudo chown root:root "$DISPATCHER_DIR/99-update-dns.sh" || return 1
             sudo chmod +x "$DISPATCHER_DIR/99-update-dns.sh" || return 1
+            return 0
         fi
 
     else
@@ -62,16 +63,17 @@ setup_permissions() {
 }
 
 main() {
-    if setup_network_manager_scripts; then
+    #     sudo systemctl enable --now NetworkManager.service || log "sudo sysctl enable --now NetworkManager.service | $LINENO"
+
+    if setup_networkmanager_scripts; then
         logger "dispatcher.d setup done."
 
-        if setup_permissions; then
-            logger "dispatcher.d scripts permissions set"
+        if setup_networkmanager_scripts_permissions; then
+            logger "dispatcher.d scripts permissions set."
         else
-            logger "dispatcher.d scripts permissions failed"
+            logger "dispatcher.d scripts permissions failed."
             return 1
         fi
-
         return 0
     else
         logger "dispatcher.d setup failed."

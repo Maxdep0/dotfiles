@@ -6,7 +6,7 @@ source "$SCRIPT_SETUP_DIR/utils.sh"
 
 ETC="/etc"
 
-install_nftables_config() {
+install_nftables() {
 
     if pac_check nftables; then
         logger "nftables is installed"
@@ -102,7 +102,7 @@ setup_nftables_service() {
 }
 
 main() {
-    if install_nftables_config; then
+    if install_nftables; then
         logger "nftables setup in progress..."
 
         if setup_nftables_config; then
@@ -117,11 +117,12 @@ main() {
             fi
 
         else
-            logger "nftables setup failed."
+            logger "nftables setup failed"
             return 1
         fi
 
     else
+        logger "nftables installation failed"
         return 1
     fi
 
