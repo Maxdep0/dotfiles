@@ -1,24 +1,13 @@
 # shellcheck shell=zsh
-
-#
-# For initial linux setup
-#
-
 [ -f "$HOME/.bash_history" ] && rm -f "$HOME/.bash_history" 
-[ ! -d "$HOME/.config/zsh" ] && mkdir -pv "$HOME/.config/zsh"
-[ ! -d "$XDG_CACHE_HOME/zsh" ] && mkdir -pv "$XDG_CACHE_HOME/zsh" 
 
-#
-# Sourcing and installing
-#
-
-# ZSH Autosuggestions
-if [ -s "$ZSH_PLUGINS_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
-    source "$ZSH_PLUGINS_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh"
+# ZSH Autocomplete
+if [ -s "$ZSH_PLUGINS_DIR/zsh-autocomplete/zsh-autocomplete.plugin.zsh" ]; then
+    source "$ZSH_PLUGINS_DIR/zsh-autocomplete/zsh-autocomplete.plugin.zsh"
 else
-    [ -d "$ZSH_PLUGINS_DIR/zsh-autosuggestions" ] || mkdir -pv "$ZSH_PLUGINS_DIR/zsh-autosuggestions"
-    git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_PLUGINS_DIR/zsh-autosuggestions"
-    source "$ZSH_PLUGINS_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh"
+    [ -d "$ZSH_PLUGINS_DIR/zsh-autocomplete" ] || mkdir -pv "$ZSH_PLUGINS_DIR/zsh-autocomplete"
+    git clone --depth 1 -- https://github.com/marlonrichert/zsh-autocomplete.git "$ZSH_PLUGINS_DIR/zsh-autocomplete"
+    source "$ZSH_PLUGINS_DIR/zsh-autocomplete/zsh-autocomplete.plugin.zsh"
 fi
 
 # NVM
@@ -33,14 +22,8 @@ fi
 # Aliases
 [ -s "$ZDOTDIR/.aliasrc" ] && source "$ZDOTDIR/.aliasrc" || echo "Aliases not found" 
 
-#############
-
-source "$HOME/Projects/arch-script/.aliases"
-
-#############
-
 #
-# Options - http://zsh.sourceforge.net/Doc/Release/Options.html 
+# http://zsh.sourceforge.net/Doc/Release/Options.html 
 #
 
 # Changing Directories
@@ -85,7 +68,6 @@ setopt CORRECT
 setopt CORRECT_ALL
 setopt INTERACTIVE_COMMENTS
 setopt RC_QUOTES
-setopt IGNORE_EOF
 
 # Job Control
 setopt BG_NICE
@@ -100,8 +82,11 @@ setopt COMBINING_CHARS
 setopt VI
 setopt ZLE
 
+
+setopt IGNORE_EOF
+
 #
-# Custom Prompt - https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html 
+# https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html 
 #
 
 autoload -Uz vcs_info
@@ -123,28 +108,16 @@ zstyle ':vcs_info:*' enable git
 PROMPT='%B%F{cyan}%~%f%b ${vcs_info_msg_0_}%B%F{white}>%f%b '
 
 #
-# Prepare functions
+# https://zsh.sourceforge.io/Doc/Release/Completion-System.html#Completion-System 
+# https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#Standard-Widgets 
+# https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#Zle-Widgets
 #
 
 fpath=($fpath /usr/local/share/zsh/site-functions /usr/share/zsh/site-functions)
 
-source <(fzf --zsh)
-zmodload zsh/complist # zmodload before compinit!
+zmodload zsh/complist 
 bindkey -v
 
-CTRL="^"
-ALT="M-"
-BACKSPACE="^?"
-TAB="^I"
-ENTER="^M"
-ESC="^["
-SPACE="@"
-
-#
-# Functions
-#
-
-# Target specific copy manager based on OS
 if [ "$XDG_SESSION_TYPE" = 'wayland' ]; then
     zle_vi_yank_to_system_register() { zle .vi-yank; echo -n "$CUTBUFFER" | wl-copy; }
     zle_vi_paste_from_system_register() { LBUFFER+=$(wl-paste); CUTBUFFER=""; zle redisplay; }
@@ -161,12 +134,13 @@ else
     echo "Unsupported session type for registers check -> .zshrc line $LINENO"
 fi
 
-# Custom FZF
-open_fzf_fd() { BUFFER+="source $ZDOTDIR/scripts/fzf-fd.zsh"; zle accept-line}
-open_fzf_rg() { BUFFER+="source $ZDOTDIR/scripts/fzf-rg.zsh"; zle accept-line}
-
-# Directories movement
-go_back() { BUFFER+=".."; zle accept-line}
+CTRL="^"
+ALT="M-"
+BACKSPACE="^?"
+TAB="^I"
+ENTER="^M"
+ESC="^["
+SPACE="@"
 
 # Disable register change for delete, etc..
 zle_vi_delete() { zle .vi-delete; CUTBUFFER=""; }
@@ -176,10 +150,7 @@ zle_vi_substitute_char() { zle .vi-substitute-char; CUTBUFFER=""; }
 zle_vi_kill_line() { zle .vi-kill-line; CUTBUFFER=""; }
 zle_vi_change_eol() { zle .vi-change-eol; CUTBUFFER=""; }
 
-#
-# Widgets  --  https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#Standard-Widgets  --  https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#Zle-Widgets
-#
-
+# Widgets
 zle -N vi-yank zle_vi_yank_to_system_register
 zle -N vi-put-after zle_vi_paste_from_system_register
 zle -N vi-delete zle_vi_delete
@@ -189,9 +160,6 @@ zle -N vi-substitute-char zle_vi_substitute_char
 zle -N vi-kill-line zle_vi_kill_line
 zle -N vi-change-eol zle_vi_change_eol
 zle -N vi-paste-visual zle_vi_paste_visual_mode
-zle -N go_back
-zle -N open_fzf_fd
-zle -N open_fzf_rg
 
 # Global
 bindkey -r "${ALT}j"
@@ -203,34 +171,18 @@ bindkey -r "${CTRL}D"
 bindkey -r "${CTRL}U"
 bindkey "${CTRL}Z" undo
 bindkey "${CTRL}Y" redo
-bindkey "${CTRL}f" open_fzf_fd
-bindkey "${CTRL}g" open_fzf_rg
+
 bindkey "${CTRL}L" accept-line
+
 bindkey "${CTRL}H" backward-delete-char
 bindkey "${BACKSPACE}" backward-delete-char
 bindkey "${TAB}" menu-select
-
-# Normal Mode
-bindkey -M vicmd "${CTRL}b" go_back
-bindkey -M vicmd "y" vi-yank
-bindkey -M vicmd "p" vi-put-after
-bindkey -M vicmd "d" vi-delete
-bindkey -M vicmd "c" vi-change
-bindkey -M vicmd "x" vi-delete-char
-bindkey -M vicmd "s" vi-substitute-char
-bindkey -M vicmd "D" vi-kill-line
-bindkey -M vicmd "C" vi-change-eol
 
 # Insert Mode
 bindkey -M viins "${CTRL}${SPACE}" complete-word
 bindkey -M viins "${CTRL}j" menu-select
 bindkey -M viins "${CTRL}p" .history-search-backward 
 bindkey -M viins "${CTRL}n" .history-search-forward 
-bindkey -M viins "${CTRL}b" go_back
-bindkey -M viins "${CTRL}k" forward-char 
-
-# Visual Mode
-bindkey -M visual "p" vi-paste-visual
 
 # Completion Menu
 bindkey -M menuselect "h" vi-backward-char
@@ -241,49 +193,38 @@ bindkey -M menuselect "${CTRL}L" accept-line
 bindkey -M menuselect "${CTRL}B" send-break
 bindkey -M menuselect "${ESC}" send-break
 
-#
-# Completions  -- # https://zsh.sourceforge.io/Doc/Release/Completion-System.html#Completion-System 
-#
+# Yank/Paste/Remove
+bindkey -M vicmd "y" vi-yank
+bindkey -M vicmd "p" vi-put-after
+bindkey -M vicmd "d" vi-delete
+bindkey -M vicmd "c" vi-change
+bindkey -M vicmd "x" vi-delete-char
+bindkey -M vicmd "s" vi-substitute-char
+bindkey -M vicmd "D" vi-kill-line
+bindkey -M vicmd "C" vi-change-eol
+bindkey -M visual "p" vi-paste-visual
 
-autoload -Uz compinit
-compinit -d "$XDG_CACHE_HOME/zsh/.zcompdump_${ZSH_VERSION}"
+# Fzf
+source <(fzf --zsh)
+
+bindkey -s "${CTRL}F" "source $ZDOTDIR/scripts/fzf-fd.zsh\n"
+bindkey -s "${CTRL}G" "source $ZDOTDIR/scripts/fzf-rg.zsh\n"
+
 autoload -Uz bashcompinit; bashcompinit 
 autoload -U colors; colors
 
-# Source bash completion after compinit to avoid creating duplicated zcompdump
+# Zstyle settings
+zstyle ':autocomplete:*' min-input 2
+zstyle ':autocomplete:*' delay 0.3 
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':autocomplete:*complete*:*' insert-unambiguous yes
+zstyle ':autocomplete:*history*:*' insert-unambiguous yes
+zstyle ':autocomplete:menu-search:*' insert-unambiguous yes
+
+
 [ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion" || echo "Bash Completions Not Found" 
 
-_comp_options+=(globdots)
-
-# Completion settions
-zstyle ":completion:*" use-cache on
-zstyle ":completion:*" cache-path "$XDG_CACHE_HOME/zsh/.zcompcache_{$ZSH_VERSION}"
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*' expand prefix suffix
-
-zstyle ':completion:*' completer _list _expand _complete _ignored _match _correct _approximate _prefix _extensions _files
-zstyle ':completion:*' file-sort modification
-zstyle ':completion:*' ignore-parents parent pwd
-zstyle ':completion:*' matcher-list 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-]=** r:|=**' 'l:|=* r:|=*' 'm:{0-9}={0-9}' 'm:{a-zA-Z0-9}={A-Za-z0-9}' 'r:|=* l:|=* r:|=*' 'l:|=* m:{a-zA-Z0-9}={A-Za-z0-9}'
-zstyle ':completion:*' match-original both
-zstyle ':completion:*' max-errors 2 numeric
-zstyle ':completion:*' old-menu false
-zstyle ":completion:*" menu select
-zstyle ':completion:*' squeeze-slashes true
-zstyle ":completion:*" complete-options true
-zstyle ':completion:*' word true
-zstyle ':completion:*:urls' sort true
-zstyle ':completion:*:history-words' sort true
-zstyle ':completion:*:history-words' stop true
-zstyle ":completion:*:*:*:*:descriptions" format "%F{green}-- %d --%f"
-zstyle ":completion:*:*:*:*:corrections" format "%F{yellow}!- %d (errors: %e) -!%f"
-zstyle ":completion:*:*:-command-:*:*" group-order alias builtins functions commands
-
-# ZSH autosuggestions settings
-ZSH_AUTOSUGGEST_STRATEGY=(history completion)
-
-# Syntax Highlighting  --  have to be last!
+# Syntax Highlighting
 if [ -s "$ZSH_PLUGINS_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
     source "$ZSH_PLUGINS_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" 
 else
@@ -291,5 +232,4 @@ else
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_PLUGINS_DIR/zsh-syntax-highlighting"
     source "$ZSH_PLUGINS_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" 
 fi
-
 

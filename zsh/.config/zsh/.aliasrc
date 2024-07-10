@@ -3,6 +3,9 @@ alias so="source $HOME/.zshenv"
 alias cl="clear"
 alias ls="ls -a --color=auto"
 
+
+alias rm="rm -i"
+
 if [[ -f "/usr/bin/fd" ]] || [[ -f "$HOME/bin/fd" ]] || [[ -f "$HOME/.local/bin/fd" ]]; then
     alias fdf='fd -H -d 1 -t f'
     alias fdd='fd -H -d 1 -t d'
