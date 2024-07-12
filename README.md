@@ -156,7 +156,7 @@ $ reflector --country GB,DE,FR,NL,SE,CZ,SK --protocol https --latest 20 --sort r
 ### Install essential [packages](https://wiki.archlinux.org/title/installation_guide#Select_the_mirrors)
 
 ```zsh
-$ pacstrap -K /mnt base linux linux-firmware base-devel sudo nano
+$ pacstrap -K /mnt base linux linux-firmware base-devel sudo vim nano
 ```
 
 ### Configure the system

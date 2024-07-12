@@ -1,8 +1,8 @@
 [Unit]
-Description=Run reflector daily
+Description=Run reflector weekly
 
 [Timer]
-OnCalendar=daily
+OnCalendar=weekly
 Persistent=true
 
 [Install]

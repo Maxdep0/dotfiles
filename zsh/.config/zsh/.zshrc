@@ -33,12 +33,6 @@ fi
 # Aliases
 [ -s "$ZDOTDIR/.aliasrc" ] && source "$ZDOTDIR/.aliasrc" || echo "Aliases not found" 
 
-#############
-
-source "$HOME/Projects/arch-script/.aliases"
-
-#############
-
 #
 # Options - http://zsh.sourceforge.net/Doc/Release/Options.html 
 #

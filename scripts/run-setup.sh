@@ -1,33 +1,39 @@
 #!/usr/bin/env bash
 
-rm -f "$HOME/logs/setup/o.log" "$HOME/logs/setup/e.log"
-
-[ ! -d "$HOME/logs/setup" ] && mkdir -pv "$HOME/logs/setup"
-[ ! -d "$HOME/.config" ] && mkdir -pv "$HOME/.config"
-[ ! -d "$HOME/Downloads" ] && mkdir -pv "$HOME/Downloads"
-[ ! -d "$HOME/Documents" ] && mkdir -pv "$HOME/Documents"
-[ ! -d "$HOME/Pictures" ] && mkdir -pv "$HOME/Pictures/Background"
-[ ! -d "$HOME/Projects" ] && mkdir -pv "$HOME/Projects"
-[ ! -d "$HOME/Videos" ] && mkdir -pv "$HOME/Videos"
+[ -d "$HOME/logs/setup" ] && mkdir -p "$HOME/logs/setup"
 
 source "$HOME/dotfiles/scripts/setup/env.sh"
 source "$HOME/dotfiles/scripts/setup/utils.sh"
 
+timestamp=$(date +'%d-%m_%H-%M')
+exec > >(tee -a "$LOGS_DIR/setup/output-$timestamp.log") 2>&1
+
 main() {
+    logger "⏳⏳⏳ INSTALLATION STARTED"
 
-    # Import packages into .txt
-    # Stow
-    # Packages....
-    # Essential AUX > wayland > Intel > Nvidia > Neovim
-    # System Setup
-    # Reboot
+    # if bash "$SCRIPT_SETUP_DIR/pre-setup.sh"; then
+    #     if bash "$SCRIPT_SYSTEM_DIR/setup-system.sh"; then
+    #         if bash "$SCRIPT_BASE_DIR/setup-base.sh"; then
+    #             if bash "$SCRIPT_SETUP_DIR/post-setup.sh"; then
+    #                 logger "✅✅✅ INSTALLATION DONE"
+    #                 return 0
+    #             fi
+    #         fi
+    #     fi
+    # fi
+    if bash "$SCRIPT_SETUP_DIR/pre-setup.sh"; then
+        if bash "$SCRIPT_SETUP_DIR/setup-system.sh"; then
+            if bash "$SCRIPT_SETUP_DIR/setup-base.sh"; then
+                if bash "$SCRIPT_SETUP_DIR/post-setup.sh"; then
+                    logger "✅✅✅ INSTALLATION DONE"
+                    return 0
+                fi
+            fi
+        fi
+    fi
 
-    # timestamp=$(date +'%d-%m_%H-%M')
-    # exec > >(tee -a "$LOGS_DIR/setup/output$timestamp.log") 2>&1
-
-    exec > >(tee -a "$LOGS_DIR/setup/o.log") 2>&1
-
-    # bash "$SCRIPT_SETUP_DIR/system/setup-system.sh"
+    logger "🔴🔴🔴 INSTALLATION FAILED"
+    return 1
 }
 
 main
