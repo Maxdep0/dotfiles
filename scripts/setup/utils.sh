@@ -106,7 +106,7 @@ if_no_backup_then_create() {
         logger "Backup already exists.  ($target.bak)"
         return 0
     elif [ -L "$target" ]; then
-        logger "Failed to create backtup because target file is symlink"
+        logger "Failed to create backup because target file is symlink"
         return 1
     fi
 
