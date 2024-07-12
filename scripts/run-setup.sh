@@ -27,7 +27,7 @@ main() {
 
     exec > >(tee -a "$LOGS_DIR/setup/o.log") 2>&1
 
-    bash "$SCRIPT_SETUP_DIR/system/setup-system.sh"
+    # bash "$SCRIPT_SETUP_DIR/system/setup-system.sh"
 }
 
 main

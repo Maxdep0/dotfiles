@@ -67,7 +67,6 @@ export LD_LIBRARY_PATH=/usr/lib/:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=/usr/local/lib/:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=/usr/local/lib64/:$LD_LIBRARY_PATH
 
-
 # Load it only for tty1, so i can debug it in tty2
 if [ "$(tty)" = "/dev/tty1" ]; then
     export LIBVA_DRIVER_NAME=iHD
@@ -84,5 +83,5 @@ if [ "$(tty)" = "/dev/tty5" ]; then
     export WLR_NO_HARDWARE_CURSORS=1
     export MOZ_DRM_DEVICE=/dev/dri/card0:/dev/dri/card1
     export MOZ_ENABLE_WAYLAND=1
-    timeout 1m sway --unsupported-gpu -d &> "$HOME/logs/sway-debug-$(date + '%m-%d_%H-%M')"
+    timeout 1m sway --unsupported-gpu -d &>"$HOME/logs/sway-debug-$(date + '%m-%d_%H-%M')"
 fi

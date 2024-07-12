@@ -8,16 +8,16 @@ setup_journalctl() {
     logger "journald.conf setup in progress..."
 
     if [ -f "$SYSTEMD/journald.conf" ]; then
-
-        if [ ! -f "$SYSTEMD/journald.conf.bak" ]; then
-            if sudo cp "$SYSTEMD/journald.conf" "$SYSTEMD/journald.conf.bak"; then
-                logger "backup created"
-            else
-                logger "copy original file failed"
-                return 1
-            fi
-
-        fi
+        #
+        # if [ ! -f "$SYSTEMD/journald.conf.bak" ]; then
+        #     if sudo cp "$SYSTEMD/journald.conf" "$SYSTEMD/journald.conf.bak"; then
+        #         logger "backup created"
+        #     else
+        #         logger "copy original file failed"
+        #         return 1
+        #     fi
+        #
+        # fi
 
         if [ -f "$SYSTEMD/journald.conf.bak" ]; then
             if sudo sed -i '/^#*SystemMaxUse/ s/^#*SystemMaxUse.*/SystemMaxUse=50M/' "$SYSTEMD/journald.conf"; then

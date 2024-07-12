@@ -39,6 +39,7 @@
 
 [help]
     autocorrect = 1
+
 [alias]
     s = status -s
     r = remote -v

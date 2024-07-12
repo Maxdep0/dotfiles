@@ -31,9 +31,9 @@
     set $ws4 4
     set $ws5 5
 
-    set $laptop_monitor 'LG Display 0x0701 Unknown'
-    set $monitor_uk 'AOC U28G2XU2 1322131231233'
-    # set $monitor_cz '.....'
+    set $dell_int_monitor 'LG Display 0x0701 Unknown'
+    set $aoc_ext_monitor_uk 'AOC U28G2XU2 1322131231233'
+    set $aoc_ext_monitor_cz 'AOC Q27G2SG4 XFXP8HA006120'
 
 #
 # Binds
@@ -134,7 +134,7 @@
     # Output
     #
 
-    output $laptop_monitor {
+    output $dell_int_monitor {
         mode 1920x1200@60.001Hz 
         adaptive_sync enabled
         max_render_time 1
@@ -142,7 +142,7 @@
         scale 1
     }
 
-    output $monitor_uk {
+    output $aoc_ext_monitor_uk {
         mode 3840x2160@143.856Hz 
         adaptive_sync enabled
         max_render_time 1 
@@ -151,14 +151,15 @@
         scale 1.1
     }
 
-    # output $monitor_cz {
-    #     mode 3840x2160@143.856Hz 
-    #     adaptive_sync enabled
-    #     max_render_time 1 
-    #     position 1920,0
-    #     scale_filter smart
-    #     scale 1.1
-    # }
+    output $aoc_ext_monitor_cz {
+        mode 2560x1440@143.912Hz 
+        adaptive_sync enabled
+        max_render_time 1 
+        position 1920,0
+        scale_filter smart
+        scale 0.9
+
+    }
 
     #
     # Input
@@ -193,11 +194,12 @@
     #
 
     # Workspace monitor priority
-    workspace $ws1 output $laptop_monitor $monitor_uk
-    workspace $ws2 output $monitor_uk $laptop_monitor
-    workspace $ws3 output $monitor_uk $laptop_monitor
-    workspace $ws4 output $monitor_uk $laptop_monitor
-    workspace $ws5 output $monitor_uk $laptop_monitor
+    workspace $ws1 output $dell_int_monitor $aoc_ext_monitor_uk $aoc_ext_monitor_cz
+    workspace $ws2 output $aoc_ext_monitor_uk $aoc_ext_monitor_cz $dell_int_monitor
+    workspace $ws3 output $aoc_ext_monitor_uk $aoc_ext_monitor_cz $dell_int_monitor
+    workspace $ws4 output $aoc_ext_monitor_uk $aoc_ext_monitor_cz $dell_int_monitor 
+    workspace $ws5 output $dell_int_monitor $aoc_ext_monitor_uk $aoc_ext_monitor_cz
+
 
     #
     # App settings

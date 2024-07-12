@@ -47,6 +47,7 @@ return {
 	font = wezterm.font("JetBrains Mono", { weight = "Light" }),
 	adjust_window_size_when_changing_font_size = false,
 	window_background_opacity = 0.7,
+	-- window_background_opacity = 0.95,
 	window_padding = { left = 0, right = 0, top = 0, bottom = 0 },
 use_fancy_tab_bar = false,
 	max_fps = 144,
@@ -55,19 +56,6 @@ use_fancy_tab_bar = false,
 		tab_bar = { background = "rgba(0,0,0,0.6)" },
 		compose_cursor = "orange",
 	},
-
-	-- window_frame = {
-	-- 	inactive_titlebar_bg = "#353535",
-	-- 	active_titlebar_bg = "#2b2042",
-	-- 	inactive_titlebar_fg = "#cccccc",
-	-- 	active_titlebar_fg = "#ffffff",
-	-- 	inactive_titlebar_border_bottom = "#2b2042",
-	-- 	active_titlebar_border_bottom = "#2b2042",
-	-- 	button_fg = "#cccccc",
-	-- 	button_bg = "#2b2042",
-	-- 	button_hover_fg = "#ffffff",
-	-- 	button_hover_bg = "#3b3052",
-	-- },
 
 	leader = { key = "Space", mods = "SHIFT" },
 
