@@ -156,11 +156,11 @@ else
 fi
 
 # Custom FZF
-open_fzf_fd() { BUFFER+="source $ZDOTDIR/scripts/fzf-fd.zsh"; zle accept-line}
-open_fzf_rg() { BUFFER+="source $ZDOTDIR/scripts/fzf-rg.zsh"; zle accept-line}
+open_fzf_fd() { BUFFER+="source $ZDOTDIR/scripts/fzf-fd.zsh"; zle accept-line; }
+open_fzf_rg() { BUFFER+="source $ZDOTDIR/scripts/fzf-rg.zsh"; zle accept-line; }
 
 # Directories movement
-go_back() { BUFFER+=".."; zle accept-line}
+go_back() { BUFFER+=".."; zle accept-line; }
 
 # Disable register change for delete, etc..
 zle_vi_delete() { zle .vi-delete; CUTBUFFER=""; }
