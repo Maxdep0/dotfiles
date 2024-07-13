@@ -10,7 +10,7 @@ create_dirs() {
         "$HOME/Downloads" \
         "$HOME/Pictures/Background" \
         "$HOME/Projects" \
-        "$HOME/logs" \
+        "$HOME/logs/setup" \
         "$HOME/Videos"; then
         logger "✅ DIRS CREATED"
         return 0
@@ -54,14 +54,14 @@ stow_dirs() {
 main() {
     logger "⏳⏳ PRE-SETUP STARTED"
 
-    if sudo pacman -Syu --noconfirm; then
+    sudo pacman -Syu --noconfirm
+
         if create_dirs; then
             if stow_dirs; then
                 logger "✅✅ PRE SETUP DONE"
                 return 0
             fi
         fi
-    fi
 
     logger "🔴🔴 PRE-SETUP FAILED"
     return 1

@@ -14,6 +14,10 @@ pac_check() {
     pacman -Qi "$1" &>/dev/null 2>&1
 }
 
+cmd_check() {
+	command -v "$1" >/dev/null 2>&1
+}
+
 clone_makepkg() {
     local link=$1
     local dir="$XDG_DOWNLOAD_DIR/${1##*/}"

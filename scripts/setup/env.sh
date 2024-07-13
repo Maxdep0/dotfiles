@@ -37,7 +37,7 @@ export PACCACHE_TIMER="/etc/systemd/system/paccache.timer"
 
 export SSHD_CONFIG="/etc/ssh/sshd_config"
 
-export REFLECTOR_DIR="/etc/systemd/system"
+export REFLECTOR_DIR="/etc/xdg/reflector"
 export REFLECTOR_CONF="/etc/xdg/reflector/reflector.conf"
 export REFLECTOR_TIMER="/etc/systemd/system/reflector.timer"
 
@@ -47,4 +47,4 @@ export NFTABLES_CONF="/etc/nftables.conf"
 
 export NM_DISPATCHER_DIR="/etc/NetworkManager/dispatcher.d"
 
-# Base
+

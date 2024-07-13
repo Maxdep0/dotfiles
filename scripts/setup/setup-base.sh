@@ -14,11 +14,14 @@ install_packages() {
         ninja curl cmake make wget curl tar unzip zip p7zip \
         ripgrep fd fzf tree-sitter tree-sitter-cli bat \
         python python-pip python-pynvim luarocks jdk-openjdk lua51 \
-        polkit brightnessctl grim slurp mpv \
-        mpv feh libreoffice-fresh acpi htop \
-        neofetch discord firefox zsh wezterm; then
+        polkit brightnessctl grim slurp network-manager-applet \
+        mpv feh libreoffice-fresh acpi htop tree \
+        neofetch discord firefox zsh wezterm \
+	    noto-fonts noto-fonts-emoji noto-fonts-extra \
+	    ttf-dejavu ttf-liberation ttf-jetbrains-mono ttf-nerd-fonts-symbols-mono; then
         logger "✅ PACKAGES SETUP DONE"
         return 0
+        echo "OK"
 
     fi
 
@@ -91,14 +94,14 @@ install_and_setup_audio() {
 }
 
 ### SYSTEM
-# disable_powerbutton() {
-#     if ! sudo sed -i 's/^#*\s*HandlePowerKey\s*=.*/HandlePowerKey=ignore/' \
-#         /etc/systemd/logind.conf; then
-#             logger "Failed to update logind.conf"
-#             return 1
-#     fi
-#     return 0
-# }
+ disable_powerbutton() {
+     if ! sudo sed -i 's/^#*\s*HandlePowerKey\s*=.*/HandlePowerKey=ignore/' \
+         /etc/systemd/logind.conf; then
+             logger "Failed to update logind.conf"
+             return 1
+     fi
+     return 0
+ }
 
 #
 # Neovim
@@ -235,10 +238,16 @@ install_nvidia_drivers() {
     return 1
 }
 
+add () {
+	# yay clipman satty
+	#
+}
+
 main() {
     logger "⏳⏳ BASE SETUP STARTED"
 
     if install_packages; then
+	    if disable_powerbutton; then
         if install_aux_tools; then
             if install_and_setup_audio; then
                 if install_and_setup_neovim; then
@@ -246,11 +255,13 @@ main() {
                         if install_intel_drivers; then
                             if install_nvidia_drivers; then
                                 logger "✅✅ BASE SETUP DONE"
+				yay -S --needed --noconfirm clipman satty
                                 return 0
                             fi
                         fi
                     fi
                 fi
+	    fi
             fi
         fi
     fi

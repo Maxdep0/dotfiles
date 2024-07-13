@@ -98,7 +98,8 @@ install_and_setup_reflector() {
         if if_no_backup_then_create "move" "$REFLECTOR_CONF"; then
             if copy_file_directly_from_src "$REFLECTOR_DIR" "reflector.conf"; then
                 if create_or_relink_symlink "$REFLECTOR_TIMER"; then
-                    if enable_and_restart reflector.service; then
+                    # if enable_and_restart reflector.service; then
+                    if sudo systemctl enable --now reflector.service; then
                         if enable_and_restart reflector.timer; then
                             logger "✅ REFLECTOR SETUP DONE"
                             return 0
