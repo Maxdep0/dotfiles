@@ -8,12 +8,10 @@ source "$HOME/dotfiles/scripts/setup/utils.sh"
 timestamp=$(date +'%d-%m_%H-%M')
 exec > >(tee -a "$LOGS_DIR/setup/output-$timestamp.log") 2>&1
 
-
 #
 # TODO: Replace all system symlings with copy
 # TODO: Store .bak or nfdefault.conf in script src dir
 #
-
 
 main() {
     logger "⏳⏳⏳ INSTALLATION STARTED"

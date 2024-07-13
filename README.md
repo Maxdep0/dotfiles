@@ -36,7 +36,7 @@ $ iwctl
 # Test connecton
 $ ping google.com
 
-# Update keyring
+# Update keyring ( Without latest ISO it probably throw storage error )
 $ pacman -Syu archlinux-keyring
 
 ```
@@ -149,13 +149,13 @@ $ lsblk
 ```zsh
 $ cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
 
-$ reflector --country GB,DE,FR,NL,SE,CZ,SK --protocol https --latest 20 --sort rate --age 24 --completion-percent 100 --fastest 10 --save /etc/pacman.d/mirrorlist
+$ reflector --country GB,DE,FR,NL,SE,CZ,SK --protocol https --latest 20 --sort rate --age 48 --completion-percent 100 --fastest 10 --save /etc/pacman.d/mirrorlist
 ```
 
 ### Install essential [packages](https://wiki.archlinux.org/title/installation_guide#Select_the_mirrors)
 
 ```zsh
-$ pacstrap -K /mnt base linux linux-firmware base-devel sudo vim nano
+$ pacstrap -K /mnt base linux linux-firmware base-devel sudo vim
 ```
 
 ### Configure the system
@@ -177,7 +177,7 @@ $ ln -sf /usr/share/zoneinfo/Europe/London /etc/localtime
 $ hwclock --systohc
 
 #Edit locale.gen and uncomment needed UTF-8 locales.
-$ nano /etc/locale.gen
+$ vim /etc/locale.gen
 # en_GB.UTF-8 UTF-8
 
 $ locale-gen
@@ -190,7 +190,7 @@ $ echo "LANG=en_GB.UTF-8" > /etc/locale.conf
 ```zsh
 $ echo "archlinux" > /etc/hostname
 
-$ nano /etc/hosts
+$ vim /etc/hosts
 #     127.0.0.1		localhost
 #     ::1			localhost
 #     127.0.1.1		archlinux.localdomain	archlinux
@@ -208,7 +208,7 @@ $ passwd
 $ useradd -m -g users -G wheel,storage,power,video,audio -s /bin/bash "USERNAME"
 $ passwd "USERNAME"
 
-$ EDITOR=nano visudo
+$ EDITOR=vim visudo
 # Uncomment:
 # %wheel ALL=(ALL:ALL) ALL
 # %wheel ALL=(ALL:ALL) NOPASSWD: ALL
