@@ -33,7 +33,9 @@ install_and_setup_paccache() {
     if if_not_installed_then_install pacman-contrib; then
         if if_no_backup_then_create "copy" "$PACMAN_CONF"; then
             if update_pacman_config; then
-                if create_or_relink_symlink "$PACCACHE_TIMER"; then
+                # if create_or_relink_symlink "$PACCACHE_TIMER"; then
+                    if copy_file_directly_from_src "$SYSTEMD_SYSTEM" "paccache.timer"; then
+
                     if enable_and_restart paccache.timer; then
                         logger "✅ PACCACHE SETUP DONE"
                         return 0
@@ -97,9 +99,10 @@ install_and_setup_reflector() {
     if if_not_installed_then_install reflector; then
         if if_no_backup_then_create "move" "$REFLECTOR_CONF"; then
             if copy_file_directly_from_src "$REFLECTOR_DIR" "reflector.conf"; then
-                if create_or_relink_symlink "$REFLECTOR_TIMER"; then
-                    # if enable_and_restart reflector.service; then
-                    if sudo systemctl enable --now reflector.service; then
+            if copy_file_directly_from_src "$SYSTEMD_SYSTEM" "reflector.timer"; then
+                # if create_or_relink_symlink "$REFLECTOR_TIMER"; then
+                    if enable_and_restart reflector.service; then
+                    # if sudo systemctl enable --now reflector.service; then
                         if enable_and_restart reflector.timer; then
                             logger "✅ REFLECTOR SETUP DONE"
                             return 0

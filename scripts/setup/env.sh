@@ -32,6 +32,8 @@ export SCRIPT_SRC_DIR="$SCRIPT_SETUP_DIR/src"
 
 # System
 
+export SYSTEMD_SYSTEM="/etc/systemd/system"
+
 export PACMAN_CONF="/etc/pacman.conf"
 export PACCACHE_TIMER="/etc/systemd/system/paccache.timer"
 
@@ -39,7 +41,7 @@ export SSHD_CONFIG="/etc/ssh/sshd_config"
 
 export REFLECTOR_DIR="/etc/xdg/reflector"
 export REFLECTOR_CONF="/etc/xdg/reflector/reflector.conf"
-export REFLECTOR_TIMER="/etc/systemd/system/reflector.timer"
+export REFLECTOR_TIMER_DIR="/etc/systemd/system/reflector.timer"
 
 export JOURNALD_CONF="/etc/systemd/journald.conf"
 

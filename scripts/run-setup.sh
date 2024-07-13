@@ -6,7 +6,8 @@ source "$HOME/dotfiles/scripts/setup/env.sh"
 source "$HOME/dotfiles/scripts/setup/utils.sh"
 
 timestamp=$(date +'%d-%m_%H-%M')
- exec > >(tee -a "$LOGS_DIR/setup/output-$timestamp.log") 2>&1
+exec > >(tee -a "$LOGS_DIR/setup/output-$timestamp.log") 2>&1
+
 
 main() {
     logger "⏳⏳⏳ INSTALLATION STARTED"
