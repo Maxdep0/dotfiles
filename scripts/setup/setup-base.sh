@@ -173,6 +173,7 @@ install_intel_drivers() {
     if if_not_installed_then_install mesa mesa-utils; then
         if if_not_installed_then_install intel-media-driver intel-gpu-tools intel-compute-runtime; then
             if if_not_installed_then_install vulkan-intel vulkan-mesa-layers; then
+                yay -S --needed auto-cpufreq
                 sudo auto-cpufreq --install
                 logger "✅ INTEL DRIVERS SETUP DONE"
                 return 0
@@ -238,10 +239,6 @@ install_nvidia_drivers() {
     return 1
 }
 
-add () {
-	# yay clipman satty
-	#
-}
 
 main() {
     logger "⏳⏳ BASE SETUP STARTED"
@@ -256,6 +253,8 @@ main() {
                             if install_nvidia_drivers; then
                                 logger "✅✅ BASE SETUP DONE"
 				yay -S --needed --noconfirm clipman satty
+                yay -S --needed spotify
+                yay -S --needed microsoft-edge-stable-bin
                                 return 0
                             fi
                         fi

@@ -7,7 +7,6 @@
         This guide is not intended for others, but for me.
         If by chance someone install linux arch using this guide,
         you have to change the <a href="#Partition-the-disks">partition size</a>, <a href="#Select-the-mirrors">mirrors</a> and <a href="#Time-And-localization">Time and Localization</a>.<br>
-        The setup script (which is not 100% error-free) contains drivers for <a href="https://www.dell.com/en-uk/shop/laptops-2-in-1-pcs/precision-7680-workstation/spd/precision-16-7680-laptop/n007p7680emea_vp">Dell Precision 7680 i7 32GB, 1TB</a>, so if you want to use it, comment out the driver installation.
 </blockquote>
 
 <span style="font-size:17px"> [Arch Linux Downloads](https://archlinux.org/download/)
@@ -269,13 +268,7 @@ $ sudo pacman -Syu
 # Clone dotfiles
 $ https://github.com/Maxdep0/dotfiles.git
 
-
-
-# Run Setup
-$ cd dotfiles
-$ bash scripts/setup.sh
-
-$ chsh -s `which zsh`        # or chsh -s "$(which zsh)"
+$ chsh -s `which zsh`
 
 $ reboot
 
@@ -284,7 +277,7 @@ $ ssh-keygen -t ed25519 -C "EMAIL ADDRESS"
 > "Enter"
 > "PASSWORD"
 > "PASSWORD"
-$ eval `ssh-agent -s`        # or eval "$(ssh-agent -s)"
+$ eval `ssh-agent -s`
 $ ssh-add ~/.ssh/id_ed25519
 $ cat ~/.ssh/id_ed25519.pub
 
