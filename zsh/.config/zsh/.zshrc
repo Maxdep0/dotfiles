@@ -9,6 +9,12 @@
 [ ! -d "$XDG_CACHE_HOME/zsh" ] && mkdir -pv "$XDG_CACHE_HOME/zsh" 
 
 #
+# Source secret env, etc...
+#
+
+[ -f "$HOME/.secrets.zsh" ] && source "$HOME/.secrets.zsh" || touch "$HOME/.secrets.zsh"
+
+#
 # Sourcing and installing
 #
 

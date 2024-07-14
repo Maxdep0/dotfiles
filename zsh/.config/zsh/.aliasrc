@@ -3,6 +3,9 @@ alias so="source $HOME/.zshenv"
 alias cl="clear"
 alias ls="ls -a --color=auto"
 
+alias av="source venv/bin/activate"
+alias dv="deactivate"
+
 
 alias rm="rm -i"
 

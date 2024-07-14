@@ -11,6 +11,10 @@ exec > >(tee -a "$LOGS_DIR/setup/output-$timestamp.log") 2>&1
 #
 # TODO: Replace all system symlings with copy
 # TODO: Store .bak or nfdefault.conf in script src dir
+# TODO: .txt package sets
+# FIX: Multiple logger output files
+# REFACTOR: setup-base.sh
+# REFACTOR: env.sh
 #
 
 main() {

@@ -7,6 +7,7 @@
         This guide is not intended for others, but for me.
         If by chance someone install linux arch using this guide,
         you have to change the <a href="#Partition-the-disks">partition size</a>, <a href="#Select-the-mirrors">mirrors</a> and <a href="#Time-And-localization">Time and Localization</a>.<br>
+        The script is not finished and is for my laptop to get everything working on a dual boot intel/nvidia with an external monitor. 
 </blockquote>
 
 <span style="font-size:17px"> [Arch Linux Downloads](https://archlinux.org/download/)
