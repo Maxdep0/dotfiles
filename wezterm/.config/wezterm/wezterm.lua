@@ -47,7 +47,7 @@ return {
 	font = wezterm.font("JetBrains Mono", { weight = "Light" }),
 	adjust_window_size_when_changing_font_size = false,
 	window_background_opacity = 0.7,
-	-- window_background_opacity = 0.95,
+	-- window_background_opacity = 0.85,
 	window_padding = { left = 0, right = 0, top = 0, bottom = 0 },
 use_fancy_tab_bar = false,
 	max_fps = 144,

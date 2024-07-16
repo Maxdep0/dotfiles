@@ -31,7 +31,8 @@ stow_dirs() {
             sway waybar \
             wezterm \
             zsh \
-            wpaperd
+            wpaperd \
+            htop
 
         stow --dir="$DOTFILES" \
             gitconfig \
@@ -41,7 +42,8 @@ stow_dirs() {
             waybar \
             wezterm \
             zsh \
-            wpaperd
+            wpaperd \
+            htop
 
         logger "✅ STOW SETUP DONE"
         return 0
@@ -56,12 +58,12 @@ main() {
 
     sudo pacman -Syu --noconfirm
 
-        if create_dirs; then
-            if stow_dirs; then
-                logger "✅✅ PRE SETUP DONE"
-                return 0
-            fi
+    if create_dirs; then
+        if stow_dirs; then
+            logger "✅✅ PRE SETUP DONE"
+            return 0
         fi
+    fi
 
     logger "🔴🔴 PRE-SETUP FAILED"
     return 1

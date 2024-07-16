@@ -17,8 +17,8 @@ install_packages() {
         polkit brightnessctl grim slurp network-manager-applet \
         mpv feh libreoffice-fresh acpi htop tree \
         neofetch discord firefox zsh wezterm \
-	    noto-fonts noto-fonts-emoji noto-fonts-extra \
-	    ttf-dejavu ttf-liberation ttf-jetbrains-mono ttf-nerd-fonts-symbols-mono; then
+        noto-fonts noto-fonts-emoji noto-fonts-extra \
+        ttf-dejavu ttf-liberation ttf-jetbrains-mono ttf-nerd-fonts-symbols-mono; then
         logger "✅ PACKAGES SETUP DONE"
         return 0
         echo "OK"
@@ -94,14 +94,14 @@ install_and_setup_audio() {
 }
 
 ### SYSTEM
- disable_powerbutton() {
-     if ! sudo sed -i 's/^#*\s*HandlePowerKey\s*=.*/HandlePowerKey=ignore/' \
-         /etc/systemd/logind.conf; then
-             logger "Failed to update logind.conf"
-             return 1
-     fi
-     return 0
- }
+disable_powerbutton() {
+    if ! sudo sed -i 's/^#*\s*HandlePowerKey\s*=.*/HandlePowerKey=ignore/' \
+        /etc/systemd/logind.conf; then
+        logger "Failed to update logind.conf"
+        return 1
+    fi
+    return 0
+}
 
 #
 # Neovim
@@ -239,28 +239,27 @@ install_nvidia_drivers() {
     return 1
 }
 
-
 main() {
     logger "⏳⏳ BASE SETUP STARTED"
 
     if install_packages; then
-	    if disable_powerbutton; then
-        if install_aux_tools; then
-            if install_and_setup_audio; then
-                if install_and_setup_neovim; then
-                    if install_and_setup_wayland; then
-                        if install_intel_drivers; then
-                            if install_nvidia_drivers; then
-                                logger "✅✅ BASE SETUP DONE"
-				yay -S --needed --noconfirm clipman satty
-                yay -S --needed spotify
-                yay -S --needed microsoft-edge-stable-bin
-                                return 0
+        if disable_powerbutton; then
+            if install_aux_tools; then
+                if install_and_setup_audio; then
+                    if install_and_setup_neovim; then
+                        if install_and_setup_wayland; then
+                            if install_intel_drivers; then
+                                if install_nvidia_drivers; then
+                                    logger "✅✅ BASE SETUP DONE"
+                                    yay -S --needed --noconfirm clipman satty
+                                    yay -S --needed spotify
+                                    yay -S --needed microsoft-edge-stable-bin
+                                    return 0
+                                fi
                             fi
                         fi
                     fi
                 fi
-	    fi
             fi
         fi
     fi
