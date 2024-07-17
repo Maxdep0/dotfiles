@@ -43,14 +43,17 @@
         "tooltip-format": "{app}: {title}"
     },
     "cpu": {
+        "interval": 5,
         "format": " {usage}% {max_frequency}"
     },
     "memory": {
+        "interval": 5,
         "format": " {percentage}%"
     },
     "temperature": {
+        "interval": 5,
         "thermal-zone": 1,
-        "critical-threshold": 80,
+        "critical-threshold": 65,
         "format-critical": "{icon} {temperatureC}°C",
         "format": "{icon} {temperatureC}°C",
         "format-icons": [
