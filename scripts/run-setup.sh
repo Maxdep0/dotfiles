@@ -15,6 +15,7 @@ exec > >(tee -a "$LOGS_DIR/setup/output-$timestamp.log") 2>&1
 # FIX: Multiple logger output files
 # REFACTOR: setup-base.sh
 # REFACTOR: env.sh
+# ADD: yay -S --needed --noconfirm postman-bin
 #
 
 main() {
