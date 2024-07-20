@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+install_packages() {
+    if_not_installed_then_install noto-fonts noto-fonts emoji noto-fonts-extra \
+        ttf-dejavu ttf-liberation ttf-jetbrains-mono \
+        ttf-nerd-fonts-symbols-mono
+
+}
+
 remove_files() {
     sudo rm -rf \
         "$HOME/.bash_logout" \

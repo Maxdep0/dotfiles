@@ -15,7 +15,7 @@ pac_check() {
 }
 
 cmd_check() {
-	command -v "$1" >/dev/null 2>&1
+    command -v "$1" >/dev/null 2>&1
 }
 
 clone_makepkg() {
@@ -34,6 +34,7 @@ clone_makepkg() {
 
     sudo rm -rf "$dir"
 
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
     logger "Successfully makepkg $dir"
     return 0
 }

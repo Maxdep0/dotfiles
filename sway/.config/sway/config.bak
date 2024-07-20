@@ -1,0 +1,277 @@
+# Read `man 5 sway` for a complete reference.
+
+#
+# Run
+#
+
+    # exec nm-applet &
+    # exec --no-startup-id wpaperd -d
+    # exec --no-startup-id wl-paste -t text --watch clipman store --no-persist
+    # exec --no-startup-id pamixer --set-volume 10
+
+#
+# Variables
+#
+
+    # set $mod Mod4
+
+    # set $left h
+    # set $down j
+    # set $up k
+    # set $right l
+
+    # set $terminal wezterm
+    # set $launcher wofi --show drun
+    # set $screenshot grim -g "$(slurp -d)" - | satty -f - --output-filename "$HOME/Pictures/$(date '+%d%m%y-%H%M%S').png"
+    # set $fullscreenshot grim -g "$(slurp -o -r)" - | satty -f - --output-filename "$HOME/Pictures/$(date '+%d%m%y-%H%M%S').png"
+
+    # set $ws1 1
+    # set $ws2 2
+    # set $ws3 3
+    # set $ws4 4
+    # set $ws5 5
+
+    # set $dell_int_monitor 'LG Display 0x0701 Unknown'
+    # set $aoc_ext_monitor_uk 'AOC U28G2XU2 1322131231233'
+    # set $aoc_ext_monitor_cz 'AOC Q27G2SG4 XFXP8HA006120'
+
+#
+# Binds
+#
+
+    # bindsym $mod+Shift+q kill
+    # bindsym $mod+Shift+c reload
+    # bindsym $mod+f fullscreen
+
+    #
+    # System binds
+    #
+
+    # Open
+    # bindsym $mod+Return exec $terminal
+    # bindsym $mod+d exec $launcher
+
+    # Satty screenshot
+    # bindsym Print exec $screenshot
+    # bindsym $mod+Print exec $fullscreenshot
+
+    # Mic
+    # bindsym XF86AudioMicMute exec pamixer --default-source --toggle-mute
+
+    # Volume
+    # bindsym XF86AudioRaiseVolume exec pamixer -i 5
+    # bindsym XF86AudioLowerVolume exec pamixer -d 5
+    # bindsym XF86AudioMute exec pamixer -t
+
+    # play/next/prev/stop
+    # bindsym XF86AudioPlay exec playerctl play-pause
+    # bindsym XF86AudioNext exec playerctl next
+    # bindsym XF86AudioPrev exec playerctl previous
+    # bindsym XF86AudioStop exec playerctl stop
+
+    # Brightness
+    # bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +5%
+    # bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
+
+    # Logout menu
+    # bindsym XF86PowerOff exec bash ~/.config/sway/scripts/logout_menu.sh
+
+    #
+    # Windows Management binds
+    #
+
+    # Scratchpad
+    bindsym $mod+Shift+minus move scratchpad
+    bindsym $mod+minus scratchpad show
+
+    # Move your focus around
+    # bindsym $mod+$left  focus left
+    # bindsym $mod+$down  focus down
+    # bindsym $mod+$up    focus up
+    # bindsym $mod+$right focus right
+
+
+    # Move the focused window
+    # bindsym $mod+Shift+$left  move left 30 px
+    # bindsym $mod+Shift+$down  move down 30 px
+    # bindsym $mod+Shift+$up    move up 30 px
+    # bindsym $mod+Shift+$right move right 30 px
+    
+
+    # Switch to workspace
+    # bindsym $mod+y workspace number $ws1
+    # bindsym $mod+u workspace number $ws2
+    # bindsym $mod+i workspace number $ws3
+    # bindsym $mod+o workspace number $ws4
+    # bindsym $mod+p workspace number $ws5
+
+    # Move focused container to workspace
+    # bindsym $mod+Shift+y move container to workspace number $ws1
+    # bindsym $mod+Shift+u move container to workspace number $ws2
+    # bindsym $mod+Shift+i move container to workspace number $ws3
+    # bindsym $mod+Shift+o move container to workspace number $ws4
+    # bindsym $mod+Shift+p move container to workspace number $ws5
+
+    # Split horizontal/vertical
+    # bindsym $mod+b splith
+    # bindsym $mod+v splitv
+
+    # Switch the current container between different layout styles
+    # bindsym $mod+w layout tabbed
+    # bindsym $mod+e layout toggle split
+
+    # Toggle floating/change focus
+    # bindsym $mod+Shift+space floating toggle
+    # bindsym $mod+space       focus mode_toggle
+
+    # Modes
+    bindsym $mod+r mode "resize"
+
+#
+# Output/Input
+#
+
+    #
+    # Output
+    #
+
+    # output $dell_int_monitor {
+    #     mode 1920x1200@60.001Hz 
+    #     adaptive_sync enabled
+    #     max_render_time 1
+    #     position 0,0
+    #     scale 1
+    # }
+    #
+    # output $aoc_ext_monitor_uk {
+    #     mode 3840x2160@143.856Hz 
+    #     adaptive_sync enabled
+    #     max_render_time 1 
+    #     position 1920,0
+    #     scale_filter smart
+    #     scale 1.1
+    # }
+    #
+    # output $aoc_ext_monitor_cz {
+    #     mode 2560x1440@143.912Hz 
+    #     adaptive_sync enabled
+    #     max_render_time 1 
+    #     position 1920,0
+    #     # scale_filter smart
+    #     # scale 0.9
+    # }
+
+    #
+    # Input
+    #
+    # input type:keyboard {
+    #     xkb_layout us 
+    #     repeat_delay 200
+    #     repeat_rate 30
+    #     xkb_options "caps:escape"
+    # }
+    #
+    # input type:pointer {
+    #     accel_profile flat
+    #     pointer_accel 0.5
+    #     scroll_method "on_button_down"
+    # }
+    #
+    # input type:touchpad {
+    #     accel_profile adaptive
+    #     middle_emulation enabled
+    #     dwt enabled
+    #     tap enabled
+    # }
+
+#
+# Workspaces/Windows/Layouts:
+#
+
+    #
+    # Workspaces
+    #
+
+    # Workspace monitor priority
+    # workspace $ws1 output $dell_int_monitor $aoc_ext_monitor_uk $aoc_ext_monitor_cz
+    # workspace $ws2 output $aoc_ext_monitor_uk $aoc_ext_monitor_cz $dell_int_monitor
+    # workspace $ws3 output $aoc_ext_monitor_uk $aoc_ext_monitor_cz $dell_int_monitor
+    # workspace $ws4 output $aoc_ext_monitor_uk $aoc_ext_monitor_cz $dell_int_monitor 
+    # workspace $ws5 output $dell_int_monitor $aoc_ext_monitor_uk $aoc_ext_monitor_cz
+
+
+    #
+    # App settings
+    #
+
+    # Assign apps to specific workspace
+    # assign [class="discord"] workspace $ws5
+    # assign [class="Spotify"] workspace $ws5
+
+    # Change default startup
+    # for_window [app_id="pavucontrol"]          floating enable, resize set 800 px 600 px
+    # for_window [app_id="nm-connection-editor"] floating enable, resize set 400 px 400 px
+    # for_window [class="feh"]                   floating enable, resize set  80 ppt 80 ppt
+    # for_window [app_id="libreoffice-*"]        floating enable, resize set  80 ppt 90 ppt
+    
+
+    #
+    # Layout Settings
+    #
+
+    # floating_maximum_size 1880 x 1140
+    # floating_minimum_size 800 x 450
+    # default_floating_border pixel 1
+    # default_border pixel 2
+
+    # workspace_auto_back_and_forth yes
+    # smart_borders on
+    # smart_gaps on
+    
+    # workspace $ws1 gaps inner 0
+    # workspace $ws1 gaps outer 0
+
+    # workspace $ws2 gaps inner 30
+    # workspace $ws2 gaps vertical -10
+    # workspace $ws2 gaps horizontal -10
+
+    # workspace $ws5 gaps inner 30
+    # workspace $ws5 gaps vertical -10
+    # workspace $ws5 gaps horizontal -10
+
+#
+# Modes:
+#
+
+    #
+    # Resizing
+    #
+
+    mode "resize" {
+        bindsym $left resize shrink width 10px
+        bindsym $down resize grow height 10px
+        bindsym $up resize shrink height 10px
+        bindsym $right resize grow width 10px
+
+        bindsym $mod+$left resize shrink width 20px
+        bindsym $mod+$down resize grow height 20px
+        bindsym $mod+$up resize shrink height 20px
+        bindsym $mod+$right resize grow width 20px
+
+        # Return to default mode
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
+    }
+
+
+
+
+#######################################################
+
+bar {
+    status_command waybar
+    mode invisible
+}
+
+

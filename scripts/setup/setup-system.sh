@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 
-source "$SCRIPT_SETUP_DIR/utils.sh"
+source "$HOME/dotfiles/scripts/setup/env.sh"
+source "$HOME/dotfiles/scripts/setup/utils.sh"
 
 #
 # Pacman
 #
 
 install_and_setup_paccache() {
-    logger "⏳PACCACHE SETUP STARTED"
+    logger "⏳PACMAN SETUP STARTED"
+
     update_pacman_config() {
         if ! sudo sed -i \
             -e 's/^#*\s*Color.*/Color/' \
@@ -30,23 +32,14 @@ install_and_setup_paccache() {
         return 0
     }
 
-    if if_not_installed_then_install pacman-contrib; then
-        if if_no_backup_then_create "copy" "$PACMAN_CONF"; then
-            if update_pacman_config; then
-                # if create_or_relink_symlink "$PACCACHE_TIMER"; then
-                    if copy_file_directly_from_src "$SYSTEMD_SYSTEM" "paccache.timer"; then
+    if_not_installed_then_install pacman-contrib || return 1
+    if_no_backup_then_create "copy" "$PACMAN_CONF" || return 1
+    update_pacman_config || return 1
+    copy_file_directly_from_src "$SYSTEMD_SYSTEM" "paccache.timer" || return 1
+    enable_and_restart paccache.timer || return 1
 
-                    if enable_and_restart paccache.timer; then
-                        logger "✅ PACCACHE SETUP DONE"
-                        return 0
-                    fi
-                fi
-            fi
-        fi
-    fi
-
-    logger "🔴 PACCACHE SETUP FAILED"
-    return 1
+    logger "✅ PACMAN SETUP DONE"
+    return 0
 }
 
 #
@@ -54,7 +47,7 @@ install_and_setup_paccache() {
 #
 
 install_and_setup_sshd() {
-    logger "⏳SSHD SETUP STARTED"
+    logger "⏳SSH SETUP STARTED"
 
     update_sshd_config() {
         sudo sed -i \
@@ -69,52 +62,32 @@ install_and_setup_sshd() {
             "$SSHD_CONFIG"
     }
 
-    if if_not_installed_then_install openssh; then
-        if if_no_backup_then_create "copy" "$SSHD_CONFIG"; then
-            if update_sshd_config; then
-                if enable_and_restart sshd.service; then
-                    logger "✅ SSHD SETUP DONE"
-                    return 0
-                fi
-            fi
+    update_sshd_config || return 1
+    if_no_backup_then_create "copy" "$SSHD_CONFIG" || return 1
+    update_sshd_config || return 1
+    enable_and_restart sshd.service || return 1
 
-        fi
-    fi
+    logger "✅ SSHD SETUP DONE"
+    return 0
 
-    logger "🔴 SSHD SETUP FAILED"
-    return 1
 }
 
 #
 # Reflector
 #
 
-#####
-##### FIX: reflector.service restart stops logger.
-#####
-
 install_and_setup_reflector() {
     logger "⏳REFLECTOR SETUP STARTED"
 
-    if if_not_installed_then_install reflector; then
-        if if_no_backup_then_create "move" "$REFLECTOR_CONF"; then
-            if copy_file_directly_from_src "$REFLECTOR_DIR" "reflector.conf"; then
-            if copy_file_directly_from_src "$SYSTEMD_SYSTEM" "reflector.timer"; then
-                # if create_or_relink_symlink "$REFLECTOR_TIMER"; then
-                    if enable_and_restart reflector.service; then
-                    # if sudo systemctl enable --now reflector.service; then
-                        if enable_and_restart reflector.timer; then
-                            logger "✅ REFLECTOR SETUP DONE"
-                            return 0
-                        fi
-                    fi
-                fi
-            fi
-        fi
-    fi
+    if_not_installed_then_install reflector || return 1
+    if_no_backup_then_create "move" "$REFLECTOR_CONF" || return 1
+    copy_file_directly_from_src "$REFLECTOR_DIR" "reflector.conf" || return 1
+    copy_file_directly_from_src "$SYSTEMD_SYSTEM" "reflector.timer" || return 1
+    enable_and_restart reflector.service || return 1
+    enable_and_restart reflector.timer || return 1
 
-    logger "🔴 REFLECTOR SETUP FAILED"
-    return 1
+    logger "✅ REFLECTOR SETUP DONE"
+    return 0
 }
 
 #
@@ -124,28 +97,12 @@ install_and_setup_reflector() {
 setup_journalctl() {
     logger "⏳JOURNALCTL SETUP STARTED"
 
-    update_journald_settings() {
-        if sudo sed -i '/^#*SystemMaxUse/ s/^#*SystemMaxUse.*/SystemMaxUse=50M/' "$JOURNALD_CONF"; then
-            logger "Successfully updated journald.conf"
-            return 0
-        else
-            logger "Failed to update journald.conf"
-            return 1
-        fi
-    }
+    if_no_backup_then_create "copy" "$JOURNALD_CONF" || return 1
+    sudo sed -i '/^#*SystemMaxUse/ s/^#*SystemMaxUse.*/SystemMaxUse=50M/' "$JOURNALD_CONF" || return 1
+    sudo systemctl restart systemd-journald || return 1
 
-    if if_no_backup_then_create "copy" "$JOURNALD_CONF"; then
-        if update_journald_settings; then
-            if sudo systemctl restart systemd-journald; then
-                logger "Successfully restarted systemd-journald"
-                logger "✅ JOURNALCTL SETUP DONE"
-                return 0
-            fi
-        fi
-    fi
-
-    logger "🔴 JOURNALCTL SETUP FAILED"
-    return 1
+    logger "✅ JOURNALCTL SETUP DONE"
+    return 0
 }
 
 #
@@ -155,24 +112,14 @@ setup_journalctl() {
 install_and_setup_nftables() {
     logger "⏳NFTABLES SETUP STARTED"
 
-    if if_not_installed_then_install nftables; then
-        if if_no_backup_then_create "move" "$NFTABLES_CONF"; then
-            if create_or_relink_symlink "$NFTABLES_CONF"; then
-                if enable_and_restart nftables.service; then
-                    if sudo nft -f "$NFTABLES_CONF"; then
-                        logger "✅ NFTABLES SETUP DONE"
-                        return 0
-                    else
-                        logger "Failed to setup nftables."
-                        return 1
-                    fi
-                fi
-            fi
-        fi
-    fi
+    if_not_installed_then_install nftables || return 1
+    if_no_backup_then_create "move" "$NFTABLES_CONF" || return 1
+    create_or_relink_symlink "$NFTABLES_CONF" || return 1
+    enable_and_restart nftables.service || return 1
+    sudo nft -f "$NFTABLES_CONF" || return 1
 
-    logger "🔴 NFTABLES SETUP FAILED"
-    return 1
+    logger "✅ NFTABLES SETUP DONE"
+    return 0
 }
 
 #
@@ -193,47 +140,62 @@ install_and_setup_networkmanager() {
         return 0
     }
 
-    if if_not_installed_then_install networkmanager network-manager-applet; then
-        if create_or_relink_symlink "$NM_DISPATCHER_DIR/99-update-hosts.sh" &&
-            create_or_relink_symlink "$NM_DISPATCHER_DIR/99-update-dns.sh"; then
-            if add_script_permissions; then
-                if enable_and_restart NetworkManager.service; then
-                    logger "💤 Sleeping for 5s..."
-                    sleep 5s
+    if_not_installed_then_install networkmanager network-manager-applet || return 1
+    create_or_relink_symlink "$NM_DISPATCHER_DIR/99-update-hosts.sh" || return 1
+    create_or_relink_symlink "$NM_DISPATCHER_DIR/99-update-dns.sh" || return 1
+    add_script_permissions || return 1
+    enable_and_restart NetworkManager.service || return 1
 
-                    logger "✅ NETWORKMANAGER SETUP DONE"
-                    return 0
-                fi
-            fi
-        fi
+    logger "💤 Sleeping for 5s..."
+    sleep 5s
+
+    logger "✅ NETWORKMANAGER SETUP DONE"
+    return 0
+}
+
+#
+# Audio
+#
+
+install_and_setup_audio() {
+    logger "⏳AUDIO SETUP STARTED"
+
+    if_not_installed_then_install pulseaudio pulseaudio-alsa pulseaudio-jack || return 1
+    if_not_installed_then_install pavucontrol pamixer playerctl || return 1
+    systemctl --user enable --now pulseaudio || return 1
+
+    logger "✅ AUDIO SETUP DONE"
+    return 0
+}
+
+#
+# Power Button
+#
+
+disable_powerbutton() {
+    if ! sudo sed -i 's/^#*\s*HandlePowerKey\s*=.*/HandlePowerKey=ignore/' \
+        /etc/systemd/logind.conf; then
+        logger "Failed to update logind.conf"
+        return 1
     fi
-
-    logger "🔴 NETWORKMANAGER SETUP FAILED"
-    return 1
+    return 0
 }
 
 main() {
     logger "⏳⏳ SYSTEM SETUP STARTED"
 
-    if install_and_setup_paccache; then
-        if install_and_setup_sshd; then
-            if install_and_setup_nftables; then
-                if install_and_setup_reflector; then
-                    if install_and_setup_networkmanager; then
-                        if setup_journalctl; then
-                            if sudo systemctl daemon-reload; then
-                                logger "✅✅ SYSTEM SETUP DONE"
-                                return 0
-                            fi
-                        fi
-                    fi
-                fi
-            fi
-        fi
-    fi
+    install_and_setup_paccache || return 1
+    install_and_setup_sshd || return 1
+    install_and_setup_nftables || return 1
+    install_and_setup_reflector || return 1
+    install_and_setup_networkmanager || return 1
+    install_and_setup_audio || return 1
+    disable_powerbutton || return 1
+    setup_journalctl || return 1
+    sudo systemctl daemon-reload || return 1
 
-    logger "🔴🔴 SYSTEM SETUP FAILED"
-    return 1
+    logger "✅✅ SYSTEM SETUP DONE"
+    return 0
 }
 
 main
