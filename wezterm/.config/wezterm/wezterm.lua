@@ -41,18 +41,21 @@ wezterm.on("update-right-status", function(window, pane)
 end)
 
 return {
+	-- Wezterm does not start with current hyprland wl protocol
+	enable_wayland = false,
 	front_end = "OpenGL",
 	disable_default_key_bindings = true,
 	scrollback_lines = 10000,
 	font = wezterm.font("JetBrains Mono", { weight = "Light" }),
 	adjust_window_size_when_changing_font_size = false,
-	-- window_background_opacity = 0.7,
-	window_background_opacity = 0.93,
+	window_background_opacity = 0.7,
+	-- window_background_opacity = 0.93,
 	window_padding = { left = 0, right = 0, top = 0, bottom = 0 },
 use_fancy_tab_bar = false,
 	max_fps = 144,
 	hide_tab_bar_if_only_one_tab = true,
 	colors = {
+
 		tab_bar = { background = "rgba(0,0,0,0.6)" },
 		compose_cursor = "orange",
 	},
