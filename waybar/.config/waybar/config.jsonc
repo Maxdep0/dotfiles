@@ -2,12 +2,11 @@
     "mode": "dock",
     "position": "top",
     "modules-left": [
-        "sway/workspaces",
-        "sway/mode",
-        "sway/scratchpad"
+        "hyprland/workspaces",
+        "hyprland/submap"
     ],
     "modules-center": [
-        "sway/window"
+        "hyprland/window"
     ],
     "modules-right": [
         "memory",
@@ -18,68 +17,88 @@
         "battery",
         "clock"
     ],
-    "sway/workspaces": {
+    "hyprland/workspaces": {
+        "active-only": false,
+        "all-outputs": false,
         "format": "{icon}",
         "format-icons": {
             "1": "",
             "2": "",
+            "3": "3",
+            "4": "4",
             "5": ""
-        }
+        },
+        "on-click": "activate",
+        "on-scroll-up": "hyprctl dispatch workspace e+1",
+        "on-scroll-down": "hyprctl dispatch workspace e-1"
     },
-    "sway/window": {
-        "max-length": 100
+    "hyprland/window": {
+        "max-length": 100,
+        "separate-outputs": true
     },
-    "sway/mode": {
+    "hyprland/submap": {
         "format": "<span style=\"italic\">{}</span>"
-    },
-    "sway/scratchpad": {
-        "format": "{icon} {count}",
-        "show-empty": false,
-        "format-icons": [
-            "",
-            ""
-        ],
-        "tooltip": true,
-        "tooltip-format": "{app}: {title}"
-    },
-    "cpu": {
-        "interval": 5,
-        "format": " {usage}% {max_frequency}"
     },
     "memory": {
         "interval": 5,
-        "format": " {percentage}%"
+        "format": "{icon}{percentage}%",
+        "tooltip": true,
+        "format-icons": [
+            "<span color='#FFFFFF'> </span>", //  0% - 20%
+            "<span color='#FFCCCC'> </span>", // 20% - 40%
+            "<span color='#FF9999'> </span>", // 40% - 60%
+            "<span color='#FF6666'> </span>", // 60% - 80%
+            "<span color='#FF0000'> </span>" //  80% - 100%
+        ]
+    },
+    "cpu": {
+        "interval": 5,
+        "format": "{icon}{usage}% {max_frequency}",
+        "format-icons": [
+            "<span color='#FFFFFF'> </span>", //  0% - 20%
+            "<span color='#FFCCCC'> </span>", // 20% - 40%
+            "<span color='#FF9999'> </span>", // 40% - 60%
+            "<span color='#FF6666'> </span>", // 60% - 80%
+            "<span color='#FF0000'> </span>" //  80% - 100%
+        ],
+        "tooltip": true
     },
     "temperature": {
-        "interval": 5,
+        "interval": 10,
         "thermal-zone": 1,
-        "critical-threshold": 65,
-        "format-critical": "{icon} {temperatureC}°C",
-        "format": "{icon} {temperatureC}°C",
+        "critical-threshold": 100,
+        "format-critical": "{icon}{temperatureC}°C",
+        "format": "{icon}{temperatureC}°C",
         "format-icons": [
-            "",
-            "",
-            ""
+            "<span color='#FFFFFF'> </span>", // 0°C    - 12.5°C
+            "<span color='#FFFFFF'> </span>", // 12.5°C - 25°C
+            "<span color='#FFFFFF'> </span>", // 25°C   - 37.5°C
+            "<span color='#FFFFFF'> </span>", // 37.5°C - 50°C
+            "<span color='#FFFFFF'> </span>", // 50°C   - 62.5°C
+            "<span color='#FF9999'> </span>", // 62.5°C - 75°C 
+            "<span color='#FF6666'> </span>", // 75°C   - 87.5°C
+            "<span color='#FF0000'>  </span>" // 87.5°C  - 100°C
         ]
     },
     "tray": {
         "spacing": 10
     },
     "battery": {
+        "interval": 30,
         "states": {
             "warning": 20,
             "critical": 10
         },
-        "format": "{icon} {capacity}%",
+        "format": "{icon}{capacity}%",
         "format-charging": "󰂄 {capacity}%",
         "format-plugged": " {capacity}%",
-        "format-alt": "{icon} {time}",
+        "format-alt": "{icon}{time}",
         "format-icons": [
-            "",
-            "",
-            "",
-            "",
-            ""
+            "<span color='#FF0000'> </span>", //  0% - 20%
+            "<span color='#FF6666'> </span>", // 20% - 40%
+            "<span color='#FF9999'> </span>", // 40% - 60%
+            "<span color='#FFCCCC'> </span>", // 60% - 80%
+            "<span color='#FFFFFF'> </span>" //  80% - 100%
         ]
     },
     "pulseaudio": {

@@ -11,19 +11,18 @@ window#waybar {
   color: white;
 }
 
-/* #workspaces { */
-/* } */
-
 #workspaces button {
   color: #c4c4c4;
   background: none;
   transition: none;
 }
 
-/* #waybar #workspaces button:hover { */
-/* } */
+#workspaces button.special {
+  color: #ffd700;
+  border-top: 1px solid #ffd700;
+}
 
-#workspaces button.focused {
+#workspaces button.active {
   color: #ffffff;
   border-top: 1px solid #ffffff;
 }
@@ -90,6 +89,7 @@ window#waybar {
   color: #ffffff;
   animation-name: blink;
   animation-duration: 0.5s;
+  /* steps instead of linear for better performance*/
   /* animation-timing-function: linear; */
   animation-timing-function: steps(12);
   animation-iteration-count: 30;
