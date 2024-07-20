@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+source "$HOME/dotfiles/scripts/setup/env.sh"
+source "$HOME/dotfiles/scripts/setup/utils.sh"
+
 install_packages() {
     if_not_installed_then_install noto-fonts noto-fonts emoji noto-fonts-extra \
         ttf-dejavu ttf-liberation ttf-jetbrains-mono \
@@ -18,6 +21,8 @@ remove_files() {
 
 main() {
     logger "⏳⏳ POST SETUP STARTED"
+
+    install_packages
 
     if sudo pacman -Syu --noconfirm; then
         if remove_files; then

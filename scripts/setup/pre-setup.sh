@@ -7,7 +7,7 @@ install_packages() {
     if_not_installed_then_install \
         base base-devel archlinux-keyring sudo \
         ninja curl cmake make wget tar unzip zip p7zip \
-        rip grep fd fzf bat \
+        ripgrep grep fd fzf bat \
         python python-pip jdk-openjdk \
         mpv feh libreoffice-fresh \
         acpi htop tree

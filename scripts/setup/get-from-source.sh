@@ -26,12 +26,12 @@ install_nvm() {
 
 install_paru() {
 
-    [ -d "$XDG_DOWNLOAD_DIR/paru" ] || sudo rm -rf "$XDG_DOWNLOAD_DIR/paru"
+    [ -d "$XDG_DOWNLOAD_DIR/paru" ] && sudo rm -rf "$XDG_DOWNLOAD_DIR/paru"
 
     git clone "https://aur.archlinux.org/paru.git" "$XDG_DOWNLOAD_DIR/paru" || return 1
     (cd "$XDG_DOWNLOAD_DIR/paru" && makepkg -si --needed --noconfirm) || return 1
 
-    [ -d "$XDG_DOWNLOAD_DIR/paru" ] || sudo rm -rf "$XDG_DOWNLOAD_DIR/paru"
+    [ -d "$XDG_DOWNLOAD_DIR/paru" ] && sudo rm -rf "$XDG_DOWNLOAD_DIR/paru"
 
     return 0
 }
@@ -41,12 +41,12 @@ install_paru() {
 #
 
 install_yay() {
-    [ -d "$XDG_DOWNLOAD_DIR/yay" ] || sudo rm -rf "$XDG_DOWNLOAD_DIR/yay"
+    [ -d "$XDG_DOWNLOAD_DIR/yay" ] && sudo rm -rf "$XDG_DOWNLOAD_DIR/yay"
 
     git clone "https://aur.archlinux.org/yay.git" "$XDG_DOWNLOAD_DIR/yay" || return 1
     (cd "$XDG_DOWNLOAD_DIR/yay" && makepkg -si --needed --noconfirm) || return 1
 
-    [ -d "$XDG_DOWNLOAD_DIR/yay" ] || sudo rm -rf "$XDG_DOWNLOAD_DIR/yay"
+    [ -d "$XDG_DOWNLOAD_DIR/yay" ] && sudo rm -rf "$XDG_DOWNLOAD_DIR/yay"
 
     return 0
 }
@@ -57,7 +57,7 @@ install_yay() {
 
 install_neovim() {
 
-    [ -d "$XDG_DOWNLOAD_DIR/neovim" ] || sudo rm -rf "$XDG_DOWNLOAD_DIR/neovim"
+    [ -d "$XDG_DOWNLOAD_DIR/neovim" ] && sudo rm -rf "$XDG_DOWNLOAD_DIR/neovim"
 
     if_not_installed_then_install \
         base-devel cmake unzip ninja curl \
@@ -70,7 +70,7 @@ install_neovim() {
     make --directory="$XDG_DOWNLOAD_DIR/neovim" CMAKE_BUILD_TYPE=Release || return 1
     sudo make --directory="$XDG_DOWNLOAD_DIR/neovim" install || return 1
 
-    [ -d "$XDG_DOWNLOAD_DIR/neovim" ] || sudo rm -rf "$XDG_DOWNLOAD_DIR/neovim"
+    [ -d "$XDG_DOWNLOAD_DIR/neovim" ] && sudo rm -rf "$XDG_DOWNLOAD_DIR/neovim"
 
     [ -d "$XDG_CONFIG_HOME/nvim" ] || git clone https://github.com/Maxdep0/nvim.git "$XDG_CONFIG_HOME/nvim"
 
@@ -82,40 +82,27 @@ nvm)
     logger "Installing nvm from source..."
     if install_nvm; then
         logger "Successfully installed nvm."
-        return 0
     fi
-    logger "Failed to install nvm from source."
-    return 1
     ;;
 yay)
     logger "Installing yay from source..."
     if install_yay; then
         logger "Successfully installed yay."
-        return 0
     fi
-    logger "Failed to install yay from source."
-    return 1
     ;;
 paru)
     logger "Installing paru from source..."
     if install_paru; then
         logger "Successfully installed paru."
-        return 0
     fi
-    logger "Failed to install paru from source."
-    return 1
     ;;
 nvim)
     logger "Installing neovim from source..."
     if install_neovim; then
         logger "Successfully installed neovim."
-        return 0
     fi
-    logger "Failed to install neovim from source."
-    return 1
     ;;
 *)
     echo "Invalid parameter. Use 'install-nvm', 'install-yay', 'update-paru', 'install-neovim'"
-    return 1
     ;;
 esac

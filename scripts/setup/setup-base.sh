@@ -51,7 +51,7 @@ install_nvidia_drivers() {
             sudo grub-mkconfig -o /boot/grub/grub.cfg
 
             logger "Successfully updated grub."
-            return 1
+            return 0
         fi
 
         logger "Failed to update grub."
@@ -60,12 +60,13 @@ install_nvidia_drivers() {
     update_mkinitcpio() {
         if sudo sed -i \
             -e 's/^HOOKS=(.*)$/HOOKS=(base udev autodetect microcode modconf keyboard keymap consolefont block filesystems fsck)/' \
-            -e 's/^MODULES=(.*)/MODULES=(i916 nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' \
+            -e 's/^MODULES=(.*)/MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' \
             "/etc/mkinitcpio.conf"; then
+            # -e 's/^MODULES=(.*)/MODULES=(i916 nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' \
 
             sudo mkinitcpio -P
             logger "Successfully updated mkinitcpio."
-            return 1
+            return 0
 
         fi
         logger "Failed to update mkinitcpio."
@@ -79,7 +80,7 @@ install_nvidia_drivers() {
                     sudo systemctl enable nvidia-hibernate.service
                     sudo systemctl enable nvidia-resume.service
                     logger "✅ NVIDIA DRIVERS SETUP DONE"
-                    return 1
+                    return 0
                 fi
             fi
 
@@ -87,7 +88,7 @@ install_nvidia_drivers() {
     fi
 
     logger "🔴 NVIDIA DRIVERS SETUP FAILED"
-    return 2
+    return 0
 }
 
 main() {
