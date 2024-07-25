@@ -44,7 +44,7 @@ install_nvidia_drivers() {
 
     update_grub() {
         # grub
-        # nvidia-drm.fbdev=2 is experimental feature for 545+ drivers
+        # nvidia-drm.fbdev=1 is experimental feature for 545+ drivers
         # It provides its own framebuffer console and replace efifb, vesafb
         if sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT="[^"]*"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=4 quiet rd.driver.blacklist=nouveau nvidia-drm.modeset=1 nvidia-drm.fbdev=1"/' \
             "/etc/default/grub"; then
