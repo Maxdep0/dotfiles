@@ -94,11 +94,21 @@
         "format-plugged": " {capacity}%",
         "format-alt": "{icon}{time}",
         "format-icons": [
-            "<span color='#FF0000'> </span>", //  0% - 20%
-            "<span color='#FF6666'> </span>", // 20% - 40%
-            "<span color='#FF9999'> </span>", // 40% - 60%
-            "<span color='#FFCCCC'> </span>", // 60% - 80%
-            "<span color='#FFFFFF'> </span>" //  80% - 100%
+            "<span> </span>",
+            "<span> </span>",
+            "<span> </span>",
+            "<span> </span>",
+            "<span> </span>"
+            // "<span color='#FFFFFF'> </span>",
+            // "<span color='#FF0000'> </span>",
+            // "<span color='#FF6666'> </span>",
+            // "<span color='#FF9999'> </span>",
+            // "<span color='#FFCCCC'> </span>",
+            // "<span color='#FFFFFF'> </span>",
+            // "<span color='#FFFFFF'> </span>",
+            // "<span color='#FFFFFF'> </span>",
+            // "<span color='#FFFFFF'> </span>",
+            // "<span color='#FFFFFF'> </span>"
         ]
     },
     "pulseaudio": {
