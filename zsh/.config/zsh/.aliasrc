@@ -1,26 +1,27 @@
-alias so="source $HOME/.zshenv"
+alias so="source ~.zshenv"
 
-alias cl="clear"
-alias ls="ls -a --color=auto"
+alias rm="rm -i"
+
+#
+# Python
+#
 
 alias av="source venv/bin/activate"
 alias dv="deactivate"
 
+#
+# Directory Stacking - use d and then index
+#
 
-alias rm="rm -i"
-
-if [[ -f "/usr/bin/fd" ]] || [[ -f "$HOME/bin/fd" ]] || [[ -f "$HOME/.local/bin/fd" ]]; then
-    alias fdf='fd -H -d 1 -t f'
-    alias fdd='fd -H -d 1 -t d'
-    alias fda='fd -H -d 1'
-fi
-
-#   Directory stacking - use d and then index
 alias d="dirs -v"
-for index ({1..9}) alias "$index"="cd +${index}"; unset index
+for index in {1..9}; do
+    alias "$index"="cd +$index"
+done
 
+#
+# Pacman
+#
 
-#   Pacman
 alias paci="sudo pacman -S --needed"
 alias pacl="sudo pacman -Ql"
 alias pacs="sudo pacman -Ss"
@@ -28,32 +29,53 @@ alias pacr="sudo pacman -Rns"
 alias paclock="sudo rm /var/lib/pacman/db.lck"
 alias pacclean="sudo pacman -Sc"
 
+#
+# Yay
+#
 
-#   Yayy
 alias yayi="yay -S --needed"
 alias yays="yay -Ss"
 alias yayr="yay -Rns"
+
+#
+# Directories
+#
 
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 
-#   Grep
-alias grep="grep -P -i --color=auto"
-
-#   Folders/Files
 alias .dot="cd ~/.config"
 alias dot="cd ~/dotfiles"
+alias pro="cd ~/Projects && tree -a -I .git -I venv -I __pycache__"
+
+#
+# Config Files
+#
+
 alias nvimc="cd ~/.config/nvim && nvim init.lua"
 alias wtc="cd ~/dotfiles/wezterm/.config/wezterm && nvim wezterm.lua"
 alias swayc="cd ~/dotfiles/sway/.config/sway && nvim config"
+alias hyprc="cd ~/dotfiles/hypr/.config/hypr && nvim hyprland.conf"
 alias barc="cd ~/dotfiles/waybar/.config/waybar && nvim config.jsonc"
 alias zshc="cd ~/dotfiles/zsh/.config/zsh && nvim .zshrc"
+alias envc="cd ~/dotfiles/zsh && nvim .zshenv"
+alias aliasc="cd ~/dotfiles/zsh/.config/zsh && nvim .aliasrc"
 
-#   Media
+#
+#
+#
+
 alias play="prime-run mpv --hwdec=nvdec --vo=gpu --gpu-context=wayland --video-sync=display-resample --interpolation --framedrop=vo"
 alias img="feh"
+alias grep="grep -P -i --color=auto"
 
+alias cl="clear"
 
-################
-alias ft="ranger"
+alias ls="ls -a --color=auto"
+
+if [[ -f "/usr/bin/fd" ]] || [[ -f "$HOME/bin/fd" ]] || [[ -f "$HOME/.local/bin/fd" ]]; then
+    alias fdf='fd -H -d 1 -t f'
+    alias fdd='fd -H -d 1 -t d'
+    alias fda='fd -H -d 1'
+fi
