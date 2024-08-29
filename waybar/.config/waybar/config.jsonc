@@ -135,5 +135,6 @@
     "clock": {
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         "format-alt": "{:%a, %d. %b  %H:%M}"
+        // "timezone": "Europe/Prague"
     }
 }
