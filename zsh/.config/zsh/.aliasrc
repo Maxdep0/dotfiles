@@ -47,7 +47,7 @@ alias ....="cd ../../.."
 
 alias .dot="cd ~/.config"
 alias dot="cd ~/dotfiles"
-alias pro="cd ~/Projects && tree -a -I .git -I venv -I __pycache__"
+alias pro="cd ~/Projects && fda"
 
 #
 # Config Files
