@@ -48,7 +48,7 @@ return {
 	scrollback_lines = 10000,
 	font = wezterm.font("JetBrains Mono", { weight = "Light" }),
 	adjust_window_size_when_changing_font_size = false,
-	window_background_opacity = 0.7,
+	window_background_opacity = 0.6,
 	-- window_background_opacity = 0.93,
 	window_padding = { left = 0, right = 0, top = 0, bottom = 0 },
 use_fancy_tab_bar = false,
