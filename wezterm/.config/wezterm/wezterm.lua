@@ -45,7 +45,7 @@ return {
 	enable_wayland = false,
 	front_end = "OpenGL",
 	disable_default_key_bindings = true,
-	scrollback_lines = 10000,
+	scrollback_lines = 5000,
 	font = wezterm.font("JetBrains Mono", { weight = "Light" }),
 	adjust_window_size_when_changing_font_size = false,
 	window_background_opacity = 0.6,

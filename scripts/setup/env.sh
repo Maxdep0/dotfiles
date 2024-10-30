@@ -23,6 +23,7 @@ export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
 export ZSH_PLUGINS_DIR="$XDG_DATA_HOME/zsh/plugins"
 export HISTFILE="$ZDOTDIR/.zhistory"
 export NVM_DIR="$HOME/.nvm"
+export SSH_DIR="$HOME/.ssh"
 
 # Script
 
@@ -48,5 +49,3 @@ export JOURNALD_CONF="/etc/systemd/journald.conf"
 export NFTABLES_CONF="/etc/nftables.conf"
 
 export NM_DISPATCHER_DIR="/etc/NetworkManager/dispatcher.d"
-
-

@@ -33,7 +33,7 @@ window#waybar {
 
 #window {
   font-weight: bold;
-  padding: 2px 0;
+  /* padding: 2px 0; */
 }
 
 #clock,

@@ -34,13 +34,14 @@
     },
     "hyprland/window": {
         "max-length": 100,
-        "separate-outputs": true
+        "separate-outputs": true,
+        "max-height": 5
     },
     "hyprland/submap": {
         "format": "<span style=\"italic\">{}</span>"
     },
     "memory": {
-        "interval": 5,
+        "interval": 10,
         "format": "{icon}{percentage}%",
         "tooltip": true,
         "format-icons": [
@@ -52,7 +53,7 @@
         ]
     },
     "cpu": {
-        "interval": 5,
+        "interval": 10,
         "format": "{icon}{usage}% {max_frequency}",
         "format-icons": [
             "<span color='#FFFFFF'> </span>", //  0% - 20%
