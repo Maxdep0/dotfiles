@@ -62,7 +62,7 @@ install_and_setup_sshd() {
             "$SSHD_CONFIG"
     }
 
-    copy_file_directly_from_src "$SSH_DIR" "config" || return 1
+    copy_file_directly_from_src "$SSH_DIR/" "config" || return 1
 
     update_sshd_config || return 1
     if_no_backup_then_create "copy" "$SSHD_CONFIG" || return 1

@@ -102,7 +102,7 @@ main() {
     install_nvidia_drivers || return 1
 
     yay -S --needed --noconfirm clipman satty
-    yay -S --needed spotify
+    yay -S --needed spotify discord
     yay -S --needed microsoft-edge-stable-bin
 
     logger "✅✅ BASE SETUP DONE"

@@ -267,7 +267,8 @@ install_nvidia_drivers() {
         logger "Failed to update mkinitcpio."
     }
 
-    if if_not_installed_then_install_yay nvidia-beta-dkms nvidia-utils-beta nvidia-settings-beta opencl-nvidia-beta; then
+    # if if_not_installed_then_install_yay nvidia-beta-dkms nvidia-utils-beta nvidia-settings-beta opencl-nvidia-beta; then
+        if if_not_installed_then_install nvidia-dkms nvidia-utils nvidia-settings opencl-nvidia; then
         if if_not_installed_then_install libva-nvidia-driver linux-headers vulkan-icd-loader nvidia-prime nvtop; then
             if update_grub; then
                 if update_mkinitcpio; then
