@@ -4,7 +4,7 @@
 
 <blockquote>
   <strong style="color:orange">Warning:</strong> 
-        This guide is not intended for others, but for me.
+        This guide is not intended for others, but for me (Dell Precision 7680, 32GB, 1TB SSD).
         If by chance someone install linux arch using this guide,
         you have to change the <a href="#Partition-the-disks">partition size</a>, <a href="#Select-the-mirrors">mirrors</a> and <a href="#Time-And-localization">Time and Localization</a>.<br>
 </blockquote>
