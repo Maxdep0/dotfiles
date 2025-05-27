@@ -1,0 +1,3 @@
+[submodule "arch-setup-script"]
+	path = arch-setup-script
+	url = git@github.com:Maxdep0/arch-setup-script.git
