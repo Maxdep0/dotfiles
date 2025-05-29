@@ -71,14 +71,14 @@
         "format-critical": "{icon}{temperatureC}°C",
         "format": "{icon}{temperatureC}°C",
         "format-icons": [
-            "<span color='#FFFFFF'> </span>", // 0°C    - 12.5°C
-            "<span color='#FFFFFF'> </span>", // 12.5°C - 25°C
-            "<span color='#FFFFFF'> </span>", // 25°C   - 37.5°C
-            "<span color='#FFFFFF'> </span>", // 37.5°C - 50°C
-            "<span color='#FFFFFF'> </span>", // 50°C   - 62.5°C
-            "<span color='#FF9999'> </span>", // 62.5°C - 75°C 
-            "<span color='#FF6666'> </span>", // 75°C   - 87.5°C
-            "<span color='#FF0000'>  </span>" // 87.5°C  - 100°C
+            "<span color='#80D4FF'> </span>", // 0°C    - 12.5°C
+            "<span color='#66CCFF'> </span>", // 12.5°C - 25°C
+            "<span color='#33CC99'> </span>", // 25°C   - 37.5°C
+            "<span color='#FFCC66'> </span>", // 37.5°C - 50°C
+            "<span color='#FF9933'> </span>", // 50°C   - 62.5°C
+            "<span color='#FF6666'> </span>", // 62.5°C - 75°C
+            "<span color='#FF3333'> </span>", // 75°C   - 87.5°C
+            "<span color='#FF0000'> </span>" // 87.5°C - 100°C
         ]
     },
     "tray": {
