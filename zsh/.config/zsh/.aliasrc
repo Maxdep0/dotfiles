@@ -4,6 +4,7 @@ alias rm="rm -i"
 
 alias checkdup="ps -eo cmd --no-headers | sort | uniq -c | awk '\$1 > 1'"
 
+alias tree="tree --gitignore"
 
 #
 # Python
