@@ -1,141 +1,132 @@
 {
-    "mode": "dock",
-    "position": "top",
-    "modules-left": [
-        "hyprland/workspaces",
-        "hyprland/submap"
+  "mode": "dock",
+  "position": "top",
+  "modules-left": ["hyprland/workspaces", "hyprland/submap"],
+  "modules-center": ["hyprland/window"],
+  "modules-right": [
+    "memory",
+    "cpu",
+    "temperature",
+    "tray",
+    "pulseaudio",
+    "battery",
+    "clock",
+  ],
+  "hyprland/workspaces": {
+    "active-only": false,
+    "all-outputs": false,
+    "format": "{icon}",
+    "format-icons": {
+      "1": "",
+      "2": "",
+      "3": "",
+      "4": "󰭻",
+      "5": "󰝚",
+    },
+    "on-click": "activate",
+    "on-scroll-up": "hyprctl dispatch workspace e+1",
+    "on-scroll-down": "hyprctl dispatch workspace e-1",
+  },
+  "hyprland/window": {
+    "max-length": 100,
+    "separate-outputs": true,
+    "max-height": 5,
+  },
+  "hyprland/submap": {
+    "format": "<span style=\"italic\">{}</span>",
+  },
+  "memory": {
+    "interval": 10,
+    "format": "{icon}{percentage}%",
+    "tooltip": true,
+    "format-icons": [
+      "<span color='#FFFFFF'> </span>", //  0% - 20%
+      "<span color='#FFCCCC'> </span>", // 20% - 40%
+      "<span color='#FF9999'> </span>", // 40% - 60%
+      "<span color='#FF6666'> </span>", // 60% - 80%
+      "<span color='#FF0000'> </span>", //  80% - 100%
     ],
-    "modules-center": [
-        "hyprland/window"
+  },
+  "cpu": {
+    "interval": 10,
+    "format": "{icon}{usage}% {max_frequency}",
+    "format-icons": [
+      "<span color='#FFFFFF'> </span>", //  0% - 20%
+      "<span color='#FFCCCC'> </span>", // 20% - 40%
+      "<span color='#FF9999'> </span>", // 40% - 60%
+      "<span color='#FF6666'> </span>", // 60% - 80%
+      "<span color='#FF0000'> </span>", //  80% - 100%
     ],
-    "modules-right": [
-        "memory",
-        "cpu",
-        "temperature",
-        "tray",
-        "pulseaudio",
-        "battery",
-        "clock"
+    "tooltip": true,
+  },
+  "temperature": {
+    "interval": 10,
+    "thermal-zone": 1,
+    "critical-threshold": 100,
+    "format-critical": "{icon}{temperatureC}°C",
+    "format": "{icon}{temperatureC}°C",
+    "format-icons": [
+      "<span color='#80D4FF'> </span>", // 0°C    - 12.5°C
+      "<span color='#66CCFF'> </span>", // 12.5°C - 25°C
+      "<span color='#33CC99'> </span>", // 25°C   - 37.5°C
+      "<span color='#FFCC66'> </span>", // 37.5°C - 50°C
+      "<span color='#FF9933'> </span>", // 50°C   - 62.5°C
+      "<span color='#FF6666'> </span>", // 62.5°C - 75°C
+      "<span color='#FF3333'> </span>", // 75°C   - 87.5°C
+      "<span color='#FF0000'> </span>", // 87.5°C - 100°C
     ],
-    "hyprland/workspaces": {
-        "active-only": false,
-        "all-outputs": false,
-        "format": "{icon}",
-        "format-icons": {
-            "1": "",
-            "2": "",
-            "3": "",
-            "4": "󰭻",
-            "5": "󰝚"
-        },
-        "on-click": "activate",
-        "on-scroll-up": "hyprctl dispatch workspace e+1",
-        "on-scroll-down": "hyprctl dispatch workspace e-1"
+  },
+  "tray": {
+    "spacing": 10,
+  },
+  "battery": {
+    "interval": 30,
+    "states": {
+      "warning": 20,
+      "critical": 10,
     },
-    "hyprland/window": {
-        "max-length": 100,
-        "separate-outputs": true,
-        "max-height": 5
+    "format": "{icon}{capacity}%",
+    "format-charging": "󰂄 {capacity}%",
+    "format-plugged": " {capacity}%",
+    "format-alt": "{icon}{time}",
+    "format-icons": [
+      "<span> </span>",
+      "<span> </span>",
+      "<span> </span>",
+      "<span> </span>",
+      "<span> </span>",
+      // "<span color='#FFFFFF'> </span>",
+      // "<span color='#FF0000'> </span>",
+      // "<span color='#FF6666'> </span>",
+      // "<span color='#FF9999'> </span>",
+      // "<span color='#FFCCCC'> </span>",
+      // "<span color='#FFFFFF'> </span>",
+      // "<span color='#FFFFFF'> </span>",
+      // "<span color='#FFFFFF'> </span>",
+      // "<span color='#FFFFFF'> </span>",
+      // "<span color='#FFFFFF'> </span>"
+    ],
+  },
+  "pulseaudio": {
+    "format": "{icon} {volume}% {format_source}",
+    "format-bluetooth": " {icon} {volume}% {format_source}",
+    "format-bluetooth-muted": "󰝟  {icon} {format_source}",
+    "format-muted": "\ueb24 {format_source}",
+    "format-source": " {volume}%",
+    "format-source-muted": "",
+    "format-icons": {
+      "headphone": " ",
+      "headset": " ",
+      "phone": " ",
+      "phone-muted": " ",
+      "portable": " ",
+      "default": ["", "", ""],
     },
-    "hyprland/submap": {
-        "format": "<span style=\"italic\">{}</span>"
-    },
-    "memory": {
-        "interval": 10,
-        "format": "{icon}{percentage}%",
-        "tooltip": true,
-        "format-icons": [
-            "<span color='#FFFFFF'> </span>", //  0% - 20%
-            "<span color='#FFCCCC'> </span>", // 20% - 40%
-            "<span color='#FF9999'> </span>", // 40% - 60%
-            "<span color='#FF6666'> </span>", // 60% - 80%
-            "<span color='#FF0000'> </span>" //  80% - 100%
-        ]
-    },
-    "cpu": {
-        "interval": 10,
-        "format": "{icon}{usage}% {max_frequency}",
-        "format-icons": [
-            "<span color='#FFFFFF'> </span>", //  0% - 20%
-            "<span color='#FFCCCC'> </span>", // 20% - 40%
-            "<span color='#FF9999'> </span>", // 40% - 60%
-            "<span color='#FF6666'> </span>", // 60% - 80%
-            "<span color='#FF0000'> </span>" //  80% - 100%
-        ],
-        "tooltip": true
-    },
-    "temperature": {
-        "interval": 10,
-        "thermal-zone": 1,
-        "critical-threshold": 100,
-        "format-critical": "{icon}{temperatureC}°C",
-        "format": "{icon}{temperatureC}°C",
-        "format-icons": [
-            "<span color='#80D4FF'> </span>", // 0°C    - 12.5°C
-            "<span color='#66CCFF'> </span>", // 12.5°C - 25°C
-            "<span color='#33CC99'> </span>", // 25°C   - 37.5°C
-            "<span color='#FFCC66'> </span>", // 37.5°C - 50°C
-            "<span color='#FF9933'> </span>", // 50°C   - 62.5°C
-            "<span color='#FF6666'> </span>", // 62.5°C - 75°C
-            "<span color='#FF3333'> </span>", // 75°C   - 87.5°C
-            "<span color='#FF0000'> </span>" // 87.5°C - 100°C
-        ]
-    },
-    "tray": {
-        "spacing": 10
-    },
-    "battery": {
-        "interval": 30,
-        "states": {
-            "warning": 20,
-            "critical": 10
-        },
-        "format": "{icon}{capacity}%",
-        "format-charging": "󰂄 {capacity}%",
-        "format-plugged": " {capacity}%",
-        "format-alt": "{icon}{time}",
-        "format-icons": [
-            "<span> </span>",
-            "<span> </span>",
-            "<span> </span>",
-            "<span> </span>",
-            "<span> </span>"
-            // "<span color='#FFFFFF'> </span>",
-            // "<span color='#FF0000'> </span>",
-            // "<span color='#FF6666'> </span>",
-            // "<span color='#FF9999'> </span>",
-            // "<span color='#FFCCCC'> </span>",
-            // "<span color='#FFFFFF'> </span>",
-            // "<span color='#FFFFFF'> </span>",
-            // "<span color='#FFFFFF'> </span>",
-            // "<span color='#FFFFFF'> </span>",
-            // "<span color='#FFFFFF'> </span>"
-        ]
-    },
-    "pulseaudio": {
-        "format": "{icon} {volume}% {format_source}",
-        "format-bluetooth": " {icon} {volume}% {format_source}",
-        "format-bluetooth-muted": "󰝟  {icon} {format_source}",
-        "format-muted": "\ueb24 {format_source}",
-        "format-source": " {volume}%",
-        "format-source-muted": "",
-        "format-icons": {
-            "headphone": " ",
-            "headset": " ",
-            "phone": " ",
-            "phone-muted": " ",
-            "portable": " ",
-            "default": [
-                "",
-                "",
-                ""
-            ]
-        },
-        "on-click": "pavucontrol"
-    },
-    "clock": {
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format-alt": "{:%a, %d. %b  %H:%M}",
-        "timezone": "Europe/London"
-    }
+    "on-click": "pavucontrol",
+  },
+  "clock": {
+    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+    "format-alt": "{:%a, %d. %b  %H:%M}",
+    "timezone": "Europe/London",
+  },
 }

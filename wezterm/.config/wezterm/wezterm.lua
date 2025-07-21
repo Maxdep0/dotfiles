@@ -46,7 +46,7 @@ return {
 	front_end = "OpenGL",
 	disable_default_key_bindings = true,
 	scrollback_lines = 5000,
-	font = wezterm.font("JetBrains Mono", { weight = "Light" }),
+	font = wezterm.font("JetBrainsMono Nerd Font Mono", { weight = "Regular" }),
 	adjust_window_size_when_changing_font_size = false,
 	window_background_opacity = 0.6,
 	-- window_background_opacity = 0.93,
@@ -74,7 +74,7 @@ use_fancy_tab_bar = false,
 		key("Tab", "ALT|SHIFT", act.ActivateTabRelative(-1)),
 
 		-- Pane
-		key("Enter", "ALT", act.TogglePaneZoomState),
+		-- key("Enter", "ALT", act.TogglePaneZoomState),
 
 		key("h", "ALT", act.ActivatePaneDirection("Left")),
 		key("j", "ALT", act.ActivatePaneDirection("Down")),
