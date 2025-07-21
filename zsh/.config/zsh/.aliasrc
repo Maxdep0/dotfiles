@@ -10,7 +10,7 @@ alias tree="tree --gitignore"
 # Python
 #
 
-alias av="source venv/bin/activate"
+alias av="source .venv/bin/activate"
 alias dv="deactivate"
 
 #
@@ -76,7 +76,7 @@ alias grep="grep -P -i --color=auto"
 
 alias cl="clear"
 
-alias ls="ls -a --color=auto"
+alias ls="ls -A --color=auto"
 
 if [[ -f "/usr/bin/fd" ]] || [[ -f "$HOME/bin/fd" ]] || [[ -f "$HOME/.local/bin/fd" ]]; then
     alias fdf='fd -H -d 1 -t f'

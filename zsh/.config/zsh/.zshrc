@@ -75,8 +75,8 @@ setopt SHARE_HISTORY
 
 # Input/Output
 setopt CLOBBER
-setopt CORRECT
-setopt CORRECT_ALL
+unsetopt CORRECT
+unsetopt CORRECT_ALL
 setopt INTERACTIVE_COMMENTS
 setopt RC_QUOTES
 setopt IGNORE_EOF
@@ -191,16 +191,15 @@ zle -N open_fzf_rg
 bindkey -r "${ALT}j"
 bindkey -r "${CTRL}j"
 bindkey -r "${ALT}k"
-# bindkey -r "u"
 bindkey -r "${CTRL}R"
 bindkey -r "${CTRL}D"
 bindkey -r "${CTRL}U"
-bindkey "${CTRL}Z" undo
-bindkey "${CTRL}Y" redo
 bindkey "${CTRL}f" open_fzf_fd
 bindkey "${CTRL}g" open_fzf_rg
+
 bindkey "${CTRL}L" accept-line
 bindkey "${CTRL}H" backward-delete-char
+
 bindkey "${BACKSPACE}" backward-delete-char
 bindkey "${TAB}" menu-select
 
@@ -232,7 +231,6 @@ bindkey -M menuselect "k" vi-up-line-or-history
 bindkey -M menuselect "j" vi-down-line-or-history
 bindkey -M menuselect "l" vi-forward-char
 bindkey -M menuselect "${CTRL}L" accept-line
-bindkey -M menuselect "${CTRL}B" send-break
 bindkey -M menuselect "${ESC}" send-break
 
 #
