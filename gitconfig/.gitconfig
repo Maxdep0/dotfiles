@@ -10,6 +10,7 @@
     editor = nvim
     autocrlf = input
     pager = cat
+    untrackedCache = true
 
 [init]
     defaultBranch = main
@@ -19,31 +20,39 @@
     diff = auto
     status = auto
     branch = auto
-    interactive = auto;
-
-[merge]
-    conflictstyle = diff3
+    interactive = auto
 
 [push]
     default = simple
     autoSetupRemote = true
 
+[pull]
+    rebase = true
+
+[merge]
+    conflictstyle = diff3
+
+[rebase]
+    autoStash = true
 
 [diff]
     tool = nvimdiff
-    algoritm = patience
+    algorithm = patience
 
 [difftool "nvimdiff"]
     cmd = "nvim -d $LOCAL $REMOTE"
     prompt = false
 
 [help]
-    autocorrect = 1
+    autocorrect = 0
 
 [alias]
     s = status -s
     r = remote -v
+    b = branch -vv
     cm = "!f() { git commit -m \"$1\"; }; f"
+    dev = "!git checkout dev 2>/dev/null || git checkout -b dev"
+    main = checkout main
     setssh = "!f() { git remote set-url origin git@github.com:Maxdep0/$1; }; f"
     l = "!git log --color=always --pretty=format:'  %C(yellow)%h %ad%C(red)%d %Creset%s%C(blue) [%cn]' --decorate --date=short | tac"
     alias = "!git config -l | grep alias | cut -c 7-"
