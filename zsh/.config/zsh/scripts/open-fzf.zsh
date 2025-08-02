@@ -51,22 +51,25 @@ if [[ -f /tmp/fzf-select ]]; then
       [[ $line == *=* ]] || continue
       KEY="${line%%=*}"
       KEY="${KEY/#export }"
-      VALUE="${line#*=}"
+      VALUE="$HOME/${line#*=}"
       DIR=${VALUE%/*}
       FILE=${VALUE##*/}
 
+      echo "\n==FZF DEBUG==\nKEY:$KEY\nVALUE:$VALUE\nDIR:$DIR\nFILE:$FILE\n"
+
       if [[ $KEY == "Dirs>  " ]]; then
-          echo "DIRS"
           cd "$DIR"
       fi
 
       if [[ $KEY == "Files> " ]]; then
+          # TODO: Add libreoffice, etc...
           if [[ "$FILE" =~ \.($NOT_NVIM_EXT)$ ]]; then
-              echo "Not a valid file for nvim"
+              echo "Not a valid file for $EDITOR"
+              echo "> $FILE}"
               return 1
           fi
           cd "$DIR"
-          nvim "$FILE"
+          "$EDITOR" "$FILE" || nvim "$FILE" || vim "$FILE" || echo "Editor not found.\nREASON: Better nothing than nano"
       fi
 
     done < /tmp/fzf-select
