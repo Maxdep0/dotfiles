@@ -1,64 +1,97 @@
-alias so="source ~.zshenv"
+alias so="source $HOME/.config/zsh/.zshrc"
 
 alias rm="rm -i"
 
 alias checkdup="ps -eo cmd --no-headers | sort | uniq -c | awk '\$1 > 1'"
 
-alias tree="tree --gitignore"
-
-#
-# Python
-#
-
-alias av="source .venv/bin/activate"
-alias dv="deactivate"
-
-#
-# Directory Stacking - use d and then index
-#
+alias tre="command tree --gitignore"
+alias trea='command tree -a -I '\''node_modules|.git|go|.nvm|.nv|.npmrc|.node_repl_history'\'''
 
 alias d="dirs -v"
-for index in {1..9}; do
-    alias "$index"="cd +$index"
-done
+for index in {1..9}; do alias "$index"="cd +$index"; done
 
-#
-# Pacman
-#
+paci() {
+    case "$1" in
+    install | i) sudo pacman -S --needed "${@:2}" ;;
+    remove | r) sudo pacman -Rns "${@:2}" ;;
+    update | u) sudo pacman -Syu ;;
+    find | f) pacman -Ss "${@:2}" ;;
+    info) pacman -Si "${@:2}" ;;
+    list | l) pacman -Qe ;;
+    listAll | la) pacman -Qn ;;
+    tree | t) pactree "${2}" ;;
+    clean | c) sudo pacman -Sc && sudo paccache -rvk2 ;;
+    orphans | o) pacman -Qtdq ;;
+    purgeOrphans | po)
+        orphans=$(pacman -Qtdq)
+        [[ -n $orphans ]] && sudo pacman -Rns $orphans || echo "No orphans."
+        ;;
+    unlock) sudo rm -f /var/lib/pacman/db.lck ;;
+    help | *) cat <<'EOF' ;;
+Usage: paci <sub-cmd> [args]
+  i|install        install packages
+  r|remove         remove packages
+  u|update         full upgrade
+  f|find           repo search
+  info             show package info
+  l|list           explicitly installed
+  la|listAll       all repo/native packages
+  t|tree           dependency tree
+  c|clean          clean cache
+  o|orphans        list orphaned deps
+  po|purgeOrphans  remove orphaned deps
+  unlock           delete pacman lock
+EOF
+    esac
+}
 
-alias paci="sudo pacman -S --needed"
-alias pacl="sudo pacman -Ql"
-alias pacs="sudo pacman -Ss"
-alias pacr="sudo pacman -Rns"
-alias paclock="sudo rm /var/lib/pacman/db.lck"
-alias pacclean="sudo pacman -Sc"
-
-#
-# Yay
-#
-
-alias yayi="yay -S --needed"
-alias yays="yay -Ss"
-alias yayr="yay -Rns"
-
-#
-# Directories
-#
+yayi() {
+    case "$1" in
+    install | i) yay -S --needed "${@:2}" ;;
+    remove | r) yay -Rns "${@:2}" ;;
+    update | u) yay -Syu ;;
+    find | f) yay -Ss "${@:2}" ;;
+    info) yay -Si "${@:2}" ;;
+    list | l) yay -Qm ;;
+    listAll | la) yay -Qm ;;
+    clean | c) yay -Yc ;;
+    orphans | o) yay -Qtdq ;;
+    purgeOrphans | po)
+        orphans=$(yay -Qtdq)
+        [[ -n $orphans ]] && yay -Rns $orphans || echo "No orphans."
+        ;;
+    help | *) cat <<'EOF' ;;
+Usage: yayi <sub-cmd> [args]
+  i|install        install (AUR)
+  r|remove         remove
+  u|update         full upgrade
+  f|find           search
+  info             show package info
+  l|list           installed AUR pkgs
+  la|listAll       all AUR pkgs
+  c|clean          clean yay cache
+  o|orphans        list orphaned deps
+  po|purgeOrphans  remove orphaned deps
+EOF
+    esac
+}
 
 alias ..="cd .."
 alias ...="cd ../.."
-alias ....="cd ../../.."
+
+pro() {
+    if [[ -n $1 && -d ~/Projects/$1 ]]; then
+        cd ~/Projects/"$1"
+    else
+        cd ~/Projects && fd -H -d 1
+    fi
+}
 
 alias .dot="cd ~/.config"
 alias dot="cd ~/dotfiles"
-alias pro="cd ~/Projects && fda"
-
-#
-# Config Files
-#
 
 alias nvimc="cd ~/.config/nvim && nvim init.lua"
-alias wtc="cd ~/dotfiles/wezterm/.config/wezterm && nvim wezterm.lua"
+alias teztermc="cd ~/dotfiles/wezterm/.config/wezterm && nvim wezterm.lua"
 alias swayc="cd ~/dotfiles/sway/.config/sway && nvim config"
 alias hyprc="cd ~/dotfiles/hypr/.config/hypr && nvim hyprland.conf"
 alias barc="cd ~/dotfiles/waybar/.config/waybar && nvim config.jsonc"
@@ -66,17 +99,13 @@ alias zshc="cd ~/dotfiles/zsh/.config/zsh && nvim .zshrc"
 alias envc="cd ~/dotfiles/zsh && nvim .zshenv"
 alias aliasc="cd ~/dotfiles/zsh/.config/zsh && nvim .aliasrc"
 
-#
-#
-#
-
 alias play="prime-run mpv --hwdec=nvdec --vo=gpu --gpu-context=wayland --video-sync=display-resample --interpolation --framedrop=vo"
 alias img="feh"
 alias grep="grep -P -i --color=auto"
 
 alias cl="clear"
 
-alias ls="ls -A --color=auto"
+alias l="ls -A --color=auto"
 
 if [[ -f "/usr/bin/fd" ]] || [[ -f "$HOME/bin/fd" ]] || [[ -f "$HOME/.local/bin/fd" ]]; then
     alias fdf='fd -H -d 1 -t f'

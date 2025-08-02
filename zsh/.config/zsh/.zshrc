@@ -156,8 +156,7 @@ else
 fi
 
 # Custom FZF
-open_fzf_fd() { BUFFER+="source $ZDOTDIR/scripts/fzf-fd.zsh"; zle accept-line; }
-open_fzf_rg() { BUFFER+="source $ZDOTDIR/scripts/fzf-rg.zsh"; zle accept-line; }
+open_fzf() { BUFFER+="source $ZDOTDIR/scripts/open-fzf.zsh"; zle accept-line }
 
 # Directories movement
 go_back() { BUFFER+=".."; zle accept-line; }
@@ -184,8 +183,7 @@ zle -N vi-kill-line zle_vi_kill_line
 zle -N vi-change-eol zle_vi_change_eol
 zle -N vi-paste-visual zle_vi_paste_visual_mode
 zle -N go_back
-zle -N open_fzf_fd
-zle -N open_fzf_rg
+zle -N open_fzf
 
 # Global
 bindkey -r "${ALT}j"
@@ -194,8 +192,7 @@ bindkey -r "${ALT}k"
 bindkey -r "${CTRL}R"
 bindkey -r "${CTRL}D"
 bindkey -r "${CTRL}U"
-bindkey "${CTRL}f" open_fzf_fd
-bindkey "${CTRL}g" open_fzf_rg
+bindkey "${CTRL}f" open_fzf
 
 bindkey "${CTRL}L" accept-line
 bindkey "${CTRL}H" backward-delete-char
