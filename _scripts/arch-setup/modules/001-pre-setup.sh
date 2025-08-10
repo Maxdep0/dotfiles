@@ -1,48 +1,46 @@
 #!/usr/bin/env bash
-
-testt() {
-    logger "START" "Pre-setup START test"
-
-    if sudo systemctl enable --now reflector.timer; then
-        logger "INFO" "Info 1 reflector.timer test"
-
-        if sudo systemctl restart reflector.timer; then
-            logger "INFO" "Info 2 reflector.timer test"
-            # return 0
-        else
-            logger "ERROR" "Err 3 reflector.timer test"
-            # return 1
+install_packages() {
+    paci_install sudo
+    sudo pacman -Syu --noconfirm
+    paci_install \
+        base base-devel archlinux-keyring \
+        ninja curl cmake make wget tar unzip zip p7zip \
+        ripgrep grep fd fzf bat jq
+    return 0
+}
+create_dirs() {
+    fs_mkdir "$HOME/.config"
+    fs_mkdir "$HOME/Documents"
+    fs_mkdir "$HOME/Downloads"
+    fs_mkdir "$HOME/Pictures/Background"
+    fs_mkdir "$HOME/Projects"
+    fs_mkdir "$HOME/.local/bin"
+    return 0
+}
+stow_dirs() {
+    paci_install stow
+    stow --dir="$DOTFILES" -D gitconfig htop hypr images satty waybar wezterm wpaperd zsh
+    stow --dir="$DOTFILES" gitconfig htop hypr zsh wezterm images htop satty hypr wpaperd waybar
+    return 0
+}
+run_pre_setup() {
+    logger progress "Pre-setup started..."
+    logger progress "Installing packages..."
+    if install_packages; then
+        logger ok "Packages installed successfully"
+        logger progress "Creating dirs..."
+        if create_dirs; then
+            logger ok "Dirs created successfully"
+            logger progress "Stowing dirs..."
+            if stow_dirs; then
+                logger ok "Stow directories completed successfully"
+                logger ok "Pre-setup done"
+                return 0
+            fi
         fi
-
-    else
-        logger "ERROR" "Err 4 reflector.timer test"
-        # return 1
     fi
-
-    logger "PROGRESS" "Progress a1 eza delete --noconfirm test"
-    sudo pacman -R --noconfirm eza
-    logger "INFO" "Info 2 eza test"
-
-    logger "PROGRESS" "Progress a2 eza install --noconfirm test"
-    sudo pacman -S --noconfirm eza
-    logger "INFO" "Info 2 eza test"
-
-    logger "PROGRESS" "Progress b1 eza delete test"
-    sudo pacman -R eza
-    logger "INFO" "Info 2 eza test"
-
-    logger "PROGRESS" "Progress b2 eza install test"
-    sudo pacman -S eza
-    logger "INFO" "Info 2 eza test"
-
-    logger "OK" "Pre-setup OK test"
-
+    logger error "Pre-setup failed"
+    return 1
 }
 
-pre_setup() {
-    logger "INFO" "$TEST1"
-    logger "INFO" "$TEST2"
-    # testt
-}
-
-pre_setup
+run_pre_setup

@@ -20,17 +20,19 @@ source "$SCRIPT_DIR"/utils.sh
 
 trap 'logger "ERROR" "Script failed at line $LINENO"' ERR
 
+# https://www.gnu.org/software/bash/manual/html_node/Bash-Conditional-Expressions.html
+# https://www.gnu.org/software/bash/manual/bash.html#Conditional-Constructs
+# https://www.gnu.org/software/coreutils/manual/coreutils.pdf
+
 main() {
-    logger "START" "Start"
-    logger "PROGRESS" "Progress"
-    logger "INFO" "Info"
-    logger "WARN" "Warn"
-    logger "ERROR" "Error"
+    logger progress "Starting Arch setup script..."
 
-    source "$SCRIPT_MODULES_DIR"/001-pre-setup.sh
+    source "$SCRIPT_MODULES_DIR"/001-pre-setup.sh || return 1
+    source "$SCRIPT_MODULES_DIR"/800-idk-name-yet.sh || return 1
+    source "$SCRIPT_MODULES_DIR"/999-post-setup.sh || return 1
 
-    logger "OK" "Ok"
-
+    logger OK "Arch setup script completed"
+    return 0
 }
 
 main "$@"

@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
-export TEST1="test1"
-export TEST2="test2"
+export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:$PATH"
+export LOGS_DIR="$HOME/logs"
+export DOTFILES="$HOME/dotfiles"
+export LOCAL_BIN="$HOME/.local/bin"
