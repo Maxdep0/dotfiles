@@ -1,37 +1,15 @@
-# shellcheck shell=zsh
+#!/usr/bin/env zsh
 
-#
-# For initial linux setup
-#
+[[ -f "$HOME/.bash_history" ]] && rm -f "$HOME/.bash_history" 
+[[ ! -d "$HOME/.config/zsh" ]] && mkdir -pv "$HOME/.config/zsh"
+[[ ! -d "$XDG_CACHE_HOME/zsh" ]] && mkdir -pv "$XDG_CACHE_HOME/zsh" 
 
-[ -f "$HOME/.bash_history" ] && rm -f "$HOME/.bash_history" 
-[ ! -d "$HOME/.config/zsh" ] && mkdir -pv "$HOME/.config/zsh"
-[ ! -d "$XDG_CACHE_HOME/zsh" ] && mkdir -pv "$XDG_CACHE_HOME/zsh" 
-
-#
-# Sourcing and installing
-#
-
-# ZSH Autosuggestions
-if [ -s "$ZSH_PLUGINS_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
-    source "$ZSH_PLUGINS_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh"
-else
-    [ -d "$ZSH_PLUGINS_DIR/zsh-autosuggestions" ] || mkdir -pv "$ZSH_PLUGINS_DIR/zsh-autosuggestions"
-    git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_PLUGINS_DIR/zsh-autosuggestions"
-    source "$ZSH_PLUGINS_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh"
-fi
-
-# NVM
-[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh" || echo "NVM Not Found" 
-
-# Colors
-[ -s "$ZDOTDIR/src/.dircolors" ] && eval "$(dircolors -b $ZDOTDIR/src/.dircolors)" || echo "Dircolors Not Found" 
-
-# Cursor Mode
-[ -s "$ZDOTDIR/scripts/cursor_mode.sh" ] && source "$ZDOTDIR/scripts/cursor_mode.sh" || echo "Cursor Mode Not Found" 
-
-# Aliases
-[ -s "$ZDOTDIR/.aliasrc" ] && source "$ZDOTDIR/.aliasrc" || echo "Aliases not found" 
+[ -s "$ZDOTDIR/scripts/local-utils.zsh" ] && source "$ZDOTDIR/scripts/local-utils.zsh" 
+load_plugin "zsh-autosuggestions" 
+load eval "$(dircolors -b $ZDOTDIR/src/.dircolors)" 
+load source "$ZDOTDIR/scripts/cursor_mode.sh"
+load source "$ZDOTDIR/.aliasrc"
+load source "$ZDOTDIR/scripts/global-utils.sh"
 
 #
 # Options - http://zsh.sourceforge.net/Doc/Release/Options.html 
@@ -70,7 +48,7 @@ setopt HIST_NO_STORE
 setopt HIST_REDUCE_BLANKS
 setopt HIST_SAVE_NO_DUPS
 setopt HIST_VERIFY
-setopt INC_APPEND_HISTORY
+unsetopt INC_APPEND_HISTORY
 setopt SHARE_HISTORY
 
 # Input/Output
@@ -100,14 +78,10 @@ setopt ZLE
 
 autoload -Uz vcs_info
 
-vcs_info_precmd() {
-  vcs_info
-}
+vcs_info_precmd() { vcs_info; }
+rprompt_precmd() { [[ $? -eq 0 ]] && RPROMPT="%F{green}( ͡° ͜ʖ ͡°)%f" || RPROMPT="%F{red}¯\(°_o)/¯%f"; }
 
-rprompt_precmd() {
-  [[ $? -eq 0 ]] && RPROMPT="%F{green}( ͡° ͜ʖ ͡°)%f" || RPROMPT="%F{red}¯\(°_o)/¯%f"
-}
-
+autoload -Uz add-zsh-hook
 add-zsh-hook precmd vcs_info_precmd
 add-zsh-hook precmd rprompt_precmd
 
@@ -123,7 +97,7 @@ PROMPT='%B%F{cyan}%~%f%b ${vcs_info_msg_0_}%B%F{white}>%f%b '
 fpath=($fpath /usr/local/share/zsh/site-functions /usr/share/zsh/site-functions)
 
 source <(fzf --zsh)
-zmodload zsh/complist # zmodload before compinit!
+zmodload zsh/complist #  WARN: zmodload before compinit!
 bindkey -v
 
 CTRL="^"
@@ -138,7 +112,6 @@ SPACE="@"
 # Functions
 #
 
-# Target specific copy manager based on OS
 if [ "$XDG_SESSION_TYPE" = 'wayland' ]; then
     zle_vi_yank_to_system_register() { zle .vi-yank; echo -n "$CUTBUFFER" | wl-copy; }
     zle_vi_paste_from_system_register() { LBUFFER+=$(wl-paste); CUTBUFFER=""; zle redisplay; }
@@ -156,7 +129,7 @@ else
 fi
 
 # Custom FZF
-open_fzf() { BUFFER+="source $ZDOTDIR/scripts/open-fzf.zsh"; zle accept-line }
+open_fzf() { BUFFER+="source $ZDOTDIR/scripts/open-fzf.zsh"; zle accept-line; }
 
 # Directories movement
 go_back() { BUFFER+=".."; zle accept-line; }
@@ -198,7 +171,6 @@ bindkey "${CTRL}L" accept-line
 bindkey "${CTRL}H" backward-delete-char
 
 bindkey "${BACKSPACE}" backward-delete-char
-bindkey "${TAB}" menu-select
 
 # Normal Mode
 bindkey -M vicmd "${CTRL}b" go_back
@@ -212,7 +184,6 @@ bindkey -M vicmd "D" vi-kill-line
 bindkey -M vicmd "C" vi-change-eol
 
 # Insert Mode
-bindkey -M viins "${CTRL}${SPACE}" complete-word
 bindkey -M viins "${CTRL}j" menu-select
 bindkey -M viins "${CTRL}p" .history-search-backward 
 bindkey -M viins "${CTRL}n" .history-search-forward 
@@ -222,12 +193,15 @@ bindkey -M viins "${CTRL}k" forward-char
 # Visual Mode
 bindkey -M visual "p" vi-paste-visual
 
+
 # Completion Menu
-bindkey -M menuselect "h" vi-backward-char
-bindkey -M menuselect "k" vi-up-line-or-history
-bindkey -M menuselect "j" vi-down-line-or-history
-bindkey -M menuselect "l" vi-forward-char
-bindkey -M menuselect "${CTRL}L" accept-line
+bindkey -M viins "${CTRL}${SPACE}" menu-select
+bindkey -M menuselect "${TAB}" accept-line
+bindkey -M menuselect "${CTRL}j" vi-down-line-or-history
+bindkey -M menuselect "${CTRL}k" vi-up-line-or-history 
+bindkey -M menuselect "${CTRL}h" vi-backward-char
+bindkey -M menuselect "${CTRL}l" accept-line
+bindkey -M menuselect "${CTRL}e" send-break
 bindkey -M menuselect "${ESC}" send-break
 
 #
@@ -239,46 +213,25 @@ compinit -d "$XDG_CACHE_HOME/zsh/.zcompdump_${ZSH_VERSION}"
 autoload -Uz bashcompinit; bashcompinit 
 autoload -U colors; colors
 
-# Source bash completion after compinit to avoid creating duplicated zcompdump
-[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion" || echo "Bash Completions Not Found" 
+load source "$ZDOTDIR/scripts/lazy-load.zsh"  # NOTE: Lazy load NVM
 
 _comp_options+=(globdots)
 
 # Completion settions
 zstyle ":completion:*" use-cache on
 zstyle ":completion:*" cache-path "$XDG_CACHE_HOME/zsh/.zcompcache_{$ZSH_VERSION}"
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*' expand prefix suffix
-
-zstyle ':completion:*' completer _list _expand _complete _ignored _match _correct _approximate _prefix _extensions _files
-zstyle ':completion:*' file-sort modification
-zstyle ':completion:*' ignore-parents parent pwd
-zstyle ':completion:*' matcher-list 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-]=** r:|=**' 'l:|=* r:|=*' 'm:{0-9}={0-9}' 'm:{a-zA-Z0-9}={A-Za-z0-9}' 'r:|=* l:|=* r:|=*' 'l:|=* m:{a-zA-Z0-9}={A-Za-z0-9}'
-zstyle ':completion:*' match-original both
-zstyle ':completion:*' max-errors 2 numeric
-zstyle ':completion:*' old-menu false
-zstyle ":completion:*" menu select
-zstyle ':completion:*' squeeze-slashes true
-zstyle ":completion:*" complete-options true
-zstyle ':completion:*' word true
-zstyle ':completion:*:urls' sort true
-zstyle ':completion:*:history-words' sort true
-zstyle ':completion:*:history-words' stop true
-zstyle ":completion:*:*:*:*:descriptions" format "%F{green}-- %d --%f"
-zstyle ":completion:*:*:*:*:corrections" format "%F{yellow}!- %d (errors: %e) -!%f"
-zstyle ":completion:*:*:-command-:*:*" group-order alias builtins functions commands
+zstyle ':completion:*' menu select
+zstyle ':completion:*' list-packed false
+zstyle ':completion:*' list-rows-first true
+zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' '+r:|[._-]=* r:|=*'
+zstyle ':completion:*' rehash true
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:history-words:*' remove-all-dups true
+zstyle ':completion:*:*:-command-:*:*' functions commands group-order builtins
+zstyle ':completion:*' completer _complete _ignored
 
 # ZSH autosuggestions settings
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
-# Syntax Highlighting  --  have to be last!
-if [ -s "$ZSH_PLUGINS_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
-    source "$ZSH_PLUGINS_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" 
-else
-    [ -d $ZSH_PLUGINS_DIR/zsh-syntax-highlighting ] || mkdir -pv "$ZSH_PLUGINS_DIR/zsh-syntax-highlighting"
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_PLUGINS_DIR/zsh-syntax-highlighting"
-    source "$ZSH_PLUGINS_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" 
-fi
 
-
+load_plugin "zsh-syntax-highlighting" # WARN: Syntax Highlighting  --  have to be last!

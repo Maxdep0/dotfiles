@@ -4,25 +4,23 @@ cursor_mode() {
     cursor_beam='\e[6 q'
 
     function zle-keymap-select {
-    if [[ ${KEYMAP} == vicmd ]] ||
-        [[ $1 = 'block' ]]; then
+        if [[ ${KEYMAP} == vicmd ]] ||
+            [[ $1 = 'block' ]]; then
             echo -ne "$cursor_block"
         elif [[ ${KEYMAP} == main ]] ||
             [[ ${KEYMAP} == viins ]] ||
             [[ ${KEYMAP} = '' ]] ||
             [[ $1 = 'beam' ]]; then
-                    echo -ne "$cursor_beam"
-    fi
+            echo -ne "$cursor_beam"
+        fi
     }
 
-zle-line-init() {
-    echo -ne "$cursor_beam"
-}
+    zle-line-init() {
+        echo -ne "$cursor_beam"
+    }
 
-zle -N zle-keymap-select
-zle -N zle-line-init
+    zle -N zle-keymap-select
+    zle -N zle-line-init
 }
 
 cursor_mode
-
-

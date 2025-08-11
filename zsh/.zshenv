@@ -1,12 +1,8 @@
-# shellcheck shell=zsh
+typeset -U path PATH
 
-typeset -U path
+path=( ~/.local/bin /usr/local/bin /usr/bin $path)
 
-path() { [[ -d "$1" ]] && path=("$1" $path); }
-
-path "$HOME/.local/bin"
-path "/usr/local/bin"
-path "/usr/bin"
+export PATH
 
 # Custom
 export DOTFILES="$HOME/dotfiles"
@@ -34,8 +30,8 @@ export XDG_RUNTIME_DIR="/run/user/$UID"
 export XDG_DOCUMENTS_DIR="$HOME/Documents"
 export XDG_DOWNLOAD_DIR="$HOME/Downloads"
 export XDG_PICTURES_DIR="$HOME/Pictures"
-export XDG_VIDEOS_DIR="$HOME/Videos"
-export XDG_MUSIC_DIR="$HOME/Videos" # I dont download music.. so dir is Videos
+export XDG_VIDEOS_DIR="$HOME/Downloads" # NOTE I dont download videos, so dir is Downloads
+export XDG_MUSIC_DIR="$HOME/Downloads" # NOTE  ^^^
 
 # ZSH
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
@@ -56,18 +52,6 @@ export FZF_DEFAULT_OPTS="-m --border sharp --color $FZF_COLORS --prompt '∷ ' -
 export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -n 10'"
 export FZF_COMPLETION_DIR_COMMANDS="cd pushd rmdir tree ls"
 
-# PKG
-export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
-export PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig:$PKG_CONFIG_PATH
-export PKG_CONFIG_PATH=/usr/local/share/pkgconfig:$PKG_CONFIG_PATH
+export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig:/usr/local/share/pkgconfig:$PKG_CONFIG_PATH"
+export LD_LIBRARY_PATH="/usr/lib:/usr/local/lib:/usr/local/lib64:$LD_LIBRARY_PATH"
 
-# LD
-export LD_LIBRARY_PATH=/usr/lib:$LD_LIBRARY_PATH
-export LD_LIBRARY_PATH=/usr/lib/:$LD_LIBRARY_PATH
-export LD_LIBRARY_PATH=/usr/local/lib/:$LD_LIBRARY_PATH
-export LD_LIBRARY_PATH=/usr/local/lib64/:$LD_LIBRARY_PATH
-
-# Load it only for tty1, so i can debug it in tty2
-if [ "$(tty)" = "/dev/tty1" ]; then
-    exec Hyprland
-fi
