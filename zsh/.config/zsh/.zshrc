@@ -1,5 +1,10 @@
 #!/usr/bin/env zsh
 
+if command -v fnm >/dev/null 2>&1; then
+  eval "$(fnm env --use-on-cd --shell zsh)"
+fi
+
+
 [[ -f "$HOME/.bash_history" ]] && rm -f "$HOME/.bash_history" 
 [[ ! -d "$HOME/.config/zsh" ]] && mkdir -pv "$HOME/.config/zsh"
 [[ ! -d "$XDG_CACHE_HOME/zsh" ]] && mkdir -pv "$XDG_CACHE_HOME/zsh" 
@@ -10,6 +15,21 @@ load eval "$(dircolors -b $ZDOTDIR/src/.dircolors)"
 load source "$ZDOTDIR/scripts/cursor_mode.sh"
 load source "$ZDOTDIR/.aliasrc"
 load source "$ZDOTDIR/scripts/global-utils.sh"
+
+
+# TODO: Move it to diff file
+FNM_PATH="/home/maxdep/.local/share/fnm" 
+if [ -d "$FNM_PATH" ]; then
+  export PATH="$FNM_PATH:$PATH"          
+  eval "`fnm env`"                        
+fi
+export FNM_COREPACK_ENABLED=true
+export FNM_VERSION_FILE_STRATEGY=recursive
+if command -v fnm >/dev/null 2>&1; then
+  eval "$(fnm env --use-on-cd --shell zsh)"
+fi
+# TODO: ^^^^
+
 
 #
 # Options - http://zsh.sourceforge.net/Doc/Release/Options.html 
@@ -213,7 +233,7 @@ compinit -d "$XDG_CACHE_HOME/zsh/.zcompdump_${ZSH_VERSION}"
 autoload -Uz bashcompinit; bashcompinit 
 autoload -U colors; colors
 
-load source "$ZDOTDIR/scripts/lazy-load.zsh"  # NOTE: Lazy load NVM
+# load source "$ZDOTDIR/scripts/lazy-load.zsh"  # NOTE: Lazy load NVM
 
 _comp_options+=(globdots)
 
@@ -235,3 +255,4 @@ ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
 
 load_plugin "zsh-syntax-highlighting" # WARN: Syntax Highlighting  --  have to be last!
+

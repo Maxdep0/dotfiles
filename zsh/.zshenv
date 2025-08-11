@@ -41,9 +41,6 @@ export HISTSIZE=10000
 export SAVEHIST=10000
 export KEYTIMEOUT=1
 
-# NPM
-export NVM_DIR="$HOME/.nvm"
-
 # FZF
 export FZF_DEFAULT_COMMAND="fd --type f --hidden"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
