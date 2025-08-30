@@ -227,6 +227,65 @@ gg() {
             return 1
         fi
         ;;
+
+    peek)
+        local ref="$2"
+        if [[ -z "$ref" ]]; then
+            echo "Usage: gg peek <ref|commit|origin/branch|refs/...>"
+            return 1
+        fi
+        local safe_ref
+        safe_ref=$(branch_to_dirname "$ref")
+        local peek_dir="$(dirname "$main_root")/$(basename "$main_root").wt.peek.$safe_ref"
+        [[ -d "$peek_dir" ]] && command git worktree remove "$peek_dir" 2>/dev/null
+        if command git worktree add --detach "$peek_dir" "$ref" 2>/dev/null; then
+            echo "Created detached peek worktree at '$ref'"
+            cd "$peek_dir" || return 1
+            return 0
+        else
+            echo "Error: Failed to create peek worktree for '$ref'"
+            return 1
+        fi
+        ;;
+
+    unpeek)
+        local arg="${2:-}"
+
+        if [ -n "$arg" ]; then
+            local safe
+            safe=$(branch_to_dirname "$arg")
+            local target="$(dirname "$main_root")/$(basename "$main_root").wt.peek.$safe"
+
+            if [ "$here_root" = "$target" ]; then
+                cd "$main_root" || return 1
+            fi
+
+            if [ -d "$target" ]; then
+                echo "Removing: $target"
+                command git worktree remove "$target" || return 1
+            else
+                echo "Error: No peek worktree for '$arg'"
+            fi
+            return 0
+        fi
+
+        case "$here_root" in
+        *".wt.peek."*)
+            cd "$main_root" || return 1
+            ;;
+        esac
+
+        command git worktree list --porcelain |
+            awk '/^worktree / && $2 ~ /\.wt\.peek\./ {print $2}' |
+            while IFS= read -r _wt; do
+                [ -n "$_wt" ] || continue
+                if [ -d "$_wt" ]; then
+                    echo "Removing: $_wt"
+                    command git worktree remove "$_wt" || exit 1
+                fi
+            done
+        return 0
+        ;;
     sync)
         local branch="${2:-$current_branch}"
 
@@ -275,22 +334,29 @@ gg() {
 gg - Git worktree manager
 
 USAGE:
-  gg <branch>                    Switch to branch
-  gg create branch <name>        Create new branch
-  gg create wt <name>            Create worktree for branch
-  gg delete branch <name>        Delete branch (del, rm, remove)
-  gg delete wt <name>            Delete worktree (del, rm, remove)
-  gg merge <src> into <target>   Merge source branch into target
-  gg sync [branch]               Sync branch with origin (current if omitted)
-  gg help                        Show this help (--help, -h)
+  gg <branch>                          Switch to branch
+  gg create branch <name>              Create new branch
+  gg create wt <name>                  Create worktree for branch
+  gg delete branch <name>              Delete branch (del, rm, remove)
+  gg delete wt <name>                  Delete worktree (del, rm, remove)
+  gg merge <src> into <target>         Merge source branch into target
+  gg sync [branch]                     Sync branch with origin (current if omitted)
+  gg peek <ref>                        Create detached worktree for inspection
+  gg unpeek [ref]                      Remove peek worktree(s) (all if no ref)
+  gg help                              Show this help (--help, -h)
 
 EXAMPLES:
-  gg feature/login              # Switch to feature/login branch
-  gg create wt bugfix/auth      # Create worktree for bugfix/auth
-  gg create branch refactor/db  # Create new branch
+  gg feature/login                     # Switch to feature/login branch
+  gg create wt bugfix/auth             # Create worktree for bugfix/auth
+  gg create branch refactor/db         # Create new branch
   gg merge feature/login into develop
-  gg sync                       # Sync current branch with origin
-  gg rm wt feature/old          # Remove completed feature worktree
+  gg sync                              # Sync current branch with origin
+  gg rm wt feature/old                 # Remove completed feature worktree
+  gg peek origin/feature/pr            # Inspect remote branch (PR review)
+  gg peek v1.2.3                       # Peek at specific tag
+  gg peek abc123f                      # Peek at specific commit
+  gg unpeek                            # Remove all peek worktrees
+  gg unpeek origin/feature/pr          # Remove specific peek worktree
 EOF
         return 0
         ;;
