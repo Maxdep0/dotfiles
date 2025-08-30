@@ -19,7 +19,7 @@ alias .dot="cd ~/.config"
 alias dot="cd ~/dotfiles"
 
 alias nvimc="cd ~/.config/nvim && nvim init.lua"
-alias teztermc="cd ~/dotfiles/wezterm/.config/wezterm && nvim wezterm.lua"
+alias weztermc="cd ~/dotfiles/wezterm/.config/wezterm && nvim wezterm.lua"
 alias swayc="cd ~/dotfiles/sway/.config/sway && nvim config"
 alias hyprc="cd ~/dotfiles/hypr/.config/hypr && nvim hyprland.conf"
 alias barc="cd ~/dotfiles/waybar/.config/waybar && nvim config.jsonc"

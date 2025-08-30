@@ -1,9 +1,10 @@
 #!/usr/bin/env zsh
 
+
+
 if command -v fnm >/dev/null 2>&1; then
   eval "$(fnm env --use-on-cd --shell zsh)"
 fi
-
 
 [[ -f "$HOME/.bash_history" ]] && rm -f "$HOME/.bash_history" 
 [[ ! -d "$HOME/.config/zsh" ]] && mkdir -pv "$HOME/.config/zsh"
@@ -15,6 +16,7 @@ load eval "$(dircolors -b $ZDOTDIR/src/.dircolors)"
 load source "$ZDOTDIR/scripts/cursor_mode.sh"
 load source "$ZDOTDIR/.aliasrc"
 load source "$ZDOTDIR/scripts/global-utils.sh"
+load source "$ZDOTDIR/scripts/gg.sh"
 
 
 # TODO: Move it to diff file

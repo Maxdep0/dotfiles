@@ -15,10 +15,10 @@ copycat() {
     clipboard_cmd="$(get_clipboard_name)" || return 1
 
     case "$clipboard_cmd" in
-    wl-copy) awk 'FNR==1{printf "\n\n========= %s =========\n\n", FILENAME} {print}' "$@" | wl-copy ;;
-    xclip) awk 'FNR==1{printf "\n\n========= %s =========\n\n", FILENAME} {print}' "$@" | xclip -selection clipboard ;;
-    xsel) awk 'FNR==1{printf "\n\n========= %s =========\n\n", FILENAME} {print}' "$@" | xsel --clipboard --input ;;
-    copyq) awk 'FNR==1{printf "\n\n========= %s =========\n\n", FILENAME} {print}' "$@" | copyq copy - ;;
+    wl-copy) awk 'FNR==1{printf "\n\n//========= %s =========\n\n", FILENAME} {print}' "$@" | wl-copy ;;
+    xclip) awk 'FNR==1{printf "\n\n//========= %s =========\n\n", FILENAME} {print}' "$@" | xclip -selection clipboard ;;
+    xsel) awk 'FNR==1{printf "\n\n//========= %s =========\n\n", FILENAME} {print}' "$@" | xsel --clipboard --input ;;
+    copyq) awk 'FNR==1{printf "\n\n//========= %s =========\n\n", FILENAME} {print}' "$@" | copyq copy - ;;
     esac
 }
 
@@ -101,4 +101,12 @@ pro() {
     else
         cd ~/Projects && fd -H -d 1
     fi
+}
+
+wifiSleep() {
+    nmcli networking off
+    echo "Sleeping for $1 seconds..."
+    sleep "$1"
+    nmcli networking on
+    echo "WiFi is back on."
 }
