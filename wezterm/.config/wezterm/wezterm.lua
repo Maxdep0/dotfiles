@@ -53,7 +53,7 @@ return {
 	-- window_background_opacity = 0.93,
 	window_padding = { left = 0, right = 0, top = 0, bottom = 0 },
 	-- WARN: use_fancy_tab_bar used by neovim toggle util
-	use_fancy_tab_bar = false,
+use_fancy_tab_bar = false,
 	max_fps = 144,
 	hide_tab_bar_if_only_one_tab = true,
 	colors = {
