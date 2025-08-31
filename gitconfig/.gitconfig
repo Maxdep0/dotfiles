@@ -50,10 +50,9 @@
     s = status -s
     r = remote -v
     b = branch -vv
+    clone-ssh = "!f() { git clone git@github.com:$1/$2.git; }; f"
+    clone-https = "!f() { git clone https://github.com/$1/$2.git; }; f"
     cm = "!f() { git commit -m \"$1\"; }; f"
-    dev = "!git checkout dev 2>/dev/null || git checkout -b dev"
-    main = checkout main
     setssh = "!f() { git remote set-url origin git@github.com:Maxdep0/$1; }; f"
     l = "!git log --color=always --pretty=format:'  %C(yellow)%h %ad%C(red)%d %Creset%s%C(blue) [%cn]' --decorate --date=short | tac"
     alias = "!git config -l | grep alias | cut -c 7-"
-
