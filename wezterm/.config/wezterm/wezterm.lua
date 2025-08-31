@@ -24,9 +24,9 @@ local function key(keys, mods, actions)
 	return { key = keys, mods = mods, action = actions }
 end
 
-local function mkey(keys, actions)
-	return { key = keys, action = actions }
-end
+-- local function mkey(keys, actions)
+-- 	return { key = keys, action = actions }
+-- end
 
 local function ckey(keys, mods, non_editor_action)
 	return conflicting_nvim_keys(keys, mods, { SendKey = { key = keys, mods = mods } }, non_editor_action)
@@ -41,8 +41,9 @@ wezterm.on("update-right-status", function(window, pane)
 end)
 
 return {
-	-- Wezterm does not start with current hyprland wl protocol
-	enable_wayland = false,
+	-- BUG: wezterm version 2024xx does not start with current hyprland wl protocol
+	-- WORKING: wezterm version 2025+
+	enable_wayland = true,
 	front_end = "OpenGL",
 	disable_default_key_bindings = true,
 	scrollback_lines = 5000,
@@ -51,7 +52,8 @@ return {
 	window_background_opacity = 0.6,
 	-- window_background_opacity = 0.93,
 	window_padding = { left = 0, right = 0, top = 0, bottom = 0 },
-use_fancy_tab_bar = false,
+	-- WARN: use_fancy_tab_bar used by neovim toggle util
+	use_fancy_tab_bar = false,
 	max_fps = 144,
 	hide_tab_bar_if_only_one_tab = true,
 	colors = {
@@ -63,66 +65,20 @@ use_fancy_tab_bar = false,
 	leader = { key = "Space", mods = "SHIFT" },
 
 	keys = {
-		key("t", "LEADER", act.ActivateKeyTable({ name = "tab_mode", one_shot = true })),
-		key("w", "LEADER", act.ActivateKeyTable({ name = "pane_mode", one_shot = true })),
-		key("r", "LEADER", act.ActivateKeyTable({ name = "size_mode", one_shot = false })),
-
-		-- Tab
-		key("]", "ALT", act.ActivateTabRelative(1)),
-		key("[", "ALT", act.ActivateTabRelative(-1)),
-		key("Tab", "ALT", act.ActivateTabRelative(1)),
-		key("Tab", "ALT|SHIFT", act.ActivateTabRelative(-1)),
-
-		-- Pane
-		-- key("Enter", "ALT", act.TogglePaneZoomState),
-
-		key("h", "ALT", act.ActivatePaneDirection("Left")),
-		key("j", "ALT", act.ActivatePaneDirection("Down")),
-		key("k", "ALT", act.ActivatePaneDirection("Up")),
-		key("l", "ALT", act.ActivatePaneDirection("Right")),
-
-		-- Copy/Paste
 		key("V", "CTRL", act.PasteFrom("Clipboard")),
 		key("C", "CTRL", act.CopyTo("Clipboard")),
-
-		-- Search Mode
-		ckey("/", "ALT", act.Search({ CaseInSensitiveString = "" })),
-
-		-- Scrolling
-		ckey("u", "ALT", act.ScrollByPage(-1)),
-		ckey("d", "ALT", act.ScrollByPage(1)),
-		ckey("U", "ALT", act.ScrollByLine(-5)),
-		ckey("J", "ALT", act.ScrollByLine(5)),
-
-		-- Command Pallette
 		key("P", "CTRL", act.ActivateCommandPalette),
+
+		key("=", "CTRL", act.IncreaseFontSize),
+		key("-", "CTRL", act.DecreaseFontSize),
+		key("0", "CTRL", act.ResetFontSize),
+
+		ckey("u", "CTRL", act.ScrollByPage(-1)),
+		ckey("d", "CTRL", act.ScrollByPage(1)),
+		ckey("/", "ALT", act.Search({ CaseInSensitiveString = "" })),
 	},
 
 	key_tables = {
-		size_mode = {
-			mkey("Escape", "PopKeyTable"),
-			mkey("h", act.AdjustPaneSize({ "Left", 1 })),
-			mkey("j", act.AdjustPaneSize({ "Down", 1 })),
-			mkey("k", act.AdjustPaneSize({ "Up", 1 })),
-			mkey("l", act.AdjustPaneSize({ "Right", 1 })),
-			mkey("=", act.IncreaseFontSize),
-			mkey("-", act.DecreaseFontSize),
-			mkey("0", act.ResetFontSize),
-		},
-
-		tab_mode = {
-			mkey("t", act.SpawnTab("DefaultDomain")),
-			mkey("c", act.CloseCurrentTab({ confirm = false })),
-		},
-
-		pane_mode = {
-			mkey("h", act.SplitPane({ direction = "Left", size = { Percent = 50 } })),
-			mkey("j", act.SplitPane({ direction = "Down", size = { Percent = 7 } })),
-			mkey("k", act.SplitPane({ direction = "Up", size = { Percent = 7 } })),
-			mkey("l", act.SplitPane({ direction = "Right", size = { Percent = 50 } })),
-			mkey("c", act.CloseCurrentPane({ confirm = false })),
-		},
-
 		search_mode = {
 			key("Escape", "NONE", act.CopyMode("Close")),
 			key("j", "ALT", act.CopyMode("NextMatch")),
@@ -134,3 +90,77 @@ use_fancy_tab_bar = false,
 		},
 	},
 }
+-- leader = { key = "Space", mods = "SHIFT" },
+
+-- keys = {
+-- key("t", "LEADER", act.ActivateKeyTable({ name = "tab_mode", one_shot = true })),
+-- key("w", "LEADER", act.ActivateKeyTable({ name = "pane_mode", one_shot = true })),
+-- key("r", "LEADER", act.ActivateKeyTable({ name = "size_mode", one_shot = false })),
+
+-- -- Tab
+-- key("]", "ALT", act.ActivateTabRelative(1)),
+-- key("[", "ALT", act.ActivateTabRelative(-1)),
+-- key("Tab", "ALT", act.ActivateTabRelative(1)),
+-- key("Tab", "ALT|SHIFT", act.ActivateTabRelative(-1)),
+
+-- Pane
+-- key("Enter", "ALT", act.TogglePaneZoomState),
+
+-- key("h", "ALT", act.ActivatePaneDirection("Left")),
+-- key("j", "ALT", act.ActivatePaneDirection("Down")),
+-- key("k", "ALT", act.ActivatePaneDirection("Up")),
+-- key("l", "ALT", act.ActivatePaneDirection("Right")),
+
+-- Copy/Paste
+-- key("V", "CTRL", act.PasteFrom("Clipboard")),
+-- key("C", "CTRL", act.CopyTo("Clipboard")),
+--
+-- Search Mode
+-- ckey("/", "ALT", act.Search({ CaseInSensitiveString = "" })),
+
+-- Scrolling
+-- ckey("u", "CTRL", act.ScrollByPage(-1)),
+-- ckey("d", "CTRL", act.ScrollByPage(1)),
+-- ckey("U", "ALT", act.ScrollByLine(-5)),
+-- ckey("J", "ALT", act.ScrollByLine(5)),
+
+-- Command Pallette
+-- key("P", "CTRL", act.ActivateCommandPalette),
+-- },
+
+-- key_tables = {
+-- 	size_mode = {
+-- 		mkey("Escape", "PopKeyTable"),
+-- mkey("h", act.AdjustPaneSize({ "Left", 1 })),
+-- mkey("j", act.AdjustPaneSize({ "Down", 1 })),
+-- mkey("k", act.AdjustPaneSize({ "Up", 1 })),
+-- mkey("l", act.AdjustPaneSize({ "Right", 1 })),
+-- 	mkey("=", act.IncreaseFontSize),
+-- 	mkey("-", act.DecreaseFontSize),
+-- 	mkey("0", act.ResetFontSize),
+-- },
+
+-- tab_mode = {
+-- 	mkey("t", act.SpawnTab("DefaultDomain")),
+-- 	mkey("c", act.CloseCurrentTab({ confirm = false })),
+-- },
+
+-- pane_mode = {
+-- 	mkey("h", act.SplitPane({ direction = "Left", size = { Percent = 50 } })),
+-- 	mkey("j", act.SplitPane({ direction = "Down", size = { Percent = 7 } })),
+-- 	mkey("k", act.SplitPane({ direction = "Up", size = { Percent = 7 } })),
+-- 	mkey("l", act.SplitPane({ direction = "Right", size = { Percent = 50 } })),
+-- 	mkey("c", act.CloseCurrentPane({ confirm = false })),
+-- },
+
+-- 	search_mode = {
+-- 		key("Escape", "NONE", act.CopyMode("Close")),
+-- 		key("j", "ALT", act.CopyMode("NextMatch")),
+-- 		key("k", "ALT", act.CopyMode("PriorMatch")),
+-- 		key("J", "ALT", act.CopyMode("NextMatchPage")),
+-- 		key("K", "ALT", act.CopyMode("PriorMatchPage")),
+-- 		key("t", "CTRL", act.CopyMode("CycleMatchType")),
+-- 		key("d", "CTRL", act.CopyMode("ClearPattern")),
+-- 	},
+-- },
+-- }
