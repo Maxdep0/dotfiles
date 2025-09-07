@@ -29,7 +29,7 @@ for dir in ${(s: :)DIRS_TO_EXCLUDE}; do FD_EXCLUDE_ARGS+=(--exclude "$dir") done
   cd "$HOME"
   fzf --ansi \
     --color "bg:-1,fg:white,hl:red,hl+:red,bg+:black,fg+:white,header:white,info:red,pointer:red,marker:red,prompt:white,spinner:red" \
-    --header '^/ - preview | Enter - cd & nvim | ^o - open with nvim' \
+    --header '^/ - preview | Enter - cd & nvim | ^o - peek with nvim' \
     --border=sharp \
     --prompt='Files> ' \
     --bind "start:reload($FD_CMD_FILES)" \
@@ -51,21 +51,22 @@ if [[ -f /tmp/fzf-select ]]; then
       [[ $line == *=* ]] || continue
       KEY="${line%%=*}"
       KEY="${KEY/#export }"
-      VALUE="$HOME/${line#*=}"
+      VALUE="$HOME/${line#*=}" 
       DIR=${VALUE%/*}
       FILE=${VALUE##*/}
 
       echo "\n==FZF DEBUG==\nKEY:$KEY\nVALUE:$VALUE\nDIR:$DIR\nFILE:$FILE\n"
 
-      if [[ $KEY == "Dirs>  " ]]; then
+      if [[ $KEY == "Dirs> " ]]; then
           cd "$DIR"
       fi
 
       if [[ $KEY == "Files> " ]]; then
           # TODO: Add libreoffice, etc...
-          if [[ "$FILE" =~ \.($NOT_NVIM_EXT)$ ]]; then
+          if [[ "$FILE" =~ "\.($NOT_NVIM_EXT)$" ]]; then
               echo "Not a valid file for $EDITOR"
-              echo "> $FILE}"
+              echo "Dir: $DIR"
+              echo "File: $FILE"
               return 1
           fi
           cd "$DIR"
