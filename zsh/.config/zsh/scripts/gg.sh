@@ -195,7 +195,7 @@ gg() {
     merge)
         if [[ "$3" != "into" || -z "$4" ]]; then
             echo "Usage: gg merge <source> into <target>"
-            echo "Example: gg merge feature/rsi into main"
+            echo "Example: gg merge dev into main"
             return 1
         fi
 
@@ -210,6 +210,39 @@ gg() {
         if ! git show-ref --quiet --verify "refs/heads/$target"; then
             echo "Error: Target branch '$target' does not exist"
             return 1
+        fi
+
+        # Auto-sync source branch with remote
+        echo "Syncing '$source' with origin..."
+        command git fetch origin "$source" 2>/dev/null || true
+
+        # Check if remote branch exists and sync
+        if git show-ref --quiet --verify "refs/remotes/origin/$source"; then
+            local return_path="$PWD"
+            local return_needed=false
+
+            # Switch to source branch to sync
+            if [[ "$current_branch" != "$source" ]]; then
+                echo "Switching to '$source' for sync..."
+                gg "$source" || return 1
+                return_needed=true
+            fi
+
+            echo "Syncing '$source' with 'origin/$source'..."
+            if command git merge "origin/$source" --ff-only 2>/dev/null; then
+                echo "Fast-forwarded '$source'"
+            elif command git merge "origin/$source" --no-edit 2>/dev/null; then
+                echo "Merged 'origin/$source' into '$source'"
+            else
+                echo "Warning: Could not auto-sync '$source' - continuing with local version"
+            fi
+
+            # Return to original location if needed
+            if [[ "$return_needed" == true ]]; then
+                cd "$return_path"
+            fi
+        else
+            echo "No remote branch 'origin/$source' found - using local '$source'"
         fi
 
         local return_path="$PWD"
@@ -227,6 +260,41 @@ gg() {
             return 1
         fi
         ;;
+    # merge)
+    #     if [[ "$3" != "into" || -z "$4" ]]; then
+    #         echo "Usage: gg merge <source> into <target>"
+    #         echo "Example: gg merge feature/rsi into main"
+    #         return 1
+    #     fi
+    #
+    #     local source="$2"
+    #     local target="$4"
+    #
+    #     # Validate branches
+    #     if ! git show-ref --quiet --verify "refs/heads/$source"; then
+    #         echo "Error: Source branch '$source' does not exist"
+    #         return 1
+    #     fi
+    #     if ! git show-ref --quiet --verify "refs/heads/$target"; then
+    #         echo "Error: Target branch '$target' does not exist"
+    #         return 1
+    #     fi
+    #
+    #     local return_path="$PWD"
+    #
+    #     echo "Switching to '$target' for merge..."
+    #     gg "$target" || return 1
+    #
+    #     echo "Merging '$source' into '$target'..."
+    #     if command git merge "$source" --no-edit; then
+    #         echo "Successfully merged '$source' into '$target'"
+    #         cd "$return_path"
+    #     else
+    #         echo "Merge conflict - resolve conflicts and commit"
+    #         echo "You are now on branch '$target'"
+    #         return 1
+    #     fi
+    #     ;;
 
     peek)
         local ref="$2"
@@ -286,49 +354,81 @@ gg() {
             done
         return 0
         ;;
-    sync)
-        local branch="${2:-$current_branch}"
+        # sync)
+        # local branch="${2:-$current_branch}"
+        #
+        # if [[ -z "$branch" ]]; then
+        #     echo "Error: No branch specified and not on any branch"
+        #     return 1
+        # fi
+        #
+        # echo "Fetching latest for '$branch'..."
+        # command git fetch origin "$branch" || return 1
+        #
+        # # Check if branch exists locally
+        # if ! git show-ref --quiet --verify "refs/heads/$branch"; then
+        #     echo "Creating local branch '$branch' from 'origin/$branch'"
+        #     command git branch "$branch" "origin/$branch"
+        # fi
+        #
+        # local return_needed=false
+        # local return_path="$PWD"
+        #
+        # if [[ "$current_branch" != "$branch" ]]; then
+        #     echo "Switching to '$branch' for sync..."
+        #     gg "$branch" || return 1
+        #     return_needed=true
+        # fi
+        #
+        # # sync
+        # echo "Syncing '$branch' with 'origin/$branch'..."
+        # if command git merge "origin/$branch" --ff-only 2>/dev/null; then
+        #     echo "Fast-forwarded '$branch'"
+        # elif command git merge "origin/$branch" --no-edit; then
+        #     echo "Merged 'origin/$branch' into '$branch'"
+        # else
+        #     echo "Sync failed - resolve conflicts and commit"
+        #     return 1
+        # fi
+        #
+        # # Return to orig loc if needed
+        # if [[ "$return_needed" == true ]]; then
+        #     cd "$return_path"
+        #     gg "$current_branch" >/dev/null 2>&1
+        # fi
+        # ;;
+        #     help | --help | -h)
+        #         cat <<'EOF'
+        # gg - Git worktree manager
+        #
+        # USAGE:
+        #   gg <branch>                          Switch to branch
+        #   gg create branch <name>              Create new branch
+        #   gg create wt <name>                  Create worktree for branch
+        #   gg delete branch <name>              Delete branch (del, rm, remove)
+        #   gg delete wt <name>                  Delete worktree (del, rm, remove)
+        #   gg merge <src> into <target>         Merge source branch into target
+        #   gg sync [branch]                     Sync branch with origin (current if omitted)
+        #   gg peek <ref>                        Create detached worktree for inspection
+        #   gg unpeek [ref]                      Remove peek worktree(s) (all if no ref)
+        #   gg help                              Show this help (--help, -h)
+        #
+        # EXAMPLES:
+        #   gg feature/login                     # Switch to feature/login branch
+        #   gg create wt bugfix/auth             # Create worktree for bugfix/auth
+        #   gg create branch refactor/db         # Create new branch
+        #   gg merge feature/login into develop
+        #   gg sync                              # Sync current branch with origin
+        #   gg rm wt feature/old                 # Remove completed feature worktree
+        #   gg peek origin/feature/pr            # Inspect remote branch (PR review)
+        #   gg peek v1.2.3                       # Peek at specific tag
+        #   gg peek abc123f                      # Peek at specific commit
+        #   gg unpeek                            # Remove all peek worktrees
+        #   gg unpeek origin/feature/pr          # Remove specific peek worktree
+        # EOF
+        #         return 0
+        #         ;;
 
-        if [[ -z "$branch" ]]; then
-            echo "Error: No branch specified and not on any branch"
-            return 1
-        fi
-
-        echo "Fetching latest for '$branch'..."
-        command git fetch origin "$branch" || return 1
-
-        # Check if branch exists locally
-        if ! git show-ref --quiet --verify "refs/heads/$branch"; then
-            echo "Creating local branch '$branch' from 'origin/$branch'"
-            command git branch "$branch" "origin/$branch"
-        fi
-
-        local return_needed=false
-        local return_path="$PWD"
-
-        if [[ "$current_branch" != "$branch" ]]; then
-            echo "Switching to '$branch' for sync..."
-            gg "$branch" || return 1
-            return_needed=true
-        fi
-
-        # sync
-        echo "Syncing '$branch' with 'origin/$branch'..."
-        if command git merge "origin/$branch" --ff-only 2>/dev/null; then
-            echo "Fast-forwarded '$branch'"
-        elif command git merge "origin/$branch" --no-edit; then
-            echo "Merged 'origin/$branch' into '$branch'"
-        else
-            echo "Sync failed - resolve conflicts and commit"
-            return 1
-        fi
-
-        # Return to orig loc if needed
-        if [[ "$return_needed" == true ]]; then
-            cd "$return_path"
-            gg "$current_branch" >/dev/null 2>&1
-        fi
-        ;;
     help | --help | -h)
         cat <<'EOF'
 gg - Git worktree manager
@@ -339,24 +439,28 @@ USAGE:
   gg create wt <name>                  Create worktree for branch
   gg delete branch <name>              Delete branch (del, rm, remove)
   gg delete wt <name>                  Delete worktree (del, rm, remove)
-  gg merge <src> into <target>         Merge source branch into target
+  gg merge <src> into <target>         Merge source into target (auto-syncs source)
   gg sync [branch]                     Sync branch with origin (current if omitted)
   gg peek <ref>                        Create detached worktree for inspection
   gg unpeek [ref]                      Remove peek worktree(s) (all if no ref)
   gg help                              Show this help (--help, -h)
 
 EXAMPLES:
-  gg feature/login                     # Switch to feature/login branch
-  gg create wt bugfix/auth             # Create worktree for bugfix/auth
+  gg dev                               # Switch to dev branch
+  gg create wt feature/auth            # Create worktree for feature/auth
   gg create branch refactor/db         # Create new branch
-  gg merge feature/login into develop
+  gg merge dev into main               # Auto-sync dev, then merge into main
   gg sync                              # Sync current branch with origin
   gg rm wt feature/old                 # Remove completed feature worktree
   gg peek origin/feature/pr            # Inspect remote branch (PR review)
   gg peek v1.2.3                       # Peek at specific tag
   gg peek abc123f                      # Peek at specific commit
   gg unpeek                            # Remove all peek worktrees
-  gg unpeek origin/feature/pr          # Remove specific peek worktree
+
+NOTES:
+  - merge command automatically syncs source branch before merging
+  - main/master branches cannot have worktrees (use main repo)
+  - Worktrees are created as: <repo>.wt.<branch-name>
 EOF
         return 0
         ;;

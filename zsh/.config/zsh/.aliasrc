@@ -40,3 +40,5 @@ if [[ -f "/usr/bin/fd" ]] || [[ -f "$HOME/bin/fd" ]] || [[ -f "$HOME/.local/bin/
     alias fdd='fd -H -d 1 -t d'
     alias fda='fd -H -d 1'
 fi
+
+alias httpServer="python3 -m http.server"

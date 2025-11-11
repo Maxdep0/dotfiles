@@ -1,7 +1,5 @@
 #!/usr/bin/env zsh
 
-
-
 if command -v fnm >/dev/null 2>&1; then
   eval "$(fnm env --use-on-cd --shell zsh)"
 fi
@@ -18,18 +16,14 @@ load source "$ZDOTDIR/.aliasrc"
 load source "$ZDOTDIR/scripts/global-utils.sh"
 load source "$ZDOTDIR/scripts/gg.sh"
 
-
 # TODO: Move it to diff file
-FNM_PATH="/home/maxdep/.local/share/fnm" 
+FNM_PATH=/home/"$USER"/.local/share/fnm 
 if [ -d "$FNM_PATH" ]; then
   export PATH="$FNM_PATH:$PATH"          
   eval "`fnm env`"                        
 fi
 export FNM_COREPACK_ENABLED=true
 export FNM_VERSION_FILE_STRATEGY=recursive
-if command -v fnm >/dev/null 2>&1; then
-  eval "$(fnm env --use-on-cd --shell zsh)"
-fi
 # TODO: ^^^^
 
 
