@@ -56,3 +56,4 @@
     setssh = "!f() { git remote set-url origin git@github.com:Maxdep0/$1; }; f"
     l = "!git log --color=always --pretty=format:'  %C(yellow)%h %ad%C(red)%d %Creset%s%C(blue) [%cn]' --decorate --date=short | tac"
     alias = "!git config -l | grep alias | cut -c 7-"
+    web = "!gh repo view --web"
