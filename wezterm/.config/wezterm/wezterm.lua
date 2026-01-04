@@ -32,13 +32,13 @@ local function ckey(keys, mods, non_editor_action)
 	return conflicting_nvim_keys(keys, mods, { SendKey = { key = keys, mods = mods } }, non_editor_action)
 end
 
-wezterm.on("update-right-status", function(window, pane)
-	local name = window:active_key_table()
-	if name then
-		name = name
-	end
-	window:set_right_status(name or "")
-end)
+-- wezterm.on("update-right-status", function(window, pane)
+-- 	local name = window:active_key_table()
+-- 	if name then
+-- 		name = name
+-- 	end
+-- 	window:set_right_status(name or "")
+-- end)
 
 return {
 	-- BUG: wezterm version 2024xx does not start with current hyprland wl protocol
@@ -74,18 +74,17 @@ return {
 
 		ckey("u", "CTRL", act.ScrollByPage(-1)),
 		ckey("d", "CTRL", act.ScrollByPage(1)),
-		ckey("/", "ALT", act.Search({ CaseInSensitiveString = "" })),
+		ckey("/", "CTRL", act.Search({ CaseInSensitiveString = "" })),
 	},
 
 	key_tables = {
 		search_mode = {
 			key("Escape", "NONE", act.CopyMode("Close")),
-			key("j", "ALT", act.CopyMode("NextMatch")),
-			key("k", "ALT", act.CopyMode("PriorMatch")),
-			key("J", "ALT", act.CopyMode("NextMatchPage")),
-			key("K", "ALT", act.CopyMode("PriorMatchPage")),
-			key("t", "CTRL", act.CopyMode("CycleMatchType")),
-			key("d", "CTRL", act.CopyMode("ClearPattern")),
+			key("c", "CTRL", act.CopyMode("Close")),
+			key("n", "CTRL", act.CopyMode("NextMatch")),
+			key("N", "CTRL", act.CopyMode("PriorMatch")),
+
+			key("m", "CTRL", act.CopyMode("CycleMatchType")),
 		},
 	},
 }
